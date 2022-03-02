@@ -1,9 +1,3 @@
-#Loopback Ignore
 back/node_modules
-back/npm-debug.log
-back/server/storage/*
 
-#Angular Ignore
 front/node_modules/
-front/dist/
-\.vscode/
