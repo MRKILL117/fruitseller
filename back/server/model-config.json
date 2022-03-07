@@ -14,25 +14,55 @@
     ]
   },
   "User": {
-    "dataSource": "db"
+    "dataSource": "mysql",
+    "public": true,
+    "options": {
+      "remoting": {
+        "sharedMethods": {
+          "*": false,
+          "CreateUserWithRole": true
+        }
+      }
+    }
   },
   "AccessToken": {
-    "dataSource": "db",
-    "public": false
+    "dataSource": "mysql",
+    "public": false,
+    "options": {
+      "remoting": {
+        "sharedMethods": {
+          "*": false
+        }
+      }
+    }
   },
   "ACL": {
-    "dataSource": "db",
-    "public": false
+    "dataSource": "mysql",
+    "public": false,
+    "options": {
+      "remoting": {
+        "sharedMethods": {
+          "*": false
+        }
+      }
+    }
   },
   "RoleMapping": {
-    "dataSource": "db",
+    "dataSource": "mysql",
     "public": false,
     "options": {
       "strictObjectIDCoercion": true
     }
   },
   "Role": {
-    "dataSource": "db",
-    "public": false
+    "dataSource": "mysql",
+    "public": false,
+    "options": {
+      "remoting": {
+        "sharedMethods": {
+          "*": false
+        }
+      }
+    }
   }
 }
