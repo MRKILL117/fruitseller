@@ -23,7 +23,7 @@ module.exports = function(Account) {
                     if(!role) {
                         newAccount.destroy((err2, destroyed) => {
                             if(err2) return callback(err2);
-                            return callback('role not specified');
+                            return callback('Rol no especificado');
                         });
                     }
                     else {
@@ -56,11 +56,20 @@ module.exports = function(Account) {
     }
 
     Account.Login = function(credentials, callback) {
-        Account.login(credentials, (err, token) => {
+        Account.findOne({where: {email: credentials.email}, include: {'role': 'role'}}, (err, user) => {
             if(err) return callback(err);
-
-            return callback(null, token);
-        })
+            
+            if(!user) return callback('Usuario no registrado');
+            Account.login(credentials, (err, token) => {
+                if(err) return callback(err);
+    
+                user = Object.assign({}, user.toJSON());
+                user.role = user.role.role;
+                user.token = token;
+                console.log(user);
+                return callback(null, user);
+            });
+        });
     }
 
 };

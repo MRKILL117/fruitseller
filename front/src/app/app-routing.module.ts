@@ -10,16 +10,28 @@ const routes: Routes = [
   {
     path: 'admin',
     children: [
+      {
+        path: 'dashboard',
+        loadChildren: () => import('./pages/dashboard/dashboard.module').then( m => m.DashboardModule)
+      }
     ]
   },
   {
     path: 'seller',
     children: [
+      {
+        path: 'dashboard',
+        loadChildren: () => import('./pages/dashboard/dashboard.module').then( m => m.DashboardModule)
+      }
     ]
   },
   {
     path: 'user',
     children: [
+      {
+        path: 'dashboard',
+        loadChildren: () => import('./pages/dashboard/dashboard.module').then( m => m.DashboardModule)
+      }
     ]
   },
 ];

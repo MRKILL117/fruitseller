@@ -29,6 +29,15 @@
     {
       "accessType": "EXECUTE",
       "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "ALLOW",
+      "property": [
+        "Login"
+      ]
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
       "principalId": "Admin",
       "permission": "ALLOW",
       "property": [
