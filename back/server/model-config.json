@@ -13,29 +13,6 @@
       "./mixins"
     ]
   },
-  "User": {
-    "dataSource": "mysql",
-    "public": true,
-    "options": {
-      "remoting": {
-        "sharedMethods": {
-          "*": false,
-          "CreateUserWithRole": true
-        }
-      }
-    }
-  },
-  "AccessToken": {
-    "dataSource": "mysql",
-    "public": false,
-    "options": {
-      "remoting": {
-        "sharedMethods": {
-          "*": false
-        }
-      }
-    }
-  },
   "ACL": {
     "dataSource": "mysql",
     "public": false,
@@ -57,6 +34,29 @@
   "Role": {
     "dataSource": "mysql",
     "public": false,
+    "options": {
+      "remoting": {
+        "sharedMethods": {
+          "*": false
+        }
+      }
+    }
+  },
+  "Account": {
+    "dataSource": "mysql",
+    "public": true,
+    "options": {
+      "remoting": {
+        "sharedMethods": {
+          "*": false,
+          "CreateUserWithRole": true
+        }
+      }
+    }
+  },
+  "AccountToken": {
+    "dataSource": "mysql",
+    "public": true,
     "options": {
       "remoting": {
         "sharedMethods": {
