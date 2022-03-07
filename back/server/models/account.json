@@ -12,6 +12,11 @@
       "type": "hasMany",
       "model": "AccountToken",
       "foreignKey": "userId"
+    },
+    "role": {
+      "type": "hasOne",
+      "model": "RoleMapping",
+      "foreignKey": "principalId"
     }
   },
   "acls": [
@@ -25,6 +30,15 @@
       "accessType": "EXECUTE",
       "principalType": "ROLE",
       "principalId": "$everyone",
+      "permission": "ALLOW",
+      "property": [
+        "GetAllAccounts"
+      ]
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "Admin",
       "permission": "ALLOW",
       "property": [
         "CreateUserWithRole"
@@ -54,6 +68,24 @@
         {
           "path": "/WithRole",
           "verb": "post"
+        }
+      ]
+    },
+    "GetAllAccounts": {
+      "accepts": [],
+      "returns": [
+        {
+          "arg": "users",
+          "type": "object",
+          "root": true,
+          "description": ""
+        }
+      ],
+      "description": "",
+      "http": [
+        {
+          "path": "/",
+          "verb": "get"
         }
       ]
     }

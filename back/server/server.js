@@ -83,34 +83,70 @@ var SeedArrayInModel = function(model, array = [], conditions = [{ key: ""}]){
   })
 }
 
+var SeedRoles = function() {
+  return new Promise((res, rej) => {
+    const roles = [
+      {
+        name: 'Admin',
+        description: 'Admin of the platform'
+      },
+      {
+        name: 'Seller',
+        description: 'Seller of the platform'
+      },
+      {
+        name: 'User',
+        description: 'User of the platform'
+      }
+    ];
+    const conditions = [
+      {key: 'name'}
+    ]
+  
+    SeedArrayInModel(app.models.Role, roles, conditions).then(() => res()).catch(err => rej(err));
+  })
+}
+
 var SeedUsers = function() {
   return new Promise((res, rej) => {
     const users = [
       {
-        role: 'Amdin',
+        role: 'Admin',
         username: 'Admin',
         email: 'admin@vhad.com',
         password: 'p4ssw0rd'
       },
       {
         role: 'Seller',
-        username: 'Admin',
+        username: 'Seller',
         email: 'seller@vhad.com',
         password: 'p4ssw0rd'
       },
       {
         role: 'User',
-        username: 'Admin',
+        username: 'User',
         email: 'user@vhad.com',
         password: 'p4ssw0rd'
       }
     ];
 
+    let cont = 0, limit = users.length;
+    users.forEach(user => {
+      app.models.Account.CreateUserWithRole(user, (err, newUser) => {
+        if(err) rej(err);
+      })
+    })
   });
 }
 
 var AutoFillData = function() {
-  return new Promise((res, rej) => {
+  return new Promise(async (res, rej) => {
+    try {
+      await SeedRoles();
+      await SeedUsers();
+    } catch (err) {
+      rej(err);
+    }
     res();
   });
 }

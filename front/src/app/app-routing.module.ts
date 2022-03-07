@@ -6,7 +6,22 @@ const routes: Routes = [
   {
     path: 'login',
     loadChildren: () => import('./pages/login/login.module').then( m => m.LoginModule)
-  }
+  },
+  {
+    path: 'admin',
+    children: [
+    ]
+  },
+  {
+    path: 'seller',
+    children: [
+    ]
+  },
+  {
+    path: 'user',
+    children: [
+    ]
+  },
 ];
 
 @NgModule({
