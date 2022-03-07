@@ -80,6 +80,31 @@
           "verb": "get"
         }
       ]
+    },
+    "Login": {
+      "accepts": [
+        {
+          "arg": "credentials",
+          "type": "object",
+          "root": true,
+          "description": "{email, password}"
+        }
+      ],
+      "returns": [
+        {
+          "arg": "token",
+          "type": "object",
+          "root": true,
+          "description": ""
+        }
+      ],
+      "description": "",
+      "http": [
+        {
+          "path": "/Login",
+          "verb": "post"
+        }
+      ]
     }
   }
 }

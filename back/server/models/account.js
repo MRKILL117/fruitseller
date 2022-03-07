@@ -55,4 +55,12 @@ module.exports = function(Account) {
         })
     }
 
+    Account.Login = function(credentials, callback) {
+        Account.login(credentials, (err, token) => {
+            if(err) return callback(err);
+
+            return callback(null, token);
+        })
+    }
+
 };
