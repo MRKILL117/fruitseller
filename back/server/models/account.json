@@ -29,19 +29,11 @@
     {
       "accessType": "EXECUTE",
       "principalType": "ROLE",
-      "principalId": "$everyone",
-      "permission": "ALLOW",
-      "property": [
-        "GetAllAccounts"
-      ]
-    },
-    {
-      "accessType": "EXECUTE",
-      "principalType": "ROLE",
       "principalId": "Admin",
       "permission": "ALLOW",
       "property": [
-        "CreateUserWithRole"
+        "CreateUserWithRole",
+        "GetAllAccounts"
       ]
     }
   ],
