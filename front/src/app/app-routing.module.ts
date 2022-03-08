@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AuthGuardService } from './services/auth-guard.service';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -9,6 +10,8 @@ const routes: Routes = [
   },
   {
     path: 'admin',
+    canActivate: [AuthGuardService],
+    data: { roleAuthorized: 'Admin' },
     children: [
       {
         path: 'dashboard',
@@ -18,6 +21,8 @@ const routes: Routes = [
   },
   {
     path: 'seller',
+    canActivate: [AuthGuardService],
+    data: { roleAuthorized: 'Seller' },
     children: [
       {
         path: 'dashboard',
@@ -27,6 +32,8 @@ const routes: Routes = [
   },
   {
     path: 'user',
+    canActivate: [AuthGuardService],
+    data: { roleAuthorized: 'User' },
     children: [
       {
         path: 'dashboard',
