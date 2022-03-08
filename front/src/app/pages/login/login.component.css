@@ -1,0 +1,14 @@
+.component-container {
+    height: 100%;
+    width: 100%;
+    /* background-image: url("https://www.teahub.io/photos/full/23-232166_background-for-windows-login.jpg"); */
+    display: block;
+    margin: 0 !important;
+    padding: 0;
+}
+
+.vertical-center {
+    display: flex;
+    height: 95vh;
+    align-items: center;
+}
