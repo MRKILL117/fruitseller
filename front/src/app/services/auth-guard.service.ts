@@ -14,12 +14,14 @@ export class AuthGuardService implements CanActivate {
 
   canActivate(snapshot: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     const token = localStorage.getItem('token');
+    const userRole = this.role.GetUserRole();
     if(!token) {
       this.router.navigate([`/login`]);
       return false;
     }
-    if(this.role.GetUserRole() != snapshot.data['roleAuthorized']) {
-      this.router.navigate([`/login`]);
+    else if(userRole != snapshot.data['roleAuthorized']) {
+      if(userRole == null) this.router.navigate([`/login`]);
+      else this.router.navigate([`/${userRole.toLowerCase()}/dashboard`]);
       return false;
     }
     return true;
