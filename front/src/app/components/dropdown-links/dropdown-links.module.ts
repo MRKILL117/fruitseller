@@ -2,26 +2,25 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { DashboardComponent } from './dashboard.component';
-import { HeaderModule } from 'src/app/components/header/header.module';
+import { DropdownLinksComponent } from './dropdown-links.component';
 
 
 const routes: Routes = [
   {
     path: '',
-    component: DashboardComponent
+    component: DropdownLinksComponent
   }
 ];
 
 
 @NgModule({
-  declarations: [DashboardComponent],
+  declarations: [DropdownLinksComponent],
   imports: [
     FormsModule,
     CommonModule,
-    HeaderModule,
     ReactiveFormsModule,
-    RouterModule.forChild(routes)
-  ]
+    // RouterModule.forChild(routes)
+  ],
+  exports: [DropdownLinksComponent]
 })
-export class DashboardModule { }
+export class DropdownLinksModule { }

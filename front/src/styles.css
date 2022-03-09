@@ -3,11 +3,45 @@ body {
     width: 100%;
     height: 100vh;
     overflow-x: hidden;
+    font-family: Arial !important;
+}
+
+label {
+    font-size: 1rem;
+    color: black;
+    font-weight: bolder;
+}
+
+.row {
+    margin: 0 !important;
 }
 
 .error-messages {
     font-size: .8rem;
     color: var(--danger);
+}
+
+.clickeable:hover {
+    cursor: pointer;
+}
+
+/* Card override */
+.card {
+    border-radius: 12px !important;
+    padding: 25px 20px !important;
+    box-shadow: 2px 1px 3px 1px #ccc;
+}
+
+.card-header {
+    background: none !important;
+    background-color: none !important;
+    border-bottom: none !important;
+}
+
+.card-footer {
+    background: none !important;
+    background-color: none !important;
+    border-top: none !important;
 }
 
 /* ngx-toastr theme */
