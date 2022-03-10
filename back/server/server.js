@@ -111,18 +111,21 @@ var SeedUsers = function() {
   return new Promise((res, rej) => {
     const users = [
       {
+        code: '0001',
         role: 'Admin',
         username: 'Admin',
         email: 'admin@vhad.com',
         password: 'p4ssw0rd'
       },
       {
+        code: '1001',
         role: 'Seller',
         username: 'Seller',
         email: 'seller@vhad.com',
         password: 'p4ssw0rd'
       },
       {
+        code: '2001',
         role: 'User',
         username: 'User',
         email: 'user@vhad.com',

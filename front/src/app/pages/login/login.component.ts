@@ -21,7 +21,7 @@ export class LoginComponent implements OnInit {
     private router: Router
   ) {
     this.loginForm = new FormGroup({
-      email: new FormControl('', [Validators.required, Validators.email]),
+      code: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]{4}$/)]),
       password: new FormControl('', [Validators.required])
     });
   }
@@ -47,8 +47,6 @@ export class LoginComponent implements OnInit {
     if(userLogged) {
       const userToken = userLogged.token;
       delete userLogged.token;
-      console.log(userToken);
-      console.log(userLogged);
       localStorage.setItem('token', userToken.id);
       localStorage.setItem('user', JSON.stringify(userLogged));
     }

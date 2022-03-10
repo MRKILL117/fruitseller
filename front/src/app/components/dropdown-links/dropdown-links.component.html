@@ -5,9 +5,15 @@
 
     <div class="dropdown-menu" aria-labelledby="dropdownHeaderMenuButton">
         <div class="menu-list">
-            <div class="menu-item" *ngFor="let menuItem of linkItems">
-                <i class="zmdi {{menuItem.icon}}"></i>
-                <span class="pl-2">{{menuItem.title}}</span>
+            <ng-container *ngFor="let menuItem of linkItems">
+                <div class="menu-item" (click)="GoToRoute(menuItem.link)">
+                    <i class="zmdi {{menuItem.icon}}"></i>
+                    <span class="pl-2">{{menuItem.title}}</span>
+                </div>
+            </ng-container>
+            <div class="menu-item" (click)="LogOut()">
+                <i class="zmdi zmdi-lock"></i>
+                <span class="pl-2">Cerrar sesión</span>
             </div>
         </div>
     </div>

@@ -5,7 +5,12 @@
   "options": {
     "validateUpsert": true
   },
-  "properties": {},
+  "properties": {
+    "code": {
+      "type": "string",
+      "required": true
+    }
+  },
   "validations": [],
   "relations": {
     "accessTokens": {
@@ -32,7 +37,16 @@
       "principalId": "$everyone",
       "permission": "ALLOW",
       "property": [
-        "Login"
+        "LogIn"
+      ]
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$authenticated",
+      "permission": "ALLOW",
+      "property": [
+        "LogOut"
       ]
     },
     {
@@ -90,7 +104,7 @@
         }
       ]
     },
-    "Login": {
+    "LogIn": {
       "accepts": [
         {
           "arg": "credentials",
@@ -111,6 +125,31 @@
       "http": [
         {
           "path": "/Login",
+          "verb": "post"
+        }
+      ]
+    },
+    "LogOut": {
+      "accepts": [
+        {
+          "arg": "token",
+          "type": "string",
+          "root": true,
+          "description": ""
+        }
+      ],
+      "returns": [
+        {
+          "arg": "loggedOut",
+          "type": "object",
+          "root": true,
+          "description": ""
+        }
+      ],
+      "description": "",
+      "http": [
+        {
+          "path": "/LogOut",
           "verb": "post"
         }
       ]

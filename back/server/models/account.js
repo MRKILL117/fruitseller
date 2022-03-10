@@ -55,21 +55,31 @@ module.exports = function(Account) {
         })
     }
 
-    Account.Login = function(credentials, callback) {
-        Account.findOne({where: {email: credentials.email}, include: {'role': 'role'}}, (err, user) => {
+    Account.LogIn = function(credentials, callback) {
+        Account.findOne({where: {code: credentials.code}, include: {'role': 'role'}}, (err, user) => {
             if(err) return callback(err);
             
             if(!user) return callback('Usuario no registrado');
+            credentials.email = user.email;
+            credentials.ttl = -1;
             Account.login(credentials, (err, token) => {
                 if(err) return callback(err);
     
                 user = Object.assign({}, user.toJSON());
                 user.role = user.role.role;
                 user.token = token;
-                console.log(user);
                 return callback(null, user);
             });
         });
+    }
+
+    Account.LogOut = function(token, callback) {
+        console.log("logging out", token);
+        Account.logout(token, (err, loggedOut) => {
+            if(err) return callback(err);
+
+            return callback(null, loggedOut);
+        })
     }
 
 };
