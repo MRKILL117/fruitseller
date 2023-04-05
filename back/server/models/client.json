@@ -1,0 +1,39 @@
+{
+  "name": "Client",
+  "base": "Model",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "street": {
+      "type": "string"
+    },
+    "state": {
+      "type": "string"
+    },
+    "country": {
+      "type": "string",
+      "required": true,
+      "default": "Mexico"
+    },
+    "postalCode": {
+      "type": "string"
+    },
+    "utilityPercentage": {
+      "type": "number",
+      "required": true,
+      "default": 0
+    },
+    "paymentDays": {
+      "type": "number"
+    }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": {}
+}
