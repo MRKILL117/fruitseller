@@ -11,7 +11,7 @@ import { HeaderModule } from './components/header/header.module';
 
 @NgModule({
   declarations: [
-    AppComponent,
+    AppComponent
   ],
   imports: [
     HeaderModule,

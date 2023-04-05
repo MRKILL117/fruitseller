@@ -16,29 +16,11 @@ const routes: Routes = [
       {
         path: 'dashboard',
         loadChildren: () => import('./pages/dashboard/dashboard.module').then( m => m.DashboardModule)
-      }
-    ]
-  },
-  {
-    path: 'seller',
-    canActivate: [AuthGuardService],
-    data: { roleAuthorized: 'Seller' },
-    children: [
+      },
       {
-        path: 'dashboard',
-        loadChildren: () => import('./pages/dashboard/dashboard.module').then( m => m.DashboardModule)
-      }
-    ]
-  },
-  {
-    path: 'user',
-    canActivate: [AuthGuardService],
-    data: { roleAuthorized: 'User' },
-    children: [
-      {
-        path: 'dashboard',
-        loadChildren: () => import('./pages/dashboard/dashboard.module').then( m => m.DashboardModule)
-      }
+        path: 'clients',
+        loadChildren: () => import('./pages/clients/clients.module').then( m => m.ClientsModule)
+      },
     ]
   },
 ];
