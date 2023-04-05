@@ -3,7 +3,7 @@
     "host": "localhost",
     "port": 3306,
     "url": "",
-    "database": "vhadDB",
+    "database": "fruitseller",
     "password": "",
     "name": "mysql",
     "user": "root",

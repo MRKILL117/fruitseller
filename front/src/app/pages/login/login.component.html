@@ -10,17 +10,17 @@
                         <div class="card-body">
                             <form [formGroup]="loginForm">
                                 <div class="form-group">
-                                    <label for="code">Código</label>
+                                    <label for="email">Email</label>
                                     <div class="input-container">
-                                        <i class="input-icon zmdi zmdi-lock"></i>
-                                        <input class="form-control" type="text" formControlName="code" (keyup.enter)="Login()">
+                                        <i class="input-icon zmdi zmdi-email"></i>
+                                        <input class="form-control" type="text" formControlName="email" (keyup.enter)="Login()">
                                     </div>
-                                    <div class="error-messages" *ngIf="form.GetFormControlByName(loginForm, 'code')?.touched && form.GetFormControlByName(loginForm, 'code')?.errors">
-                                        <span class="d-block" *ngIf="form.GetFormControlByName(loginForm, 'code')?.errors.pattern">
-                                            Código no valido
+                                    <div class="error-messages" *ngIf="form.GetFormControlByName(loginForm, 'email')?.touched && form.GetFormControlByName(loginForm, 'email')?.errors">
+                                        <span class="d-block" *ngIf="form.GetFormControlByName(loginForm, 'email')?.errors.pattern">
+                                            Email no valido
                                         </span>
-                                        <span class="d-block" *ngIf="form.GetFormControlByName(loginForm, 'code')?.errors.required">
-                                            Favor de ingresar su código
+                                        <span class="d-block" *ngIf="form.GetFormControlByName(loginForm, 'email')?.errors.required">
+                                            Favor de ingresar su email
                                         </span>
                                     </div>
                                 </div>
@@ -28,7 +28,7 @@
                                 <div class="form-group">
                                     <label for="password">Contraseña</label>
                                     <div class="input-container">
-                                        <i class="input-icon zmdi zmdi-key"></i>
+                                        <i class="input-icon zmdi zmdi-lock"></i>
                                         <input class="form-control" type="password" formControlName="password" (keyup.enter)="Login()">
                                     </div>
                                     <div class="error-messages" *ngIf="form.GetFormControlByName(loginForm, 'password')?.touched && form.GetFormControlByName(loginForm, 'password')?.errors">

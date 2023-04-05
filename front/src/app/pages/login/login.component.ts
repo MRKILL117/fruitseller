@@ -21,7 +21,7 @@ export class LoginComponent implements OnInit {
     private router: Router
   ) {
     this.loginForm = new FormGroup({
-      code: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]{4}$/)]),
+      email: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', [Validators.required])
     });
   }
@@ -31,6 +31,7 @@ export class LoginComponent implements OnInit {
 
   Login() {
     if(!this.loginForm.valid) {
+      this.loginForm.markAllAsTouched();
       this.toast.ShowDefaultWarning('Favor de llenar todos los campos', 'Formulario incompleto');
       return;
     }
