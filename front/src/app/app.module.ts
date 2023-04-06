@@ -6,6 +6,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ModalModule } from 'ngx-bootstrap/modal';
 import { HeaderModule } from './components/header/header.module';
 
 
@@ -18,6 +19,7 @@ import { HeaderModule } from './components/header/header.module';
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
+    ModalModule.forRoot(),
     ToastrModule.forRoot(),
     BrowserAnimationsModule,
   ],

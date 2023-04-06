@@ -18,11 +18,32 @@
     "price": {
       "type": "number",
       "required": true,
-      "default": 0
+      "default": 0,
+      "mysql": {
+        "dataType": "DECIMAL",
+        "dataPrecision": 20,
+        "dataScale": 2
+      }
     }
   },
   "validations": [],
-  "relations": {},
+  "relations": {
+    "admin": {
+      "type": "belongsTo",
+      "model": "Account",
+      "foreignKey": "adminId"
+    },
+    "salesMeasurementType": {
+      "type": "belongsTo",
+      "model": "MeasurementType",
+      "foreignKey": "salesMeasurementTypeId"
+    },
+    "inventoryMeasurementType": {
+      "type": "belongsTo",
+      "model": "MeasurementType",
+      "foreignKey": "inventoryMeasurementTypeId"
+    }
+  },
   "acls": [],
   "methods": {}
 }

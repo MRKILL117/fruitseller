@@ -86,7 +86,9 @@
       "validateUpsert": true,
       "remoting": {
         "sharedMethods": {
-          "*": false
+          "*": false,
+          "CreateOne": true,
+          "GetAll": true
         }
       }
     }

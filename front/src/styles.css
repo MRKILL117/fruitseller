@@ -37,6 +37,21 @@ label {
     text-transform: capitalize;
 }
 
+/* Input overrides */
+.input-container {
+    position: relative;
+}
+
+.input-container input {
+    padding-left: 30px;
+}
+
+.input-icon {
+    position: absolute;
+    left: 10px;
+    top: 11px;
+}
+
 /* Card override */
 .card {
     border-radius: 12px !important;
@@ -54,6 +69,32 @@ label {
     background: none !important;
     background-color: none !important;
     border-top: none !important;
+}
+
+/* Modal overrides */
+
+.modal {
+    display: flex !important;
+    justify-content: center;
+    width: 100vw !important;
+    height: 100vh !important;
+}
+
+.modal-dialog {
+    margin: 0 !important;
+    display: flex !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    align-items: center;
+    justify-content: center;
+}
+
+@media (min-width: 768px) {
+    .modal-content {
+        width: 50vw !important;
+        display: flex;
+        align-self: center;
+    }
 }
 
 /* ngx-toastr theme */

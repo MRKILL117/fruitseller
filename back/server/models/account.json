@@ -17,6 +17,21 @@
       "type": "hasOne",
       "model": "RoleMapping",
       "foreignKey": "principalId"
+    },
+    "clients": {
+      "type": "hasMany",
+      "model": "Client",
+      "foreignKey": "adminId"
+    },
+    "buyers": {
+      "type": "hasMany",
+      "model": "Buyer",
+      "foreignKey": "adminId"
+    },
+    "products": {
+      "type": "hasMany",
+      "model": "Product",
+      "foreignKey": "adminId"
     }
   },
   "acls": [
