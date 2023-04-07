@@ -13,7 +13,7 @@ export class RoleService {
 
   public GetUserRole(): string | null {
     let userStored = localStorage.getItem('user');
-    if(userStored != null) {
+    if(!!userStored) {
       const user: any = JSON.parse(userStored);
       if(user && user.role) return user.role.name;
     }
