@@ -13,6 +13,7 @@ const routes: Routes = [
     canActivate: [AuthGuardService],
     data: { roleAuthorized: 'Admin' },
     children: [
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       {
         path: 'dashboard',
         loadChildren: () => import('./pages/dashboard/dashboard.module').then( m => m.DashboardModule)
@@ -27,7 +28,7 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
-    RouterModule.forRoot(routes)
+    RouterModule.forRoot(routes, {useHash: true})
   ],
   exports: [RouterModule]
 })
