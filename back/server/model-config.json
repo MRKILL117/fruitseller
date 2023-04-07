@@ -88,6 +88,7 @@
         "sharedMethods": {
           "*": false,
           "CreateOne": true,
+          "CreateArray": true,
           "GetAll": true,
           "Update": true,
           "prototype.Delete": true

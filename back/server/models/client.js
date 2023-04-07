@@ -9,7 +9,7 @@ module.exports = function(Client) {
         }, (err, clientFound) => {
             if(err) return callback(err);
     
-            if(!!clientFound) return callback('rfc is already registered!!');
+            if(!!clientFound) return callback('El RFC ya está registrado');
 
             client.adminId = userId;
             Client.create(client, (err, newClient) => {
@@ -21,7 +21,22 @@ module.exports = function(Client) {
     }
 
     Client.CreateArray = function(ctx, clients, callback) {
+        let data = {
+            clientsFailed: [],
+            clientsSuccess: []
+        }
+        let cont = 0, limit = clients.length;
+        if(!limit) return callback(null, data);
+        clients.forEach(client => {
+            Client.CreateOne(ctx, client, (err, newClient) => {
+                if(err) {
+                    data.clientsFailed.push({client, reason: typeof err === 'string' ? err : null});
+                }
+                else data.clientsSuccess.push(newClient);
 
+                if(++cont == limit) return callback(null, data);
+            });
+        });
     }
 
     Client.GetAll = function(ctx, callback) {

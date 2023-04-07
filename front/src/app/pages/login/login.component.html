@@ -12,7 +12,7 @@
                                 <div class="form-group">
                                     <label for="email">Email</label>
                                     <div class="input-container">
-                                        <i class="input-icon zmdi zmdi-email"></i>
+                                        <i class="input-icon zmdi zmdi-email zmdi-hc-lg"></i>
                                         <input class="form-control" type="text" formControlName="email" (keyup.enter)="Login()">
                                     </div>
                                     <div class="error-messages" *ngIf="form.GetFormControlByName(loginForm, 'email')?.touched && form.GetFormControlByName(loginForm, 'email')?.errors">
@@ -28,7 +28,7 @@
                                 <div class="form-group">
                                     <label for="password">Contraseña</label>
                                     <div class="input-container">
-                                        <i class="input-icon zmdi zmdi-lock"></i>
+                                        <i class="input-icon zmdi zmdi-lock zmdi-hc-lg"></i>
                                         <input class="form-control" type="password" formControlName="password" (keyup.enter)="Login()">
                                     </div>
                                     <div class="error-messages" *ngIf="form.GetFormControlByName(loginForm, 'password')?.touched && form.GetFormControlByName(loginForm, 'password')?.errors">
