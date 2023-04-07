@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { CsvService } from 'src/app/services/csv.service';
 import { FormService } from 'src/app/services/form.service';
 import { HttpService } from 'src/app/services/http.service';
 import { ModalService } from 'src/app/services/modal.service';
@@ -15,6 +16,9 @@ export class ClientsComponent implements OnInit {
   clients: Array<any> = [];
   selectedClient: any = null;
   isEditing: boolean = false;
+  clientsCsv: any;
+  clientsToUpload: Array<any> = [];
+  clientsFailed: Array<any> = [];
   clientForm: FormGroup = new FormGroup({
     id: new FormControl(null, []),
     name: new FormControl('', [Validators.required]),
@@ -26,12 +30,52 @@ export class ClientsComponent implements OnInit {
     utilityPercentage: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
     paymentDays: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
   });
+  dataConversions: Array<any> = [
+    {
+      oldKey: 'Nombre',
+      newKey: 'name'
+    },
+    {
+      oldKey: 'RFC',
+      newKey: 'rfc'
+    },
+    {
+      oldKey: 'Dirección',
+      newKey: 'address'
+    },
+    {
+      oldKey: 'Código postal',
+      newKey: 'postalCode'
+    },
+    {
+      oldKey: 'Estado',
+      newKey: 'state'
+    },
+    {
+      oldKey: 'País',
+      newKey: 'country'
+    },
+    {
+      oldKey: 'Porcentaje de utilidad',
+      newKey: 'utilityPercentage'
+    },
+    {
+      oldKey: 'Días de pago',
+      newKey: 'paymentDays'
+    },
+  ];
+
+  public get csvAcceptLabel() {
+    if(!!this.clientsFailed.length) return 'Reintentar';
+    return `Subir`;
+  }
 
   constructor(
     public form: FormService,
     public modal: ModalService,
     private toast: ToastService,
-    private http: HttpService
+    private http: HttpService,
+    private csv: CsvService
   ) { }
 
   ngOnInit(): void {
@@ -68,12 +112,21 @@ export class ClientsComponent implements OnInit {
     });
   }
 
-  OnFileSelected($event: any) {
-    
-  }
-
   RegisterClients() {
-
+    this.http.Post(`Clients/Array`, {clients: this.clientsToUpload}).subscribe((data: any) => {
+      this.clientsFailed = data.clientsFailed;
+      if(!!data.clientsSuccess.length) this.toast.ShowDefaultSuccess(`${data.clientsSuccess.length} clientes creados correctamente`);
+      if(data.clientsFailed.length) {
+        this.toast.ShowDefaultWarning(`${data.clientsFailed.length} clientes no se pudieron crear`);
+      }
+      else {
+        this.modal.CloseModal();
+        this.clientsToUpload = [];
+      }
+    }, err => {
+      console.error("Error creating clients", err);
+      this.toast.ShowDefaultDanger(`Error al crear clientes`);
+    });
   }
 
   UpdateClient() {
@@ -107,6 +160,33 @@ export class ClientsComponent implements OnInit {
     }, err => {
       console.error("Error deleting client", err);
       this.toast.ShowDefaultDanger(`Error al eliminar cliente`);
+    });
+  }
+
+  DownloadTemplate() {
+    this.http.DownloadFileWithoutApi("assets/templates/plantilla_clientes.csv", 'plantilla_clientes.csv');
+  }
+
+  OnFileSelected(event: any) {
+    const file = event.target.files[0];
+    this.clientsCsv = file;
+    if(!file) return;
+    const FILE_READER = new FileReader();
+    FILE_READER.onload = (reader) => {
+      this.csv.ReadCSV(FILE_READER.result).then(res => {
+        this.clientsToUpload = this.FormatData(res.data);
+      });
+    };
+    FILE_READER.readAsText(file, 'ISO-8859-3');
+  }
+
+  FormatData(students: Array<any>) {
+    return students.map(student => {
+      let dataFormatted: any = {};
+      this.dataConversions.forEach(conversion => {
+        dataFormatted[conversion.newKey] = student[conversion.oldKey];
+      });
+      return dataFormatted;
     });
   }
 

@@ -44,5 +44,18 @@ export class HttpService {
   public Delete(endpoint: string, body: any, useToken: boolean = true) {
     return this.http.delete(this.GetEndpointFullUrl(endpoint), {headers: this.headers});
   }
+
+  public DownloadFileWithoutApi(url: string, name: string) {
+    this.http.get(url, {
+      responseType: 'blob'
+    }).subscribe(blob => {
+      const a = document.createElement('a');
+      const objectUrl = URL.createObjectURL(blob);
+      a.setAttribute('href', objectUrl);
+      a.setAttribute('download', name);
+      a.click();
+      a.remove();
+    });
+  }
   
 }

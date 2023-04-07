@@ -36,6 +36,10 @@ label {
 .clickeable:hover {
     cursor: pointer;
 }
+.clickeable-hover:hover {
+    cursor: pointer;
+    background-color: #ccc;
+}
 
 .page-title {
     font-size: 2.5rem;
@@ -106,9 +110,14 @@ label {
 
 /* Table overrides */
 
+
 thead tr {
     background-color: #51A351;
     color: white;
+}
+
+.table-danger > thead > tr {
+    background-color: var(--danger);
 }
 
 th {
@@ -126,6 +135,11 @@ td {
     border-radius: 12px 12px 0 0 !important;
     overflow: hidden;
     max-height: 100%;
+}
+
+.modal-table {
+    max-height: 60vh;
+    overflow-y: auto;
 }
 
 /* Modal overrides */
