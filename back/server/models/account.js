@@ -56,11 +56,10 @@ module.exports = function(Account) {
     }
 
     Account.LogIn = function(credentials, callback) {
-        Account.findOne({where: {code: credentials.code}, include: {'role': 'role'}}, (err, user) => {
+        Account.findOne({where: {email: credentials.email}, include: {'role': 'role'}}, (err, user) => {
             if(err) return callback(err);
             
             if(!user) return callback('Usuario no registrado');
-            credentials.email = user.email;
             credentials.ttl = -1;
             Account.login(credentials, (err, token) => {
                 if(err) return callback(err);
@@ -79,7 +78,7 @@ module.exports = function(Account) {
             if(err) return callback(err);
 
             return callback(null, loggedOut);
-        })
+        });
     }
 
 };

@@ -72,15 +72,15 @@ var SeedArrayInModel = function(model, array = [], conditions = [{ key: ""}]){
         where: {}
       }
       conditions.forEach((condition) => {
-        filter.where[condition.key] = element[condition.key];
+        if(!!condition.key) filter.where[condition.key] = element[condition.key];
       })
       model.findOrCreate(filter, element, (err) => {
         if(err) reject(err);
         cont++;
         if(cont == limit) resolve('ok');
-      })
-    })
-  })
+      });
+    });
+  });
 }
 
 var SeedRoles = function() {
@@ -90,55 +90,32 @@ var SeedRoles = function() {
         name: 'Admin',
         description: 'Admin of the platform'
       },
-      {
-        name: 'Seller',
-        description: 'Seller of the platform'
-      },
-      {
-        name: 'User',
-        description: 'User of the platform'
-      }
     ];
     const conditions = [
       {key: 'name'}
     ]
   
     SeedArrayInModel(app.models.Role, roles, conditions).then(() => res()).catch(err => rej(err));
-  })
+  });
 }
 
 var SeedUsers = function() {
   return new Promise((res, rej) => {
     const users = [
       {
-        code: '0001',
         role: 'Admin',
         username: 'Admin',
-        email: 'admin@vhad.com',
-        password: 'p4ssw0rd'
+        email: 'admin@test.com',
+        password: '123'
       },
-      {
-        code: '1001',
-        role: 'Seller',
-        username: 'Seller',
-        email: 'seller@vhad.com',
-        password: 'p4ssw0rd'
-      },
-      {
-        code: '2001',
-        role: 'User',
-        username: 'User',
-        email: 'user@vhad.com',
-        password: 'p4ssw0rd'
-      }
     ];
 
     let cont = 0, limit = users.length;
     users.forEach(user => {
       app.models.Account.CreateUserWithRole(user, (err, newUser) => {
         if(err) rej(err);
-      })
-    })
+      });
+    });
   });
 }
 

@@ -1,0 +1,49 @@
+{
+  "name": "Product",
+  "base": "Model",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "tax": {
+      "type": "number",
+      "required": true,
+      "default": 0
+    },
+    "price": {
+      "type": "number",
+      "required": true,
+      "default": 0,
+      "mysql": {
+        "dataType": "DECIMAL",
+        "dataPrecision": 20,
+        "dataScale": 2
+      }
+    }
+  },
+  "validations": [],
+  "relations": {
+    "admin": {
+      "type": "belongsTo",
+      "model": "Account",
+      "foreignKey": "adminId"
+    },
+    "salesMeasurementType": {
+      "type": "belongsTo",
+      "model": "MeasurementType",
+      "foreignKey": "salesMeasurementTypeId"
+    },
+    "inventoryMeasurementType": {
+      "type": "belongsTo",
+      "model": "MeasurementType",
+      "foreignKey": "inventoryMeasurementTypeId"
+    }
+  },
+  "acls": [],
+  "methods": {}
+}

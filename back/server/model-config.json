@@ -77,5 +77,74 @@
         }
       }
     }
+  },
+  "Client": {
+    "dataSource": "mysql",
+    "public": true,
+    "options": {
+      "allowEternalTokens": true,
+      "validateUpsert": true,
+      "remoting": {
+        "sharedMethods": {
+          "*": false,
+          "CreateOne": true,
+          "GetAll": true,
+          "Update": true,
+          "prototype.Delete": true
+        }
+      }
+    }
+  },
+  "Product": {
+    "dataSource": "mysql",
+    "public": true,
+    "options": {
+      "allowEternalTokens": true,
+      "validateUpsert": true,
+      "remoting": {
+        "sharedMethods": {
+          "*": false
+        }
+      }
+    }
+  },
+  "Buyer": {
+    "dataSource": "mysql",
+    "public": true,
+    "options": {
+      "allowEternalTokens": true,
+      "validateUpsert": true,
+      "remoting": {
+        "sharedMethods": {
+          "*": false
+        }
+      }
+    }
+  },
+  "Order": {
+    "dataSource": "mysql",
+    "public": true,
+    "options": {
+      "allowEternalTokens": true,
+      "validateUpsert": true,
+      "remoting": {
+        "sharedMethods": {
+          "*": false
+        }
+      }
+    }
+  },
+  "MeasurementType": {
+    "dataSource": "mysql",
+    "public": true,
+    "options": {
+      "allowEternalTokens": true,
+      "validateUpsert": true,
+      "remoting": {
+        "sharedMethods": {
+          "*": false
+        }
+      }
+    }
   }
 }

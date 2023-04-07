@@ -6,6 +6,12 @@ body {
     font-family: Arial !important;
 }
 
+.content {
+    padding: 1rem 1.2rem 0 1.2rem;
+    height: calc(100vh - 9vh);
+    overflow: auto;
+}
+
 label {
     font-size: 1rem;
     color: black;
@@ -17,12 +23,66 @@ label {
 }
 
 .error-messages {
+    margin-top: .2rem;
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     font-size: .8rem;
     color: var(--danger);
 }
 
 .clickeable:hover {
     cursor: pointer;
+}
+
+.page-title {
+    font-size: 2.5rem;
+    font-weight: 500;
+    text-transform: capitalize;
+}
+
+.no-items-message {
+    width: 100%;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: black;
+    margin: 2rem 0;
+}
+
+/* Input overrides */
+.input-container {
+    position: relative;
+    height: 46px !important;
+}
+
+.input-container input {
+    padding-left: 35px;
+    height: 100%;
+    border-radius: 16px;
+    border: 2px solid #cacaca;
+    transition: all .5s;
+}
+.input-container input::placeholder {
+    color: #999999;
+    font-weight: 600;
+}
+.input-container input:focus {
+    border: 2px solid #bababa;
+    box-shadow: 0px 0px 4px 2px #cfcfcf;
+}
+
+.input-icon {
+    position: absolute;
+    display: flex;
+    height: 100%;
+    width: 40px;
+    align-items: center;
+    justify-content: center;
+    left: 0;
+    top: 0;
 }
 
 /* Card override */
@@ -42,6 +102,98 @@ label {
     background: none !important;
     background-color: none !important;
     border-top: none !important;
+}
+
+/* Table overrides */
+
+thead tr {
+    background-color: #51A351;
+    color: white;
+}
+
+th {
+    text-align: center !important;
+}
+td {
+    text-align: center;
+}
+
+.tbody {
+    overflow-y: auto;
+}
+
+.table {
+    border-radius: 12px 12px 0 0 !important;
+    overflow: hidden;
+    max-height: 100%;
+}
+
+/* Modal overrides */
+
+.modal {
+    display: flex !important;
+    justify-content: center;
+    width: 100vw !important;
+    height: 100vh !important;
+}
+
+.modal-dialog {
+    margin: 0 !important;
+    display: block;
+    width: min-content !important;
+    max-width: none !important;
+}
+
+.modal-content {
+    margin: 1.5rem 0 !important;
+    border-radius: 12px !important;
+    padding: 1rem 1.5rem;
+}
+.modal-header {
+    border: none !important;
+    display: flex;
+    justify-content: space-between !important;
+    padding: 1rem 1rem 1.5rem 1rem !important;
+}
+.close-modal-button {
+    height: min-content;
+}
+.modal-title {
+    font-size: 1.5rem;
+    color: black;
+    font-weight: 600;
+}
+.modal-body {
+    border: none !important;
+}
+.modal-footer {
+    border: none !important;
+}
+
+@media (min-width: 0px) and (max-width: 576px) {
+    .modal-content {
+        width: 96vw !important;
+    }
+}
+@media (min-width: 576px) {
+    .modal-content {
+        width: 90vw !important;
+    }
+}
+@media (min-width: 768px) {
+    .modal-content {
+        width: 75vw !important;
+    }
+}
+@media (min-width: 992px) {
+    .modal-content {
+        width: 60vw !important;
+    }
+}
+@media (min-width: 1200px) {
+    .modal-content {
+        width: 50vw !important;
+    }
 }
 
 /* ngx-toastr theme */

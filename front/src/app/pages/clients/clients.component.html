@@ -1,0 +1,250 @@
+<div class="content">
+    <div class="d-flex align-items-center justify-content-between">
+        <div class="page-title">
+            Mis clientes
+        </div>
+
+        <div class="d-flex">
+            <button class="btn btn-success mx-1" (click)="modal.OpenModal(addOrEditClientModal)">
+                <i class="zmdi zmdi-plus-circle-o zmdi-hc-lg mr-2"></i>
+                Agregar
+            </button>
+            <button class="btn btn-success mx-1" (click)="modal.OpenModal(addClientsByCsvModal)">
+                <i class="zmdi zmdi-file zmdi-hc-lg mr-2"></i>
+                CSV
+            </button>
+        </div>
+    </div>
+
+    <div class="row justify-content-center" *ngIf="!!clients?.length; else noClientsMessage">
+        <!-- Filters -->
+        <div class="col-12 mb-4">
+
+        </div>
+        <div class="col-12 col-lg-11">
+            <table class="table table-striped">
+                <thead class="table-thead">
+                    <tr>
+                        <th>Nombre</th>
+                        <th>RFC</th>
+                        <th>Direccion</th>
+                        <th>CP</th>
+                        <th>Localidad</th>
+                        <th>% utiliad</th>
+                        <th>Días de pago</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                
+                <tbody>
+                    <tr *ngFor="let client of clients">
+                        <td>{{client.name}}</td>
+                        <td>{{client.rfc}}</td>
+                        <td>{{client.address}}</td>
+                        <td>{{client.postalCode}}</td>
+                        <td>{{client.state + ", " + client.country}}</td>
+                        <td>{{client.utilityPercentage + "%"}}</td>
+                        <td>{{client.paymentDays ? client.paymentDays : 'N/A'}}</td>
+                        <td>
+                            <div class="d-flex align-items-center justify-content-center">
+                                <i class="zmdi zmdi-edit zmdi-hc-lg clickeable mx-2" (click)="EditClient(client); modal.OpenModal(addOrEditClientModal)"></i>
+                                <i class="zmdi zmdi-delete zmdi-hc-lg clickeable mx-2" (click)="selectedClient = client; modal.OpenModal(deleteClientModal)"></i>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<ng-template #noClientsMessage>
+    <div class="no-items-message">
+        No tiene clientes registrados
+    </div>
+</ng-template>
+
+<ng-template #addClientsByCsvModal>
+    <div class="modal-header">
+        <h2 class="modal-title">Agregar por CSV</h2>
+        <i class="close-modal-button zmdi zmdi-close-circle-o zmdi-hc-2x clickeable" (click)="modal.CloseModal(); clientForm.reset()"></i>
+    </div>
+    <div class="modal-body">
+
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="modal.CloseModal(); clientForm.reset()">
+            Cancelar
+        </button>
+        <button class="btn btn-danger" (click)="DeleteClient()">
+            Subir
+        </button>
+    </div>
+</ng-template>
+
+<ng-template #deleteClientModal>
+    <div class="modal-header">
+        <h2 class="modal-title">Eliminar cliente</h2>
+        <i class="close-modal-button zmdi zmdi-close-circle-o zmdi-hc-2x clickeable" (click)="modal.CloseModal(); clientForm.reset()"></i>
+    </div>
+    <div class="modal-body">
+        <div class="d-flex">
+            ¿Esta seguro que desea eliminar a "{{selectedClient?.name}}"?
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="modal.CloseModal(); clientForm.reset()">
+            No, cancelar
+        </button>
+        <button class="btn btn-danger" (click)="DeleteClient()">
+            Si, eliminar
+        </button>
+    </div>
+</ng-template>
+
+<ng-template #addOrEditClientModal>
+    <div class="modal-header">
+        <h2 class="modal-title">{{ isEditing ? 'Actualizar cliente' : 'Agregar un cliente'}}</h2>
+        <i class="close-modal-button zmdi zmdi-close-circle-o zmdi-hc-2x clickeable" (click)="modal.CloseModal(); clientForm.reset()"></i>
+    </div>
+    <div class="modal-body">
+        <div class="w-100">
+            <form [formGroup]="clientForm">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label>Nombre</label>
+                            <div class="input-container">
+                                <i class="input-icon zmdi zmdi-account-o zmdi-hc-lg"></i>
+                                <input class="form-control" type="text" placeholder="Nombre del cliente" formControlName="name" (keyup.enter)="RegisterClient()">
+                            </div>
+                            <div class="error-messages" *ngIf="form.GetFormControlByName(clientForm, 'name')?.touched && form.GetFormControlByName(clientForm, 'name')?.errors">
+                                <span class="d-block" *ngIf="form.GetFormControlByName(clientForm, 'name')?.errors.required">
+                                    Campo obligatorio
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label>RFC</label>
+                            <div class="input-container">
+                                <i class="input-icon zmdi zmdi-account-o zmdi-hc-lg"></i>
+                                <input class="form-control" type="text" placeholder="RFC del cliente" formControlName="rfc" (keyup.enter)="RegisterClient()">
+                            </div>
+                            <div class="error-messages" *ngIf="form.GetFormControlByName(clientForm, 'rfc')?.touched && form.GetFormControlByName(clientForm, 'rfc')?.errors">
+                                <span class="d-block" *ngIf="form.GetFormControlByName(clientForm, 'rfc')?.errors.required">
+                                    Campo obligatorio
+                                </span>
+                                <span class="d-block" *ngIf="form.GetFormControlByName(clientForm, 'rfc')?.errors.pattern">
+                                    Valor inválido
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6">
+                        <div class="form-group">
+                            <label>Dirección</label>
+                            <div class="input-container">
+                                <i class="input-icon zmdi zmdi-home zmdi-hc-lg"></i>
+                                <input class="form-control" type="text" placeholder="Dirección del cliente" formControlName="address" (keyup.enter)="RegisterClient()">
+                            </div>
+                            <div class="error-messages" *ngIf="form.GetFormControlByName(clientForm, 'address')?.touched && form.GetFormControlByName(clientForm, 'address')?.errors">
+                                <span class="d-block" *ngIf="form.GetFormControlByName(clientForm, 'address')?.errors.required">
+                                    Campo obligatorio
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6">
+                        <div class="form-group">
+                            <label>Código postal</label>
+                            <div class="input-container">
+                                <i class="input-icon zmdi zmdi-home zmdi-hc-lg"></i>
+                                <input class="form-control" type="text" placeholder="Código posal del cliente" formControlName="postalCode" (keyup.enter)="RegisterClient()">
+                            </div>
+                            <div class="error-messages" *ngIf="form.GetFormControlByName(clientForm, 'postalCode')?.touched && form.GetFormControlByName(clientForm, 'postalCode')?.errors">
+                                <span class="d-block" *ngIf="form.GetFormControlByName(clientForm, 'postalCode')?.errors.required">
+                                    Campo obligatorio
+                                </span>
+                                <span class="d-block" *ngIf="form.GetFormControlByName(clientForm, 'postalCode')?.errors.pattern">
+                                    Valor inválido
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6">
+                        <div class="form-group">
+                            <label>Estado</label>
+                            <div class="input-container">
+                                <i class="input-icon zmdi zmdi-globe zmdi-hc-lg"></i>
+                                <input class="form-control" type="text" placeholder="Estado del cliente" formControlName="state" (keyup.enter)="RegisterClient()">
+                            </div>
+                            <div class="error-messages" *ngIf="form.GetFormControlByName(clientForm, 'state')?.touched && form.GetFormControlByName(clientForm, 'state')?.errors">
+                                <span class="d-block" *ngIf="form.GetFormControlByName(clientForm, 'state')?.errors.required">
+                                    Campo obligatorio
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6">
+                        <div class="form-group">
+                            <label>País</label>
+                            <div class="input-container">
+                                <i class="input-icon zmdi zmdi-globe zmdi-hc-lg"></i>
+                                <input class="form-control" type="text" placeholder="País del cliente" formControlName="country" (keyup.enter)="RegisterClient()">
+                            </div>
+                            <div class="error-messages" *ngIf="form.GetFormControlByName(clientForm, 'country')?.touched && form.GetFormControlByName(clientForm, 'country')?.errors">
+                                <span class="d-block" *ngIf="form.GetFormControlByName(clientForm, 'country')?.errors.required">
+                                    Campo obligatorio
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label>Porcentaje de utilidad</label>
+                            <div class="input-container">
+                                <i class="input-icon zmdi zmdi-balance-wallet zmdi-hc-lg"></i>
+                                <input class="form-control" type="text" placeholder="Porcentaje de utilidad del cliente" formControlName="utilityPercentage" (keyup.enter)="RegisterClient()">
+                            </div>
+                            <div class="error-messages" *ngIf="form.GetFormControlByName(clientForm, 'utilityPercentage')?.touched && form.GetFormControlByName(clientForm, 'utilityPercentage')?.errors">
+                                <span class="d-block" *ngIf="form.GetFormControlByName(clientForm, 'utilityPercentage')?.errors.required">
+                                    Campo obligatorio
+                                </span>
+                                <span class="d-block" *ngIf="form.GetFormControlByName(clientForm, 'utilityPercentage')?.errors.pattern">
+                                    Valor inválido
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label>Dias de pago</label>
+                            <div class="input-container">
+                                <i class="input-icon zmdi zmdi-time-countdown zmdi-hc-lg"></i>
+                                <input class="form-control" type="text" placeholder="Dias de pago del cliente" formControlName="paymentDays" (keyup.enter)="RegisterClient()">
+                            </div>
+                            <div class="error-messages" *ngIf="form.GetFormControlByName(clientForm, 'paymentDays')?.touched && form.GetFormControlByName(clientForm, 'paymentDays')?.errors">
+                                <span class="d-block" *ngIf="form.GetFormControlByName(clientForm, 'paymentDays')?.errors.required">
+                                    Campo obligatorio
+                                </span>
+                                <span class="d-block" *ngIf="form.GetFormControlByName(clientForm, 'paymentDays')?.errors.pattern">
+                                    Valor inválido
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="modal.CloseModal(); clientForm.reset()">
+            Cancelar
+        </button>
+        <button class="btn btn-primary" (click)="RegisterClient()">
+            {{isEditing ? 'Actualizar' : 'Agregar'}}
+        </button>
+    </div>
+</ng-template>

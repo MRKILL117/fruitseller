@@ -13,39 +13,22 @@ const routes: Routes = [
     canActivate: [AuthGuardService],
     data: { roleAuthorized: 'Admin' },
     children: [
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       {
         path: 'dashboard',
         loadChildren: () => import('./pages/dashboard/dashboard.module').then( m => m.DashboardModule)
-      }
-    ]
-  },
-  {
-    path: 'seller',
-    canActivate: [AuthGuardService],
-    data: { roleAuthorized: 'Seller' },
-    children: [
+      },
       {
-        path: 'dashboard',
-        loadChildren: () => import('./pages/dashboard/dashboard.module').then( m => m.DashboardModule)
-      }
-    ]
-  },
-  {
-    path: 'user',
-    canActivate: [AuthGuardService],
-    data: { roleAuthorized: 'User' },
-    children: [
-      {
-        path: 'dashboard',
-        loadChildren: () => import('./pages/dashboard/dashboard.module').then( m => m.DashboardModule)
-      }
+        path: 'clients',
+        loadChildren: () => import('./pages/clients/clients.module').then( m => m.ClientsModule)
+      },
     ]
   },
 ];
 
 @NgModule({
   imports: [
-    RouterModule.forRoot(routes)
+    RouterModule.forRoot(routes, {useHash: true})
   ],
   exports: [RouterModule]
 })

@@ -2,24 +2,23 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { DashboardComponent } from './dashboard.component';
-import { HeaderModule } from 'src/app/components/header/header.module';
+
+import { ProductsComponent } from './products.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: DashboardComponent
+    component: ProductsComponent
   }
 ];
 
 @NgModule({
-  declarations: [DashboardComponent],
+  declarations: [ProductsComponent],
   imports: [
     FormsModule,
     CommonModule,
-    HeaderModule,
     ReactiveFormsModule,
     RouterModule.forChild(routes)
   ]
 })
-export class DashboardModule { }
+export class ProductsModule { }

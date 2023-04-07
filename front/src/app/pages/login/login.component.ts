@@ -4,6 +4,8 @@ import { ToastService } from './../../services/toast.service';
 import { FormService } from './../../services/form.service';
 import { HttpService } from './../../services/http.service';
 import { Router } from '@angular/router';
+import { RoleService } from 'src/app/services/role.service';
+import { NavigationService } from 'src/app/services/navigation.service';
 
 @Component({
   selector: 'app-login',
@@ -18,19 +20,25 @@ export class LoginComponent implements OnInit {
     private http: HttpService,
     public form: FormService,
     private toast: ToastService,
-    private router: Router
+    private router: Router,
+    private role: RoleService,
+    private nav: NavigationService
   ) {
     this.loginForm = new FormGroup({
-      code: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]{4}$/)]),
+      email: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', [Validators.required])
     });
   }
 
   ngOnInit(): void {
+    if(!!this.role.GetUserRole()) {
+      this.nav.GoToRoleRoute('');
+    }
   }
 
   Login() {
     if(!this.loginForm.valid) {
+      this.loginForm.markAllAsTouched();
       this.toast.ShowDefaultWarning('Favor de llenar todos los campos', 'Formulario incompleto');
       return;
     }
