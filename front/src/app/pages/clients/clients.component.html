@@ -1,6 +1,7 @@
 <div class="content">
     <div class="d-flex align-items-center justify-content-between">
         <div class="page-title">
+            <i class="zmdi zmdi-home zmdi-hc-lg mr-2 clickeable" (click)="GoHome()"></i>
             Mis clientes
         </div>
 
@@ -251,7 +252,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-12">
+                    <div class="col-12 col-sm-6">
                         <div class="form-group">
                             <label>Porcentaje de utilidad</label>
                             <div class="input-container">
@@ -262,13 +263,13 @@
                                 <span class="d-block" *ngIf="form.GetFormControlByName(clientForm, 'utilityPercentage')?.errors.required">
                                     Campo obligatorio
                                 </span>
-                                <span class="d-block" *ngIf="form.GetFormControlByName(clientForm, 'utilityPercentage')?.errors.pattern">
-                                    Valor inválido
+                                <span class="d-block" *ngIf="form.GetFormControlByName(clientForm, 'utilityPercentage')?.errors.onlynumbers">
+                                    Solo números
                                 </span>
                             </div>
                         </div>
                     </div>
-                    <div class="col-12">
+                    <div class="col-12 col-sm-6">
                         <div class="form-group">
                             <label>Dias de pago</label>
                             <div class="input-container">
@@ -279,8 +280,8 @@
                                 <span class="d-block" *ngIf="form.GetFormControlByName(clientForm, 'paymentDays')?.errors.required">
                                     Campo obligatorio
                                 </span>
-                                <span class="d-block" *ngIf="form.GetFormControlByName(clientForm, 'paymentDays')?.errors.pattern">
-                                    Valor inválido
+                                <span class="d-block" *ngIf="form.GetFormControlByName(clientForm, 'paymentDays')?.errors.onlynumbers">
+                                    Solo números
                                 </span>
                             </div>
                         </div>

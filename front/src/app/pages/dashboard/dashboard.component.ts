@@ -19,32 +19,32 @@ export class DashboardComponent implements OnInit {
     {
       title: 'Productos',
       route: 'products',
-      icon: 'zmdi-accounts',
+      icon: 'zmdi-archive',
     },
     {
       title: 'Ordenes de venta',
       route: 'sell-orders',
-      icon: 'zmdi-accounts',
+      icon: 'zmdi-assignment-alert',
     },
     {
       title: 'Compras del día',
       route: 'daily-shopping',
-      icon: 'zmdi-accounts',
+      icon: 'zmdi-shopping-cart',
     },
     {
       title: 'Lista de precios',
       route: 'prices-list',
-      icon: 'zmdi-accounts',
+      icon: 'zmdi-money',
     },
     {
       title: 'Inventario',
       route: 'inventory',
-      icon: 'zmdi-accounts',
+      icon: 'zmdi-assignment',
     },
     {
       title: 'Facturación',
       route: 'invoicing',
-      icon: 'zmdi-accounts',
+      icon: 'zmdi-money-box',
     },
   ]
 

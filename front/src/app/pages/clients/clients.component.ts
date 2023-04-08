@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { onlyNumbers } from 'src/app/common/custom-validators.directive';
 import { CsvService } from 'src/app/services/csv.service';
 import { FormService } from 'src/app/services/form.service';
 import { HttpService } from 'src/app/services/http.service';
 import { ModalService } from 'src/app/services/modal.service';
+import { NavigationService } from 'src/app/services/navigation.service';
 import { ToastService } from 'src/app/services/toast.service';
 
 @Component({
@@ -27,8 +29,8 @@ export class ClientsComponent implements OnInit {
     state: new FormControl('', [Validators.required]),
     country: new FormControl('', [Validators.required]),
     postalCode: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]{5}$/)]),
-    utilityPercentage: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
-    paymentDays: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
+    utilityPercentage: new FormControl('', [onlyNumbers()]),
+    paymentDays: new FormControl('', [onlyNumbers()]),
   });
   dataConversions: Array<any> = [
     {
@@ -75,11 +77,16 @@ export class ClientsComponent implements OnInit {
     public modal: ModalService,
     private toast: ToastService,
     private http: HttpService,
-    private csv: CsvService
+    private csv: CsvService,
+    private nav: NavigationService
   ) { }
 
   ngOnInit(): void {
     this.GetClients();
+  }
+
+  GoHome() {
+    this.nav.GoToRoleRoute('');
   }
 
   GetClients() {
@@ -94,6 +101,7 @@ export class ClientsComponent implements OnInit {
     if(this.clientForm.invalid) {
       this.clientForm.markAllAsTouched();
       this.toast.ShowDefaultWarning(`Favor de llenar los campos obligatorios`);
+      return;
     }
 
     if(this.isEditing) {

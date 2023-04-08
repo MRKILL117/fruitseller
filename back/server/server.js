@@ -73,11 +73,10 @@ var SeedArrayInModel = function(model, array = [], conditions = [{ key: ""}]){
       }
       conditions.forEach((condition) => {
         if(!!condition.key) filter.where[condition.key] = element[condition.key];
-      })
+      });
       model.findOrCreate(filter, element, (err) => {
         if(err) reject(err);
-        cont++;
-        if(cont == limit) resolve('ok');
+        if(++cont == limit) resolve('ok');
       });
     });
   });
@@ -93,7 +92,7 @@ var SeedRoles = function() {
     ];
     const conditions = [
       {key: 'name'}
-    ]
+    ];
   
     SeedArrayInModel(app.models.Role, roles, conditions).then(() => res()).catch(err => rej(err));
   });
@@ -114,8 +113,30 @@ var SeedUsers = function() {
     users.forEach(user => {
       app.models.Account.CreateUserWithRole(user, (err, newUser) => {
         if(err) rej(err);
+        if(++cont == limit) res();
       });
     });
+  });
+}
+
+var SeedMeasurementTypes = function() {
+  return new Promise((res, rej) => {
+    const measurementTypes = [
+      {
+        name: 'Kilogramos',
+        abrev: 'Kg',
+      },
+      {
+        name: 'Piezas',
+        abrev: 'Pz',
+      },
+    ];
+    const conditions = [
+      {key: 'name'}
+    ];
+
+    let cont = 0, limit = measurementTypes.length;
+    SeedArrayInModel(app.models.MeasurementType, measurementTypes, conditions).then(() => res()).catch(err => rej(err));
   });
 }
 
@@ -124,6 +145,7 @@ var AutoFillData = function() {
     try {
       await SeedRoles();
       await SeedUsers();
+      await SeedMeasurementTypes();
     } catch (err) {
       rej(err);
     }
