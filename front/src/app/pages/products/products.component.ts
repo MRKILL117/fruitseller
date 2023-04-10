@@ -15,19 +15,24 @@ import { ToastService } from 'src/app/services/toast.service';
 })
 export class ProductsComponent implements OnInit {
 
+  measurementTypes: Array<any> = [];
   products: Array<any> = [];
   selectedProduct: any = null;
   isEditing: boolean = false;
   productsCsv: any;
   productsToUpload: Array<any> = [];
   productsFailed: Array<any> = [];
+  loading: any = {
+    updating: false,
+    getting: true
+  }
   productForm: FormGroup = new FormGroup({
     id: new FormControl(null, []),
     name: new FormControl('', [Validators.required]),
     price: new FormControl('', [Validators.required, priceNumber]),
     tax: new FormControl('', [Validators.required, onlyNumbers]),
-    salesMeasurementTypeId: new FormControl('', [Validators.required]),
-    inventoryMeasurementTypeId: new FormControl('', [Validators.required]),
+    salesMeasurementTypeId: new FormControl(null, [Validators.required]),
+    inventoryMeasurementTypeId: new FormControl(null, [Validators.required]),
   });
   dataConversions: Array<any> = [
     {
@@ -35,32 +40,20 @@ export class ProductsComponent implements OnInit {
       newKey: 'name'
     },
     {
-      oldKey: 'RFC',
-      newKey: 'rfc'
+      oldKey: 'Precio',
+      newKey: 'price'
     },
     {
-      oldKey: 'Dirección',
-      newKey: 'address'
+      oldKey: 'Impuesto',
+      newKey: 'tax'
     },
     {
-      oldKey: 'Código postal',
-      newKey: 'postalCode'
+      oldKey: 'Unidad de medida ventas',
+      newKey: 'salesMeasurementType'
     },
     {
-      oldKey: 'Estado',
-      newKey: 'state'
-    },
-    {
-      oldKey: 'País',
-      newKey: 'country'
-    },
-    {
-      oldKey: 'Porcentaje de utilidad',
-      newKey: 'utilityPercentage'
-    },
-    {
-      oldKey: 'Días de pago',
-      newKey: 'paymentDays'
+      oldKey: 'Unidad de medida inventario',
+      newKey: 'inventoryMeasurementType'
     },
   ];
 
@@ -79,6 +72,7 @@ export class ProductsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.GetMeasurementTypes();
     this.GetProducts();
   }
 
@@ -86,11 +80,28 @@ export class ProductsComponent implements OnInit {
     this.nav.GoToRoleRoute('');
   }
 
+  OnSalesMeasurementTypeChanges(measurementType: any) {
+    if(!!measurementType && !this.productForm.get('inventoryMeasurementTypeId')?.value) {
+      this.productForm.get('inventoryMeasurementTypeId')?.setValue(measurementType.id);
+    }
+  }
+
+  GetMeasurementTypes() {
+    this.http.Get(`MeasurementTypes`).subscribe((measurementTypes: any) => {
+      this.measurementTypes = measurementTypes;
+    }, err => {
+      console.error("Error getting measurement types", err);
+    });
+  }
+
   GetProducts() {
+    this.loading.getting = true;
     this.http.Get(`Products`).subscribe((products: any) => {
       this.products = products;
+      this.loading.getting = false;
     }, err => {
       console.error("Error getting products", err);
+      this.loading.getting = false;
     });
   }
 
@@ -100,49 +111,59 @@ export class ProductsComponent implements OnInit {
       this.toast.ShowDefaultWarning(`Favor de llenar los campos obligatorios`);
     }
 
+    this.loading.updating = true;
+    
     if(this.isEditing) {
       this.UpdateProduct();
       return;
     }
-
-    this.http.Post(`Products`, {Product: this.productForm.value}).subscribe(newProduct => {
+    
+    this.http.Post(`Products`, {product: this.productForm.value}).subscribe(newProduct => {
       this.GetProducts();
-      this.toast.ShowDefaultSuccess(`Producte creado exitosamente`);
+      this.toast.ShowDefaultSuccess(`Producto creado exitosamente`);
       this.productForm.reset();
       this.modal.CloseModal();
+      this.loading.updating = false;
     }, err => {
-      this.toast.ShowDefaultDanger(`Error al crear Producte`);
+      this.toast.ShowDefaultDanger(`Error al crear producto`);
       console.error("Error creating Product", err);
+      this.loading.updating = false;
     });
   }
-
+  
   RegisterProducts() {
-    this.http.Post(`Products/Array`, {Products: this.productsToUpload}).subscribe((data: any) => {
+    this.loading.updating = true;
+    this.http.Post(`Products/Array`, {products: this.productsToUpload}).subscribe((data: any) => {
+      this.GetProducts();
       this.productsFailed = data.productsFailed;
-      if(!!data.ProductsSuccess.length) this.toast.ShowDefaultSuccess(`${data.ProductsSuccess.length} Productes creados correctamente`);
+      if(!!data.productsSuccess.length) this.toast.ShowDefaultSuccess(`${data.productsSuccess.length} productos creados correctamente`);
       if(data.productsFailed.length) {
-        this.toast.ShowDefaultWarning(`${data.productsFailed.length} Productes no se pudieron crear`);
+        this.toast.ShowDefaultWarning(`${data.productsFailed.length} productos no se pudieron crear`);
       }
       else {
         this.modal.CloseModal();
         this.productsToUpload = [];
       }
+      this.loading.updating = false;
     }, err => {
       console.error("Error creating Products", err);
-      this.toast.ShowDefaultDanger(`Error al crear Productes`);
+      this.toast.ShowDefaultDanger(`Error al crear productos`);
+      this.loading.updating = false;
     });
   }
 
   UpdateProduct() {
-    const Product = this.productForm.value;
-    this.http.Patch(`Products`, {Product}).subscribe(ProductSaved => {
+    const product = this.productForm.value;
+    this.http.Patch(`Products`, {product}).subscribe(ProductSaved => {
       this.GetProducts();
-      this.toast.ShowDefaultSuccess(`Producte actualizado con éxito`);
+      this.toast.ShowDefaultSuccess(`producto actualizado con éxito`);
       this.modal.CloseModal();
       this.isEditing = false;
+      this.loading.updating = false;
     }, err => {
       console.error("Error patching Product", err);
-      this.toast.ShowDefaultDanger(`Error al actualizar Producte`);
+      this.toast.ShowDefaultDanger(`Error al actualizar producto`);
+      this.loading.updating = false;
     });
   }
 
@@ -157,18 +178,21 @@ export class ProductsComponent implements OnInit {
   }
 
   DeleteProduct() {
+    this.loading.updating = true;
     this.http.Delete(`Products/${this.selectedProduct.id}`, {}).subscribe(deletedProduct => {
       this.GetProducts();
-      this.toast.ShowDefaultSuccess(`Producte eliminado correctamente`);
+      this.toast.ShowDefaultSuccess(`producto eliminado correctamente`);
       this.modal.CloseModal();
+      this.loading.updating = false;
     }, err => {
       console.error("Error deleting Product", err);
-      this.toast.ShowDefaultDanger(`Error al eliminar Producte`);
+      this.toast.ShowDefaultDanger(`Error al eliminar producto`);
+      this.loading.updating = false;
     });
   }
 
   DownloadTemplate() {
-    this.http.DownloadFileWithoutApi("assets/templates/plantilla_Productes.csv", 'plantilla_Productes.csv');
+    this.http.DownloadFileWithoutApi("assets/templates/plantilla_productos.csv", 'plantilla_productos.csv');
   }
 
   OnFileSelected(event: any) {

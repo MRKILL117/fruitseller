@@ -23,6 +23,6 @@ export function priceNumber(): ValidatorFn {
     const value = control.value;
     if(!value) return null;
     if(/^[0-9]{1,}(\.[0-9]{1,2})?$/.test(value)) return null;
-    return {procenumber: 'format invalid'};
+    return {pricenumber: 'format invalid'};
   }
 }

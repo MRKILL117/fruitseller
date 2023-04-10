@@ -32,46 +32,53 @@
         </div>
     </div>
 
-    <div class="row justify-content-center" *ngIf="!!products?.length; else noProductsMessage">
-        <!-- Filters -->
-        <div class="col-12 mb-4">
-
+    <ng-container *ngIf="!loading.getting; else bigLoading">
+        <div class="row justify-content-center" *ngIf="!!products?.length; else noProductsMessage">
+            <!-- Filters -->
+            <div class="col-12 mb-4">
+    
+            </div>
+            <div class="col-12 col-lg-11">
+                <table class="table table-striped">
+                    <thead class="table-thead">
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Precio</th>
+                            <th>Impuesto</th>
+                            <th>Comprador</th>
+                            <th>Unidad de medida (ventas)</th>
+                            <th>Unidad de medida (inventario)</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    
+                    <tbody>
+                        <tr *ngFor="let product of products">
+                            <td>{{product.name}}</td>
+                            <td>{{product.price}}</td>
+                            <td>{{product.tax}}</td>
+                            <td>{{product.buyer?.name ? product.buyer?.name : 'No asignado'}}</td>
+                            <td>{{product.salesMeasurementType?.name + " - " + product.salesMeasurementType?.abrev}}</td>
+                            <td>{{product.inventoryMeasurementType?.name + " - " + product.inventoryMeasurementType?.abrev}}</td>
+                            <td>
+                                <div class="d-flex align-items-center justify-content-center">
+                                    <i class="zmdi zmdi-edit zmdi-hc-lg clickeable mx-2" (click)="EditProduct(product); modal.OpenModal(addOrEditProductModal)"></i>
+                                    <i class="zmdi zmdi-delete zmdi-hc-lg clickeable mx-2" (click)="selectedProduct = product; modal.OpenModal(deleteProductModal)"></i>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
-        <div class="col-12 col-lg-11">
-            <table class="table table-striped">
-                <thead class="table-thead">
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Precio</th>
-                        <th>Impuesto</th>
-                        <th>Comprador</th>
-                        <th>Unidad de medida (ventas)</th>
-                        <th>Unidad de medida (inventario)</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                
-                <tbody>
-                    <tr *ngFor="let product of products">
-                        <td>{{product.name}}</td>
-                        <td>{{product.price}}</td>
-                        <td>{{product.tax}}</td>
-                        <td>{{product.buyer.name}}</td>
-                        <td>{{product.salesMeasurementType.abrev}}</td>
-                        <td>{{product.inventoryMeasurementType.abrev}}</td>
-                        <td>
-                            <div class="d-flex align-items-center justify-content-center">
-                                <i class="zmdi zmdi-edit zmdi-hc-lg clickeable mx-2" (click)="EditProduct(product); modal.OpenModal(addOrEditProductModal)"></i>
-                                <i class="zmdi zmdi-delete zmdi-hc-lg clickeable mx-2" (click)="selectedProduct = product; modal.OpenModal(deleteProductModal)"></i>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
+    </ng-container>
 </div>
 
+<ng-template #bigLoading>
+    <div class="w-100 h-75 d-flex align-items-center justify-content-center" style="min-height: min-content;">
+        <i class="zmdi zmdi-spinner zmdi-hc-5x zmdi-hc-spin"></i>
+    </div>
+</ng-template>
 <ng-template #noProductsMessage>
     <div class="no-items-message">
         No tiene productos registrados
@@ -81,7 +88,7 @@
 <ng-template #addProductsByCsvModal>
     <div class="modal-header">
         <h2 class="modal-title">Agregar por CSV</h2>
-        <i class="close-modal-button zmdi zmdi-close-circle-o zmdi-hc-2x clickeable" (click)="modal.CloseModal()"></i>
+        <i class="close-modal-button zmdi zmdi-close-circle-o zmdi-hc-2x clickeable" (click)="modal.CloseModal(loading.updating)"></i>
     </div>
     <div class="modal-body">
         <div class="d-flex flex-column justify-content-between">
@@ -104,16 +111,14 @@
                     <thead class="table-thead bg-danger">
                         <tr>
                             <th>Nombre</th>
-                            <th>RFC</th>
                             <th>Motivo</th>
                         </tr>
                     </thead>
                     
                     <tbody>
-                        <tr *ngFor="let Product of productsFailed">
-                            <td>{{Product.Product.name}}</td>
-                            <td>{{Product.Product.rfc}}</td>
-                            <td>{{!!Product.reason ? Product.reason : 'Error al crear'}}</td>
+                        <tr *ngFor="let product of productsFailed">
+                            <td>{{product.product.name}}</td>
+                            <td>{{!!product.reason ? product.reason : 'Error al crear'}}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -125,8 +130,9 @@
             <span *ngIf="!productsFailed?.length">Cancelar</span>
             <span *ngIf="!!productsFailed?.length">Cerrar</span>
         </button>
-        <button class="btn btn-success" (click)="RegisterProducts()">
-            {{csvAcceptLabel}}
+        <button class="btn btn-success" [disabled]="loading.updating" (click)="RegisterProducts()">
+            <span *ngIf="!loading.updating">{{csvAcceptLabel}}</span>
+            <span *ngIf="loading.updating"><i class="zmdi zmdi-spinner zmdi-hc-lg zmdi-hc-spin"></i></span>
         </button>
     </div>
 </ng-template>
@@ -134,7 +140,7 @@
 <ng-template #deleteProductModal>
     <div class="modal-header">
         <h2 class="modal-title">Eliminar producto</h2>
-        <i class="close-modal-button zmdi zmdi-close-circle-o zmdi-hc-2x clickeable" (click)="modal.CloseModal(); productForm.reset()"></i>
+        <i class="close-modal-button zmdi zmdi-close-circle-o zmdi-hc-2x clickeable" (click)="modal.CloseModal(loading.updating); productForm.reset()"></i>
     </div>
     <div class="modal-body">
         <div class="d-flex">
@@ -142,11 +148,12 @@
         </div>
     </div>
     <div class="modal-footer">
-        <button class="btn btn-secondary" (click)="modal.CloseModal(); productForm.reset()">
+        <button class="btn btn-secondary" [disabled]="loading.updating" (click)="modal.CloseModal(); productForm.reset()">
             No, cancelar
         </button>
-        <button class="btn btn-danger" (click)="DeleteProduct()">
-            Si, eliminar
+        <button class="btn btn-danger" [disabled]="loading.updating" (click)="DeleteProduct()">
+            <span *ngIf="!loading.updating">Si, eliminar</span>
+            <span *ngIf="loading.updating"><i class="zmdi zmdi-spinner zmdi-hc-lg zmdi-hc-spin"></i></span>
         </button>
     </div>
 </ng-template>
@@ -154,7 +161,7 @@
 <ng-template #addOrEditProductModal>
     <div class="modal-header">
         <h2 class="modal-title">{{ isEditing ? 'Actualizar producto' : 'Agregar un producto'}}</h2>
-        <i class="close-modal-button zmdi zmdi-close-circle-o zmdi-hc-2x clickeable" (click)="modal.CloseModal(); productForm.reset()"></i>
+        <i class="close-modal-button zmdi zmdi-close-circle-o zmdi-hc-2x clickeable" (click)="modal.CloseModal(loading.updating); productForm.reset()"></i>
     </div>
     <div class="modal-body">
         <div class="w-100">
@@ -164,7 +171,7 @@
                         <div class="form-group">
                             <label>Nombre</label>
                             <div class="input-container">
-                                <i class="input-icon zmdi zmdi-account-o zmdi-hc-lg"></i>
+                                <i class="input-icon zmdi zmdi-collection-text zmdi-hc-lg"></i>
                                 <input class="form-control" type="text" placeholder="Nombre del producto" formControlName="name" (keyup.enter)="RegisterProduct()">
                             </div>
                             <div class="error-messages" *ngIf="form.GetFormControlByName(productForm, 'name')?.touched && form.GetFormControlByName(productForm, 'name')?.errors">
@@ -176,13 +183,13 @@
                     </div>
                     <div class="col-12 col-sm-6">
                         <div class="form-group">
-                            <label>Dirección</label>
+                            <label>Precio</label>
                             <div class="input-container">
                                 <i class="input-icon zmdi zmdi-money zmdi-hc-lg"></i>
-                                <input class="form-control" type="text" placeholder="Dirección del producto" formControlName="price" (keyup.enter)="RegisterProduct()">
+                                <input class="form-control" type="text" placeholder="Precio del producto" formControlName="price" (keyup.enter)="RegisterProduct()">
                             </div>
                             <div class="error-messages" *ngIf="form.GetFormControlByName(productForm, 'price')?.touched && form.GetFormControlByName(productForm, 'price')?.errors">
-                                <span class="d-block" *ngIf="form.GetFormControlByName(productForm, 'price')?.errors.required">
+                                <span class="d-block" *ngIf="form.GetFormControlByName(productForm, 'price')?.errors.pricenumber">
                                     Campo obligatorio
                                 </span>
                             </div>
@@ -199,8 +206,45 @@
                                 <span class="d-block" *ngIf="form.GetFormControlByName(productForm, 'tax')?.errors.required">
                                     Campo obligatorio
                                 </span>
-                                <span class="d-block" *ngIf="form.GetFormControlByName(productForm, 'tax')?.errors.pattern">
+                                <span class="d-block" *ngIf="form.GetFormControlByName(productForm, 'tax')?.errors.onlynumbers">
                                     Valor inválido
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6">
+                        <div class="form-group">
+                            <label>Unidad de medida para ventas</label>
+                            <ng-select
+                                class=""
+                                [items]="measurementTypes"
+                                bindLabel="name"
+                                bindValue="id"
+                                (change)="OnSalesMeasurementTypeChanges($event)"
+                                placeholder="Unidad de medida (ventas)"
+                                formControlName="salesMeasurementTypeId"
+                            ></ng-select>
+                            <div class="error-messages" *ngIf="form.GetFormControlByName(productForm, 'salesMeasurementTypeId')?.touched && form.GetFormControlByName(productForm, 'salesMeasurementTypeId')?.errors">
+                                <span class="d-block" *ngIf="form.GetFormControlByName(productForm, 'salesMeasurementTypeId')?.errors.required">
+                                    Campo obligatorio
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6">
+                        <div class="form-group">
+                            <label>Unidad de medida para inventario</label>
+                            <ng-select
+                                class=""
+                                [items]="measurementTypes"
+                                bindLabel="name"
+                                bindValue="id"
+                                placeholder="Unidad de medida (inventario)"
+                                formControlName="inventoryMeasurementTypeId"
+                            ></ng-select>
+                            <div class="error-messages" *ngIf="form.GetFormControlByName(productForm, 'inventoryMeasurementTypeId')?.touched && form.GetFormControlByName(productForm, 'inventoryMeasurementTypeId')?.errors">
+                                <span class="d-block" *ngIf="form.GetFormControlByName(productForm, 'inventoryMeasurementTypeId')?.errors.required">
+                                    Campo obligatorio
                                 </span>
                             </div>
                         </div>
@@ -210,11 +254,12 @@
         </div>
     </div>
     <div class="modal-footer">
-        <button class="btn btn-secondary" (click)="modal.CloseModal(); productForm.reset()">
+        <button class="btn btn-secondary" [disabled]="loading.updating" (click)="modal.CloseModal(); productForm.reset()">
             Cancelar
         </button>
-        <button class="btn btn-primary" (click)="RegisterProduct()">
-            {{isEditing ? 'Actualizar' : 'Agregar'}}
+        <button class="btn btn-primary" [disabled]="loading.updating" (click)="RegisterProduct()">
+            <span *ngIf="!loading.updating">{{isEditing ? 'Actualizar' : 'Agregar'}}</span>
+            <span *ngIf="loading.updating"><i class="zmdi zmdi-spinner zmdi-hc-lg zmdi-hc-spin"></i></span>
         </button>
     </div>
 </ng-template>

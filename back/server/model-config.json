@@ -148,7 +148,8 @@
       "validateUpsert": true,
       "remoting": {
         "sharedMethods": {
-          "*": false
+          "*": false,
+          "GetAll": true
         }
       }
     }

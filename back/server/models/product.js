@@ -5,11 +5,11 @@ module.exports = function(Product) {
     Product.CreateOne = function(ctx, product, callback) {
         const userId = ctx.accessToken.userId;
         Product.findOne({
-            where: {rfc: product.rfc, adminId: userId, deleted: false}
+            where: {name: {like: `%${product.name}%`}, adminId: userId, deleted: false}
         }, (err, productFound) => {
             if(err) return callback(err);
     
-            if(!!productFound) return callback('El RFC ya está registrado');
+            if(!!productFound) return callback('El producto ya existe');
 
             product.adminId = userId;
             Product.create(product, (err, newproduct) => {
@@ -27,14 +27,26 @@ module.exports = function(Product) {
         }
         let cont = 0, limit = products.length;
         if(!limit) return callback(null, data);
-        products.forEach(product => {
-            Product.CreateOne(ctx, product, (err, newproduct) => {
-                if(err) {
-                    data.productsFailed.push({product, reason: typeof err === 'string' ? err : null});
-                }
-                else data.productsSuccess.push(newproduct);
+        Product.app.models.MeasurementType.GetAll((err, measurementTypes) => {
+            if(err) return callback(err);
 
-                if(++cont == limit) return callback(null, data);
+            products.forEach(product => {
+                if(!!product.salesMeasurementType) {
+                    const measurementType = measurementTypes.find(type => type.name.toLowerCase().includes(product.salesMeasurementType.toLowerCase()) || type.abrev.toLowerCase().includes(product.salesMeasurementType.toLowerCase()));
+                    product.salesMeasurementTypeId = !!measurementType ? measurementType.id : null;
+                }
+                if(!!product.inventoryMeasurementType) {
+                    const measurementType = measurementTypes.find(type => type.name.toLowerCase().includes(product.inventoryMeasurementType.toLowerCase()) || type.abrev.toLowerCase().includes(product.inventoryMeasurementType.toLowerCase()));
+                    product.inventoryMeasurementTypeId = !!measurementType ? measurementType.id : null;
+                }
+                Product.CreateOne(ctx, product, (err, newproduct) => {
+                    if(err) {
+                        data.productsFailed.push({product, reason: typeof err === 'string' ? err : null});
+                    }
+                    else data.productsSuccess.push(newproduct);
+    
+                    if(++cont == limit) return callback(null, data);
+                });
             });
         });
     }

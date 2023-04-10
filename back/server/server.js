@@ -124,11 +124,11 @@ var SeedMeasurementTypes = function() {
     const measurementTypes = [
       {
         name: 'Kilogramos',
-        abrev: 'Kg',
+        abrev: 'kg',
       },
       {
         name: 'Piezas',
-        abrev: 'Pz',
+        abrev: 'pz',
       },
     ];
     const conditions = [
