@@ -249,6 +249,24 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-12 col-sm-6">
+                        <div class="form-group">
+                            <label>Comprador</label>
+                            <ng-select
+                                class=""
+                                [items]="buyers"
+                                bindLabel="name"
+                                bindValue="id"
+                                placeholder="Comprador"
+                                formControlName="buyerId"
+                            ></ng-select>
+                            <div class="error-messages" *ngIf="form.GetFormControlByName(productForm, 'buyerId')?.touched && form.GetFormControlByName(productForm, 'buyerId')?.errors">
+                                <span class="d-block" *ngIf="form.GetFormControlByName(productForm, 'buyerId')?.errors.required">
+                                    Campo obligatorio
+                                </span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </form>
         </div>

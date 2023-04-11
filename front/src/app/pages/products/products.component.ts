@@ -17,6 +17,7 @@ export class ProductsComponent implements OnInit {
 
   measurementTypes: Array<any> = [];
   products: Array<any> = [];
+  buyers: Array<any> = [];
   selectedProduct: any = null;
   isEditing: boolean = false;
   productsCsv: any;
@@ -31,6 +32,7 @@ export class ProductsComponent implements OnInit {
     name: new FormControl('', [Validators.required]),
     price: new FormControl('', [Validators.required, priceNumber]),
     tax: new FormControl('', [Validators.required, onlyNumbers]),
+    buyerId: new FormControl(null, []),
     salesMeasurementTypeId: new FormControl(null, [Validators.required]),
     inventoryMeasurementTypeId: new FormControl(null, [Validators.required]),
   });
@@ -91,6 +93,17 @@ export class ProductsComponent implements OnInit {
       this.measurementTypes = measurementTypes;
     }, err => {
       console.error("Error getting measurement types", err);
+    });
+  }
+
+  GetBuyers() {
+    this.loading.getting = true;
+    this.http.Get(`Buyers`).subscribe((buyers: any) => {
+      this.buyers = buyers;
+      this.loading.getting = false;
+    }, err => {
+      console.error("Error getting buyers", err);
+      this.loading.getting = false;
     });
   }
 

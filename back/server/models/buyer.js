@@ -11,11 +11,25 @@ module.exports = function(Buyer) {
     
             if(!!buyerFound) return callback('El comprador ya existe');
 
-            Buyer.adminId = userId;
+            buyer.adminId = userId;
             Buyer.create(buyer, (err, newBuyer) => {
                 if(err) return callback(err);
 
-                return callback(null, newBuyer);
+                let cont = 0, limit = buyer.products.length;
+                if(!limit) return callback(null, newBuyer);
+                buyer.products.forEach(product => {
+                    Buyer.app.models.Product.findById(product.id, (err, productInstance) => {
+                        if(err) return callback(err);
+                        
+                        if(!!productInstance && !productInstance.buyerId) {
+                            productInstance.buyerId = newBuyer.id;
+                            productInstance.save((err, saved) => {
+                                if(err) return callback(err);
+                                if(++cont == limit) return callback(null, newBuyer);
+                            });
+                        } else if(++cont == limit) return callback(null, newBuyer);
+                    });
+                });
             });
         });
     }

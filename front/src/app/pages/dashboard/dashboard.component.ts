@@ -24,7 +24,7 @@ export class DashboardComponent implements OnInit {
     {
       title: 'Compradores',
       route: 'buyers',
-      icon: 'zmdi-archive',
+      icon: 'zmdi-walk',
     },
     {
       title: 'Ordenes de venta',

@@ -29,7 +29,7 @@ export class BuyersComponent implements OnInit {
   buyerForm: FormGroup = new FormGroup({
     id: new FormControl(null, []),
     name: new FormControl('', [Validators.required]),
-    products: new FormControl(null, [Validators.required])
+    products: new FormControl(null, [])
   });
   dataConversions: Array<any> = [
     {
@@ -80,7 +80,7 @@ export class BuyersComponent implements OnInit {
   GetProducts() {
     this.loading.getting = true;
     this.http.Get(`Products`).subscribe((products: any) => {
-      this.products = products;
+      this.products = products.filter((product: any) => !product.buyerId);
       this.loading.getting = false;
     }, err => {
       console.error("Error getting products", err);
@@ -113,6 +113,7 @@ export class BuyersComponent implements OnInit {
     }
     
     this.http.Post(`Buyers`, {buyer: this.buyerForm.value}).subscribe(newbuyer => {
+      this.GetProducts();
       this.GetBuyers();
       this.toast.ShowDefaultSuccess(`Comprador creado exitosamente`);
       this.buyerForm.reset();
@@ -128,6 +129,7 @@ export class BuyersComponent implements OnInit {
   RegisterBuyers() {
     this.loading.updating = true;
     this.http.Post(`Buyers/Array`, {buyers: this.buyersToUpload}).subscribe((data: any) => {
+      this.GetProducts();
       this.GetBuyers();
       this.buyersFailed = data.buyersFailed;
       if(!!data.buyersSuccess.length) this.toast.ShowDefaultSuccess(`${data.buyersSuccess.length} compradors creados correctamente`);
@@ -149,6 +151,7 @@ export class BuyersComponent implements OnInit {
   UpdateBuyer() {
     const buyer = this.buyerForm.value;
     this.http.Patch(`Buyers`, {buyer}).subscribe(buyerSaved => {
+      this.GetProducts();
       this.GetBuyers();
       this.toast.ShowDefaultSuccess(`Comprador actualizado con éxito`);
       this.modal.CloseModal();
@@ -174,6 +177,7 @@ export class BuyersComponent implements OnInit {
   DeleteBuyer() {
     this.loading.updating = true;
     this.http.Delete(`Buyers/${this.selectedBuyer.id}`, {}).subscribe(deletedbuyer => {
+      this.GetProducts();
       this.GetBuyers();
       this.toast.ShowDefaultSuccess(`Comprador eliminado correctamente`);
       this.modal.CloseModal();
