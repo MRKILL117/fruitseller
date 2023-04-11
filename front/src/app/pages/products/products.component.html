@@ -45,9 +45,9 @@
                             <th>Nombre</th>
                             <th>Precio</th>
                             <th>Impuesto</th>
-                            <th>Comprador</th>
                             <th>Unidad de medida (ventas)</th>
                             <th>Unidad de medida (inventario)</th>
+                            <th>Comprador</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -57,9 +57,9 @@
                             <td>{{product.name}}</td>
                             <td>{{product.price}}</td>
                             <td>{{product.tax}}</td>
-                            <td>{{product.buyer?.name ? product.buyer?.name : 'No asignado'}}</td>
                             <td>{{product.salesMeasurementType?.name + " - " + product.salesMeasurementType?.abrev}}</td>
                             <td>{{product.inventoryMeasurementType?.name + " - " + product.inventoryMeasurementType?.abrev}}</td>
+                            <td>{{product.buyer?.name ? product.buyer?.name : 'No asignado'}}</td>
                             <td>
                                 <div class="d-flex align-items-center justify-content-center">
                                     <i class="zmdi zmdi-edit zmdi-hc-lg clickeable mx-2" (click)="EditProduct(product); modal.OpenModal(addOrEditProductModal)"></i>
