@@ -54,7 +54,8 @@ module.exports = function(Product) {
     Product.GetAll = function(ctx, callback) {
         const userId = ctx.accessToken.userId;
         Product.find({
-            where: {adminId: userId, deleted: false}
+            where: {adminId: userId, deleted: false},
+            order: 'name ASC'
         }, (err, products) => {
             if(err) return callback(err);
 

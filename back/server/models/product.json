@@ -6,7 +6,7 @@
     "validateUpsert": true
   },
   "scope": {
-    "include": ["salesMeasurementType", "inventoryMeasurementType"]
+    "include": ["salesMeasurementType", "inventoryMeasurementType", "buyer"]
   },
   "properties": {
     "name": {
@@ -40,6 +40,11 @@
       "type": "belongsTo",
       "model": "Account",
       "foreignKey": "adminId"
+    },
+    "buyer": {
+      "type": "belongsTo",
+      "model": "Buyer",
+      "foreignKey": "buyerId"
     },
     "salesMeasurementType": {
       "type": "belongsTo",

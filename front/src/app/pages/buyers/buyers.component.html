@@ -43,11 +43,7 @@
                     <thead class="table-thead">
                         <tr>
                             <th>Nombre</th>
-                            <th>Precio</th>
-                            <th>Impuesto</th>
-                            <th>Unidad de medida (ventas)</th>
-                            <th>Unidad de medida (inventario)</th>
-                            <th>Comprador</th>
+                            <th>Productos</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -55,11 +51,14 @@
                     <tbody>
                         <tr *ngFor="let buyer of buyers">
                             <td>{{buyer.name}}</td>
-                            <td>{{buyer.price}}</td>
-                            <td>{{buyer.tax}}</td>
-                            <td>{{buyer.salesMeasurementType?.name + " - " + buyer.salesMeasurementType?.abrev}}</td>
-                            <td>{{buyer.inventoryMeasurementType?.name + " - " + buyer.inventoryMeasurementType?.abrev}}</td>
-                            <td>{{buyer.buyer?.name ? buyer.buyer?.name : 'No asignado'}}</td>
+                            <td *ngIf="buyer.products.length">
+                                <div class="d-flex align-items-center justify-content-center">
+                                    <div class="badge badge-primary mx-2" *ngFor="let product of buyer.products">{{product.name}}</div>
+                                </div>
+                            </td>
+                            <td *ngIf="!buyer.products.length">
+                                No tiene productos asignados
+                            </td>
                             <td>
                                 <div class="d-flex align-items-center justify-content-center">
                                     <i class="zmdi zmdi-edit zmdi-hc-lg clickeable mx-2" (click)="EditBuyer(buyer); modal.OpenModal(addOrEditBuyerModal)"></i>

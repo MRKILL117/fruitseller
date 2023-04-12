@@ -34,23 +34,13 @@ export class BuyersComponent implements OnInit {
   dataConversions: Array<any> = [
     {
       oldKey: 'Nombre',
-      newKey: 'name'
+      newKey: 'name',
+      type: 'string'
     },
     {
-      oldKey: 'Precio',
-      newKey: 'price'
-    },
-    {
-      oldKey: 'Impuesto',
-      newKey: 'tax'
-    },
-    {
-      oldKey: 'Unidad de medida ventas',
-      newKey: 'salesMeasurementType'
-    },
-    {
-      oldKey: 'Unidad de medida inventario',
-      newKey: 'inventoryMeasurementType'
+      oldKey: 'Productos',
+      newKey: 'products',
+      type: 'array'
     },
   ];
 
@@ -200,20 +190,11 @@ export class BuyersComponent implements OnInit {
     const FILE_READER = new FileReader();
     FILE_READER.onload = (reader) => {
       this.csv.ReadCSV(FILE_READER.result).then(res => {
-        this.buyersToUpload = this.FormatData(res.data);
+        this.buyersToUpload = this.csv.FormatData(res.data, this.dataConversions);
+        console.log(this.buyersToUpload);
       });
     };
     FILE_READER.readAsText(file, 'ISO-8859-3');
-  }
-
-  FormatData(students: Array<any>) {
-    return students.map(student => {
-      let dataFormatted: any = {};
-      this.dataConversions.forEach(conversion => {
-        dataFormatted[conversion.newKey] = student[conversion.oldKey];
-      });
-      return dataFormatted;
-    });
   }
 
 }

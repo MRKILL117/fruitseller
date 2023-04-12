@@ -35,4 +35,22 @@ export class CsvService {
 
     return new Angular5Csv(data, name, this.options);
   }
+
+  public FormatData(array: Array<any>, dataConversions: any): Array<any> {
+    return array.map(student => {
+      let dataFormatted: any = {};
+      dataConversions.forEach((conversion: any) => {
+        dataFormatted[conversion.newKey] = this.ConvertData(student[conversion.oldKey], conversion.type);
+      });
+      return dataFormatted;
+    });
+  }
+
+  private ConvertData(data: string, type: string): any {
+    switch (type) {
+      case 'array': return data.split(/,|-/).map(d => d.trim()).filter(d => !!d);
+      default: return data;
+    }
+  }
+
 }

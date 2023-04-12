@@ -42,7 +42,8 @@ module.exports = function(Client) {
     Client.GetAll = function(ctx, callback) {
         const userId = ctx.accessToken.userId;
         Client.find({
-            where: {adminId: userId, deleted: false}
+            where: {adminId: userId, deleted: false},
+            order: 'name ASC'
         }, (err, clients) => {
             if(err) return callback(err);
 
