@@ -1,0 +1,27 @@
+{
+  "name": "PriceHistory",
+  "plural": "PriceHistories",
+  "base": "Model",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "date": {
+      "type": "string",
+      "required": true
+    },
+    "purchasePrice": {
+      "type": "number",
+      "required": true
+    },
+    "salePrice": {
+      "type": "number",
+      "required": true
+    }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": {}
+}

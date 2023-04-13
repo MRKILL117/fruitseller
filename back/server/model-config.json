@@ -172,5 +172,19 @@
         }
       }
     }
+  },
+  "PriceHistory": {
+    "dataSource": "mysql",
+    "public": true,
+    "options": {
+      "allowEternalTokens": true,
+      "validateUpsert": true,
+      "remoting": {
+        "sharedMethods": {
+          "*": false,
+          "GetAll": true
+        }
+      }
+    }
   }
 }

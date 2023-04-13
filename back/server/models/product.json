@@ -6,7 +6,11 @@
     "validateUpsert": true
   },
   "scope": {
-    "include": ["salesMeasurementType", "inventoryMeasurementType", "buyer"]
+    "include": [
+      "salesMeasurementType",
+      "inventoryMeasurementType",
+      "buyer"
+    ]
   },
   "properties": {
     "name": {
