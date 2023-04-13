@@ -13,11 +13,21 @@
     },
     "purchasePrice": {
       "type": "number",
-      "required": true
+      "required": true,
+      "mysql": {
+        "dataType": "DECIMAL",
+        "dataPrecision": 20,
+        "dataScale": 2
+      }
     },
     "salePrice": {
       "type": "number",
-      "required": true
+      "required": true,
+      "mysql": {
+        "dataType": "DECIMAL",
+        "dataPrecision": 20,
+        "dataScale": 2
+      }
     }
   },
   "validations": [],

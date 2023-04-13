@@ -108,6 +108,7 @@
           "CreateOne": true,
           "CreateArray": true,
           "GetAll": true,
+          "GetAllWithPriceHistory": true,
           "Update": true,
           "prototype.Delete": true
         }

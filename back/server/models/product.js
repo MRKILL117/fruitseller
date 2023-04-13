@@ -63,6 +63,29 @@ module.exports = function(Product) {
         });
     }
 
+    Product.GetAllWithPriceHistory = function(ctx, callback) {
+        Product.app.models.PriceHistory.UpsertTodayPrices(ctx, (err, pricesUPdated) => {
+            if(err) return callback(err);
+
+            const userId = ctx.accessToken.userId;
+            Product.find({
+                where: {adminId: userId, deleted: false},
+                include: {
+                    relation: 'prices',
+                    scope: {
+                        order: 'date DESC',
+                        limit: 1
+                    }
+                },
+                order: 'name ASC'
+            }, (err, products) => {
+                if(err) return callback(err);
+
+                return callback(null, products);
+            });
+        });
+    }
+
     Product.Update = function(product, callback) {
         Product.upsert(product, (err, productUpdated) => {
             if(err) return callback(err);

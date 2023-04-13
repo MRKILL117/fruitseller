@@ -38,7 +38,7 @@ export class DashboardComponent implements OnInit {
     },
     {
       title: 'Lista de precios',
-      route: 'prices-list',
+      route: 'price-list',
       icon: 'zmdi-money',
     },
     {

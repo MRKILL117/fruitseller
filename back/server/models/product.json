@@ -59,6 +59,11 @@
       "type": "belongsTo",
       "model": "MeasurementType",
       "foreignKey": "inventoryMeasurementTypeId"
+    },
+    "prices": {
+      "type": "hasMany",
+      "model": "PriceHistory",
+      "foreignKey": "productId"
     }
   },
   "acls": [
@@ -77,6 +82,7 @@
         "CreateOne",
         "CreateArray",
         "GetAll",
+        "GetAllWithPriceHistory",
         "Update",
         "Delete"
       ]
@@ -175,6 +181,34 @@
       "http": [
         {
           "path": "/",
+          "verb": "get"
+        }
+      ]
+    },
+    "GetAllWithPriceHistory": {
+      "accepts": [
+        {
+          "arg": "ctx",
+          "type": "object",
+          "required": true,
+          "description": "",
+          "http": {
+            "source": "req"
+          }
+        }
+      ],
+      "returns": [
+        {
+          "arg": "products",
+          "type": "array",
+          "root": true,
+          "description": ""
+        }
+      ],
+      "description": "",
+      "http": [
+        {
+          "path": "/WithPriceHistory",
           "verb": "get"
         }
       ]
