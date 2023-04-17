@@ -89,8 +89,11 @@ export class ClientsComponent implements OnInit {
     this.nav.GoToRoleRoute('');
   }
 
-  GetClients() {
-    this.http.Get(`Clients`).subscribe((clients: any) => {
+  GetClients(filters: any = null) {
+    console.log(filters);
+    let endpoint = `/Clients`;
+    if(!!filters) endpoint += `/FilteredBy/Text/${filters.text}`;
+    this.http.Get(endpoint).subscribe((clients: any) => {
       this.clients = clients;
     }, err => {
       console.error("Error getting clients", err);

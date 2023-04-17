@@ -39,10 +39,23 @@ module.exports = function(Client) {
         });
     }
 
-    Client.GetAll = function(ctx, callback) {
+    Client.GetAll = function(ctx, text, callback) {
         const userId = ctx.accessToken.userId;
+        let where = {
+            adminId: userId, deleted: false
+        }
+        if(!!text && text != '*') {
+            where['or'] = [
+                {name: {like: `%${text}%`}},
+                {rfc: {like: `%${text}%`}},
+                {state: {like: `%${text}%`}},
+                {country: {like: `%${text}%`}},
+                {postalCode: {like: `%${text}%`}},
+                {address: {like: `%${text}%`}}
+            ]
+        }
         Client.find({
-            where: {adminId: userId, deleted: false},
+            where,
             order: 'name ASC'
         }, (err, clients) => {
             if(err) return callback(err);

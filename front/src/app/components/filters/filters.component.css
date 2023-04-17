@@ -1,0 +1,14 @@
+.filters {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    flex-wrap: wrap;
+}
+
+.form-group {
+    margin: 0;
+    min-width: min-content;
+    margin: .5rem;
+    flex-basis: 225px;
+    max-width: 100%;
+}
