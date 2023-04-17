@@ -52,9 +52,12 @@ module.exports = function(Product) {
     }
 
     Product.GetAll = function(ctx, callback) {
-        const userId = ctx.accessToken.userId;
+        let where = {deleted: false};
+        if(!!ctx) {
+            where['adminId'] = ctx.accessToken.userId;
+        }
         Product.find({
-            where: {adminId: userId, deleted: false},
+            where,
             order: 'name ASC'
         }, (err, products) => {
             if(err) return callback(err);

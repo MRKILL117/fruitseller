@@ -140,12 +140,20 @@ var SeedMeasurementTypes = function() {
   });
 }
 
+var InitializeCornjobs = function() {
+  return new Promise((res, rej) => {
+    app.models.PriceHistory.DailyCronJobToUpdatePrices();
+    res();
+  });
+}
+
 var AutoFillData = function() {
   return new Promise(async (res, rej) => {
     try {
       await SeedRoles();
       await SeedUsers();
       await SeedMeasurementTypes();
+      await InitializeCornjobs();
     } catch (err) {
       rej(err);
     }
