@@ -78,14 +78,18 @@ module.exports = function(Buyer) {
         Buyer.upsert(buyer, (err, buyerUpdated) => {
             if(err) return callback(err);
             
-            let productsToUnbind = buyerUpdated.products().filter(prod => !buyer.products.find(prod2 => prod2.id == prod.id));
-            Buyer.app.models.Product.updateAll({id: {inq: productsToUnbind.map(prod => prod.id)}}, {buyerId: null}, (err, updated) => {
+            Buyer.findById(buyerUpdated.id, {include: 'products'}, (err, buyerUpdated) => {
                 if(err) return callback(err);
-                
-                Buyer.app.models.Product.updateAll({id: {inq: buyer.products.map(prod => prod.id)}}, {buyerId: buyerUpdated.id}, (err, updated) => {
-                    if(err) return callback(err);
 
-                    return callback(null, buyerUpdated);
+                let productsToUnbind = buyerUpdated.products().filter(prod => !buyer.products.find(prod2 => prod2.id == prod.id));
+                Buyer.app.models.Product.updateAll({id: {inq: productsToUnbind.map(prod => prod.id)}}, {buyerId: null}, (err, updated) => {
+                    if(err) return callback(err);
+                    
+                    Buyer.app.models.Product.updateAll({id: {inq: buyer.products.map(prod => prod.id)}}, {buyerId: buyerUpdated.id}, (err, updated) => {
+                        if(err) return callback(err);
+    
+                        return callback(null, buyerUpdated);
+                    });
                 });
             });
         });
@@ -93,29 +97,18 @@ module.exports = function(Buyer) {
 
     Buyer.prototype.Delete = function(callback) {
         this.deleted = true;
-        let cont = 0, limit = this.products().length;
-        if(!!limit) {
-            this.products().forEach(product => {
-                product.buyerId = null;
-                product.save((err, saved) => {
-                    if(err) return callback(err);
-    
-                    if(++cont == limit) {
-                        this.save((err, deleted) => {
-                            if(err) return callback(err);
-                            return callback(null, deleted);
-                        });
-                    }
-                });
-            });
-        }
-        else {
-            this.save((err, deleted) => {
+        Buyer.findById(this.id, {include: 'products'}, (err, buyer) => {
+            if(err) return callback(err);
+
+            Buyer.app.models.Product.updateAll({id: {inq: buyer.products().map(prod => prod.id)}}, {buyerId: null}, (err, updated) => {
                 if(err) return callback(err);
 
-                return callback(null, deleted);
+                this.save((err, deleted) => {
+                    if(err) return callback(err);
+                    return callback(null, deleted);
+                });
             });
-        }
+        });
     }
 
 };

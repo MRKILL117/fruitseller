@@ -123,6 +123,7 @@ export class ProductsComponent implements OnInit {
     if(this.productForm.invalid) {
       this.productForm.markAllAsTouched();
       this.toast.ShowDefaultWarning(`Favor de llenar los campos obligatorios`);
+      return;
     }
 
     this.loading.updating = true;

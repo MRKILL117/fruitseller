@@ -90,7 +90,6 @@ export class ClientsComponent implements OnInit {
   }
 
   GetClients(filters: any = null) {
-    console.log(filters);
     let endpoint = `/Clients`;
     if(!!filters) endpoint += `/FilteredBy/Text/${filters.text}`;
     this.http.Get(endpoint).subscribe((clients: any) => {
@@ -134,6 +133,7 @@ export class ClientsComponent implements OnInit {
         this.modal.CloseModal();
         this.clientsToUpload = [];
       }
+      this.GetClients();
     }, err => {
       console.error("Error creating clients", err);
       this.toast.ShowDefaultDanger(`Error al crear clientes`);
