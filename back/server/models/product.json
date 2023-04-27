@@ -195,6 +195,24 @@
           "http": {
             "source": "req"
           }
+        },
+        {
+          "arg": "text",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "arg": "startDate",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "arg": "endDate",
+          "type": "string",
+          "required": false,
+          "description": ""
         }
       ],
       "returns": [
@@ -209,6 +227,10 @@
       "http": [
         {
           "path": "/WithPriceHistory",
+          "verb": "get"
+        },
+        {
+          "path": "/WithPriceHistory/FilteredBy/Text/:text/StartDate/:startDate/EndDate/:endDate",
           "verb": "get"
         }
       ]

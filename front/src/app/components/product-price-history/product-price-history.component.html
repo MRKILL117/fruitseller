@@ -1,0 +1,28 @@
+<div class="card d-flex flex-column">
+    <div class="d-flex align-items-center justify-content-around">
+        <div class="name">{{product?.name}}</div>
+        <div>
+            <input type="text" [(ngModel)]="product.prices[0].purchasePrice">
+        </div>
+        <div>
+            <input type="text" [(ngModel)]="product.prices[0].salePrice">
+        </div>
+        <div class="clickeable" (click)="showHistory = !showHistory">
+            <i class="zmdi zmdi-caret-down zmdi-hc-3x" [ngClass]="{'caret-active': showHistory}"></i>
+        </div>
+    </div>
+    <div class="d-flex flex-column price-history" [ngClass]="{'toggle-active': showHistory}">
+        <div class="d-flex align-items-center justify-content-around">
+            <div class="name">Fecha</div>
+            <div>Precio de compra</div>
+            <div>Precio de venta</div>
+            <div></div>
+        </div>
+        <div class="d-flex align-items-center justify-content-around" *ngFor="let price of product?.prices">
+            <div class="name">{{price.date}}</div>
+            <div>{{price.purchasePrice}}</div>
+            <div>{{price.salePrice}}</div>
+            <div></div>
+        </div>
+    </div>
+</div>

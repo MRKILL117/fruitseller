@@ -15,8 +15,10 @@ module.exports = function(PriceHistory) {
 
             PriceHistory.find({
                 where: {
-                    producId: {inq: products.map(prod => prod.id)},
-                    date: {like: `%${todayDate}%`}
+                    and: [
+                        {or: products.map(prod => {return {productId: prod.id}})},
+                        {date: {like: `%${todayDate}%`}},
+                    ]
                 }
             }, (err, prices) => {
                 if(err) return callback(err);

@@ -21,6 +21,10 @@ export class ClientsComponent implements OnInit {
   clientsCsv: any;
   clientsToUpload: Array<any> = [];
   clientsFailed: Array<any> = [];
+  loading: any = {
+    updating: false,
+    getting: true
+  }
   clientForm: FormGroup = new FormGroup({
     id: new FormControl(null, []),
     name: new FormControl('', [Validators.required]),
@@ -90,12 +94,15 @@ export class ClientsComponent implements OnInit {
   }
 
   GetClients(filters: any = null) {
+    this.loading.getting = true;
     let endpoint = `/Clients`;
     if(!!filters) endpoint += `/FilteredBy/Text/${filters.text}`;
     this.http.Get(endpoint).subscribe((clients: any) => {
       this.clients = clients;
+      this.loading.getting = false;
     }, err => {
       console.error("Error getting clients", err);
+      this.loading.getting = false;
     });
   }
 

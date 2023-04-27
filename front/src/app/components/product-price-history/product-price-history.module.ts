@@ -4,23 +4,24 @@ import { Routes, RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 
-import { SellOrdersComponent } from './sell-orders.component';
+import { ProductPriceHistoryComponent } from './product-price-history.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: SellOrdersComponent
+    component: ProductPriceHistoryComponent
   }
 ];
 
 @NgModule({
-  declarations: [SellOrdersComponent],
+  declarations: [ProductPriceHistoryComponent],
   imports: [
     FormsModule,
     CommonModule,
     NgSelectModule,
     ReactiveFormsModule,
-    RouterModule.forChild(routes)
-  ]
+    // RouterModule.forChild(routes)
+  ],
+  exports: [ProductPriceHistoryComponent]
 })
-export class SellOrdersModule { }
+export class ProductPriceHistoryModule { }

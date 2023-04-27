@@ -1,0 +1,18 @@
+.price-history {
+    height: 0px;
+    overflow-y: hidden;
+    transition: all .3s ease-in-out;
+}
+
+.toggle-active {
+    height: 250px;
+    overflow-y: auto;
+}
+
+.zmdi-caret-down {
+    transition: all .3s ease-in-out;
+}
+
+.caret-active {
+    transform: rotate(180deg);
+}

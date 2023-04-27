@@ -42,6 +42,11 @@ export class DashboardComponent implements OnInit {
       icon: 'zmdi-money',
     },
     {
+      title: 'Cobranza',
+      route: 'payments',
+      icon: 'zmdi-balance',
+    },
+    {
       title: 'Inventario',
       route: 'inventory',
       icon: 'zmdi-assignment',

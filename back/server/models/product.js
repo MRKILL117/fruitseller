@@ -66,7 +66,7 @@ module.exports = function(Product) {
         });
     }
 
-    Product.GetAllWithPriceHistory = function(ctx, callback) {
+    Product.GetAllWithPriceHistory = function(ctx, text, startDate, endDate, callback) {
         Product.app.models.PriceHistory.UpsertTodayPrices(ctx, (err, pricesUPdated) => {
             if(err) return callback(err);
 
@@ -76,8 +76,7 @@ module.exports = function(Product) {
                 include: {
                     relation: 'prices',
                     scope: {
-                        order: 'date DESC',
-                        limit: 1
+                        order: 'date DESC'
                     }
                 },
                 order: 'name ASC'

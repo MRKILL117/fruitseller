@@ -32,7 +32,7 @@ export class ProductsComponent implements OnInit {
     name: new FormControl('', [Validators.required]),
     price: new FormControl('', [Validators.required, priceNumber]),
     tax: new FormControl('', [Validators.required, onlyNumbers]),
-    buyerId: new FormControl(null, []),
+    buyerId: new FormControl(null, [Validators.required]),
     salesMeasurementTypeId: new FormControl(null, [Validators.required]),
     inventoryMeasurementTypeId: new FormControl(null, [Validators.required]),
   });
