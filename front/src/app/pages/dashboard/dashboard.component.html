@@ -1,7 +1,7 @@
 <div class="content-center">
-    <div class="row justify-content-center">
-        <div class="col-11 col-md-10 col-lg-9 col-xl-8 modules-container">
-            <div class="pages-container flex-grow-1">
+    <div class="row justify-content-center h-100">
+        <div class="col-12 modules-container">
+            <div class="pages-container">
                 <div class="page-container clickeable bg-white" *ngFor="let page of pages" (click)="nav.GoToRoleRoute(page.route)">
         
                     <i class="zmdi {{page.icon}} zmdi-hc-4x"></i>

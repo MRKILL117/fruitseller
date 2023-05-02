@@ -16,18 +16,18 @@ import { ToastService } from 'src/app/services/toast.service';
 export class SellOrdersComponent implements OnInit {
 
   measurementTypes: Array<any> = [];
-  products: Array<any> = [];
+  orders: Array<any> = [];
   buyers: Array<any> = [];
-  selectedProduct: any = null;
+  selectedOrder: any = null;
   isEditing: boolean = false;
-  productsCsv: any;
-  productsToUpload: Array<any> = [];
-  productsFailed: Array<any> = [];
+  ordersCsv: any;
+  ordersToUpload: Array<any> = [];
+  ordersFailed: Array<any> = [];
   loading: any = {
     updating: false,
     getting: true
   }
-  productForm: FormGroup = new FormGroup({
+  OrderForm: FormGroup = new FormGroup({
     id: new FormControl(null, []),
     name: new FormControl('', [Validators.required]),
     price: new FormControl('', [Validators.required, priceNumber]),
@@ -60,7 +60,7 @@ export class SellOrdersComponent implements OnInit {
   ];
 
   public get csvAcceptLabel() {
-    if(!!this.productsFailed.length) return 'Reintentar';
+    if(!!this.ordersFailed.length) return 'Reintentar';
     return `Subir`;
   }
 
@@ -70,13 +70,13 @@ export class SellOrdersComponent implements OnInit {
     private toast: ToastService,
     private http: HttpService,
     private csv: CsvService,
-    private nav: NavigationService
+    public nav: NavigationService
   ) { }
 
   ngOnInit(): void {
     this.GetBuyers();
     this.GetMeasurementTypes();
-    this.GetProducts();
+    this.GetOrders();
   }
 
   GoHome() {
@@ -84,8 +84,8 @@ export class SellOrdersComponent implements OnInit {
   }
 
   OnSalesMeasurementTypeChanges(measurementType: any) {
-    if(!!measurementType && !this.productForm.get('inventoryMeasurementTypeId')?.value) {
-      this.productForm.get('inventoryMeasurementTypeId')?.setValue(measurementType.id);
+    if(!!measurementType && !this.OrderForm.get('inventoryMeasurementTypeId')?.value) {
+      this.OrderForm.get('inventoryMeasurementTypeId')?.setValue(measurementType.id);
     }
   }
 
@@ -108,20 +108,20 @@ export class SellOrdersComponent implements OnInit {
     });
   }
 
-  GetProducts() {
+  GetOrders() {
     this.loading.getting = true;
-    this.http.Get(`Products`).subscribe((products: any) => {
-      this.products = products;
+    this.http.Get(`Orders`).subscribe((Orders: any) => {
+      this.orders = Orders;
       this.loading.getting = false;
     }, err => {
-      console.error("Error getting products", err);
+      console.error("Error getting Orders", err);
       this.loading.getting = false;
     });
   }
 
-  RegisterProduct() {
-    if(this.productForm.invalid) {
-      this.productForm.markAllAsTouched();
+  RegisterOrder() {
+    if(this.OrderForm.invalid) {
+      this.OrderForm.markAllAsTouched();
       this.toast.ShowDefaultWarning(`Favor de llenar los campos obligatorios`);
       return;
     }
@@ -129,108 +129,98 @@ export class SellOrdersComponent implements OnInit {
     this.loading.updating = true;
     
     if(this.isEditing) {
-      this.UpdateProduct();
+      this.UpdateOrder();
       return;
     }
     
-    this.http.Post(`Products`, {product: this.productForm.value}).subscribe(newProduct => {
-      this.GetProducts();
-      this.toast.ShowDefaultSuccess(`Producto creado exitosamente`);
-      this.productForm.reset();
+    this.http.Post(`Orders`, {Order: this.OrderForm.value}).subscribe(newOrder => {
+      this.GetOrders();
+      this.toast.ShowDefaultSuccess(`Orden creado exitosamente`);
+      this.OrderForm.reset();
       this.modal.CloseModal();
       this.loading.updating = false;
     }, err => {
-      this.toast.ShowDefaultDanger(`Error al crear producto`);
-      console.error("Error creating Product", err);
+      this.toast.ShowDefaultDanger(`Error al crear orden`);
+      console.error("Error creating Order", err);
       this.loading.updating = false;
     });
   }
   
-  RegisterProducts() {
+  RegisterOrders() {
     this.loading.updating = true;
-    this.http.Post(`Products/Array`, {products: this.productsToUpload}).subscribe((data: any) => {
-      this.GetProducts();
-      this.productsFailed = data.productsFailed;
-      if(!!data.productsSuccess.length) this.toast.ShowDefaultSuccess(`${data.productsSuccess.length} productos creados correctamente`);
-      if(data.productsFailed.length) {
-        this.toast.ShowDefaultWarning(`${data.productsFailed.length} productos no se pudieron crear`);
+    this.http.Post(`Orders/Array`, {Orders: this.ordersToUpload}).subscribe((data: any) => {
+      this.GetOrders();
+      this.ordersFailed = data.OrdersFailed;
+      if(!!data.OrdersSuccess.length) this.toast.ShowDefaultSuccess(`${data.OrdersSuccess.length} ordenes creados correctamente`);
+      if(data.OrdersFailed.length) {
+        this.toast.ShowDefaultWarning(`${data.OrdersFailed.length} ordenes no se pudieron crear`);
       }
       else {
         this.modal.CloseModal();
-        this.productsToUpload = [];
+        this.ordersToUpload = [];
       }
       this.loading.updating = false;
     }, err => {
-      console.error("Error creating Products", err);
-      this.toast.ShowDefaultDanger(`Error al crear productos`);
+      console.error("Error creating Orders", err);
+      this.toast.ShowDefaultDanger(`Error al crear ordenes`);
       this.loading.updating = false;
     });
   }
 
-  UpdateProduct() {
-    const product = this.productForm.value;
-    this.http.Patch(`Products`, {product}).subscribe(ProductSaved => {
-      this.GetProducts();
-      this.toast.ShowDefaultSuccess(`producto actualizado con éxito`);
+  UpdateOrder() {
+    const Order = this.OrderForm.value;
+    this.http.Patch(`Orders`, {Order}).subscribe(OrderSaved => {
+      this.GetOrders();
+      this.toast.ShowDefaultSuccess(`Orden actualizado con éxito`);
       this.modal.CloseModal();
       this.isEditing = false;
       this.loading.updating = false;
     }, err => {
-      console.error("Error patching Product", err);
-      this.toast.ShowDefaultDanger(`Error al actualizar producto`);
+      console.error("Error patching Order", err);
+      this.toast.ShowDefaultDanger(`Error al actualizar orden`);
       this.loading.updating = false;
     });
   }
 
-  EditProduct(Product: any) {
+  EditOrder(Order: any) {
     this.isEditing = true;
-    for (const key in this.productForm.controls) {
-      if (Object.prototype.hasOwnProperty.call(this.productForm.controls, key)) {
-        const control = this.productForm.controls[key];
-        control.setValue(Product[key]);
+    for (const key in this.OrderForm.controls) {
+      if (Object.prototype.hasOwnProperty.call(this.OrderForm.controls, key)) {
+        const control = this.OrderForm.controls[key];
+        control.setValue(Order[key]);
       }
     }
   }
 
-  DeleteProduct() {
+  DeleteOrder() {
     this.loading.updating = true;
-    this.http.Delete(`Products/${this.selectedProduct.id}`, {}).subscribe(deletedProduct => {
-      this.GetProducts();
-      this.toast.ShowDefaultSuccess(`producto eliminado correctamente`);
+    this.http.Delete(`Orders/${this.selectedOrder.id}`, {}).subscribe(deletedOrder => {
+      this.GetOrders();
+      this.toast.ShowDefaultSuccess(`Orden eliminado correctamente`);
       this.modal.CloseModal();
       this.loading.updating = false;
     }, err => {
-      console.error("Error deleting Product", err);
-      this.toast.ShowDefaultDanger(`Error al eliminar producto`);
+      console.error("Error deleting Order", err);
+      this.toast.ShowDefaultDanger(`Error al eliminar orden`);
       this.loading.updating = false;
     });
   }
 
   DownloadTemplate() {
-    this.http.DownloadFileWithoutApi("assets/templates/plantilla_productos.csv", 'plantilla_productos.csv');
+    this.http.DownloadFileWithoutApi("assets/templates/plantilla_ordenes.csv", 'plantilla_ordenes.csv');
   }
 
   OnFileSelected(event: any) {
     const file = event.target.files[0];
-    this.productsCsv = file;
+    this.ordersCsv = file;
     if(!file) return;
     const FILE_READER = new FileReader();
     FILE_READER.onload = (reader) => {
       this.csv.ReadCSV(FILE_READER.result).then(res => {
-        this.productsToUpload = this.FormatData(res.data);
+        this.ordersToUpload = this.csv.FormatData(res.data, this.dataConversions);
       });
     };
     FILE_READER.readAsText(file, 'ISO-8859-3');
-  }
-
-  FormatData(students: Array<any>) {
-    return students.map(student => {
-      let dataFormatted: any = {};
-      this.dataConversions.forEach(conversion => {
-        dataFormatted[conversion.newKey] = student[conversion.oldKey];
-      });
-      return dataFormatted;
-    });
   }
 
 }

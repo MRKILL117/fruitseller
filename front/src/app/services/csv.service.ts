@@ -37,10 +37,10 @@ export class CsvService {
   }
 
   public FormatData(array: Array<any>, dataConversions: any): Array<any> {
-    return array.map(student => {
+    return array.map(instance => {
       let dataFormatted: any = {};
       dataConversions.forEach((conversion: any) => {
-        dataFormatted[conversion.newKey] = this.ConvertData(student[conversion.oldKey], conversion.type);
+        dataFormatted[conversion.newKey] = this.ConvertData(instance[conversion.oldKey], conversion.type);
       });
       return dataFormatted;
     });
@@ -48,6 +48,7 @@ export class CsvService {
 
   private ConvertData(data: string, type: string): any {
     switch (type) {
+      case 'number': return Number.isNaN(Number(data)) ? data : Number(data);
       case 'array': return data.split(/,|-/).map(d => d.trim()).filter(d => !!d);
       default: return data;
     }

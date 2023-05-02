@@ -6,23 +6,23 @@
         </div>
 
         <div class="d-flex">
-            <button class="btn btn-success mx-1" (click)="modal.OpenModal(addOrEditProductModal)">
+            <button class="btn btn-success mx-1" (click)="nav.GoToRoleRoute('sell-orders/create')">
                 <i class="zmdi zmdi-plus-circle-o zmdi-hc-lg mr-2"></i>
                 Agregar
             </button>
-            <div class="clickeable px-2" id="csvProductsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <div class="clickeable px-2" id="csvordersDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <button class="btn btn-success mx-1">
                     <i class="zmdi zmdi-file zmdi-hc-lg mr-2"></i>
                     CSV
                 </button>
             
-                <div class="dropdown-menu px-1 py-1" aria-labelledby="csvProductsDropdown">
+                <div class="dropdown-menu px-1 py-1" aria-labelledby="csvordersDropdown">
                     <div class="menu-list">
                         <div class="d-flex align-items-center px-3 my-1 clickeable-hover" (click)="DownloadTemplate()">
                             <i class="zmdi zmdi-file-text"></i>
                             <span class="pl-2">Descargar plantilla</span>
                         </div>
-                        <div class="d-flex align-items-center px-3 my-1 clickeable-hover" (click)="modal.OpenModal(addProductsByCsvModal)">
+                        <div class="d-flex align-items-center px-3 my-1 clickeable-hover" (click)="modal.OpenModal(addordersByCsvModal)">
                             <i class="zmdi zmdi-file-plus"></i>
                             <span class="pl-2">Subir archivo</span>
                         </div>
@@ -33,7 +33,7 @@
     </div>
 
     <ng-container *ngIf="!loading.getting; else bigLoading">
-        <div class="row justify-content-center" *ngIf="!!products?.length; else noProductsMessage">
+        <div class="row justify-content-center" *ngIf="!!orders?.length; else noordersMessage">
             <!-- Filters -->
             <div class="col-12 mb-4">
     
@@ -53,17 +53,17 @@
                     </thead>
                     
                     <tbody>
-                        <tr *ngFor="let product of products">
-                            <td>{{product.name}}</td>
-                            <td>{{product.price}}</td>
-                            <td>{{product.tax}}</td>
-                            <td>{{product.salesMeasurementType?.name + " - " + product.salesMeasurementType?.abrev}}</td>
-                            <td>{{product.inventoryMeasurementType?.name + " - " + product.inventoryMeasurementType?.abrev}}</td>
-                            <td>{{product.buyer?.name ? product.buyer?.name : 'No asignado'}}</td>
+                        <tr *ngFor="let order of orders">
+                            <td>{{order.name}}</td>
+                            <td>{{order.price}}</td>
+                            <td>{{order.tax}}</td>
+                            <td>{{order.salesMeasurementType?.name + " - " + order.salesMeasurementType?.abrev}}</td>
+                            <td>{{order.inventoryMeasurementType?.name + " - " + order.inventoryMeasurementType?.abrev}}</td>
+                            <td>{{order.buyer?.name ? order.buyer?.name : 'No asignado'}}</td>
                             <td>
                                 <div class="d-flex align-items-center justify-content-center">
-                                    <i class="zmdi zmdi-edit zmdi-hc-lg clickeable mx-2" (click)="EditProduct(product); modal.OpenModal(addOrEditProductModal)"></i>
-                                    <i class="zmdi zmdi-delete zmdi-hc-lg clickeable mx-2" (click)="selectedProduct = product; modal.OpenModal(deleteProductModal)"></i>
+                                    <!-- <i class="zmdi zmdi-edit zmdi-hc-lg clickeable mx-2" (click)="EditOrder(order)"></i> -->
+                                    <i class="zmdi zmdi-delete zmdi-hc-lg clickeable mx-2" (click)="selectedOrder = order; modal.OpenModal(deleteorderModal)"></i>
                                 </div>
                             </td>
                         </tr>
@@ -79,13 +79,13 @@
         <i class="zmdi zmdi-spinner zmdi-hc-5x zmdi-hc-spin"></i>
     </div>
 </ng-template>
-<ng-template #noProductsMessage>
+<ng-template #noordersMessage>
     <div class="no-items-message">
-        No tiene productos registrados
+        No tiene ordenes registrados
     </div>
 </ng-template>
 
-<ng-template #addProductsByCsvModal>
+<ng-template #addordersByCsvModal>
     <div class="modal-header">
         <h2 class="modal-title">Agregar por CSV</h2>
         <i class="close-modal-button zmdi zmdi-close-circle-o zmdi-hc-2x clickeable" (click)="modal.CloseModal(loading.updating)"></i>
@@ -98,14 +98,14 @@
                     Seleccionar archivo
                 </button>
                 <span>
-                    {{productsCsv?.name}}
+                    {{ordersCsv?.name}}
                 </span>
                 <input class="d-none" type="file" accept=".csv" (change)="OnFileSelected($event)" #csvFileInput>
             </div>
 
-            <div class="modal-table" *ngIf="!!productsFailed?.length">
+            <div class="modal-table" *ngIf="!!ordersFailed?.length">
                 <div class="my-4 text-center" style="font-size: 1.25rem; font-weight: 700;">
-                    Error al crear productos
+                    Error al crear ordenes
                 </div>
                 <table class="table table-danger table-striped">
                     <thead class="table-thead bg-danger">
@@ -116,9 +116,9 @@
                     </thead>
                     
                     <tbody>
-                        <tr *ngFor="let product of productsFailed">
-                            <td>{{product.product.name}}</td>
-                            <td>{{!!product.reason ? product.reason : 'Error al crear'}}</td>
+                        <tr *ngFor="let order of ordersFailed">
+                            <td>{{order.order.name}}</td>
+                            <td>{{!!order.reason ? order.reason : 'Error al crear'}}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -127,156 +127,32 @@
     </div>
     <div class="modal-footer">
         <button class="btn btn-secondary" (click)="modal.CloseModal()">
-            <span *ngIf="!productsFailed?.length">Cancelar</span>
-            <span *ngIf="!!productsFailed?.length">Cerrar</span>
+            <span *ngIf="!ordersFailed?.length">Cancelar</span>
+            <span *ngIf="!!ordersFailed?.length">Cerrar</span>
         </button>
-        <button class="btn btn-success" [disabled]="loading.updating" (click)="RegisterProducts()">
+        <button class="btn btn-success" [disabled]="loading.updating" (click)="RegisterOrders()">
             <span *ngIf="!loading.updating">{{csvAcceptLabel}}</span>
             <span *ngIf="loading.updating"><i class="zmdi zmdi-spinner zmdi-hc-lg zmdi-hc-spin"></i></span>
         </button>
     </div>
 </ng-template>
 
-<ng-template #deleteProductModal>
+<ng-template #deleteorderModal>
     <div class="modal-header">
-        <h2 class="modal-title">Eliminar producto</h2>
-        <i class="close-modal-button zmdi zmdi-close-circle-o zmdi-hc-2x clickeable" (click)="modal.CloseModal(loading.updating); productForm.reset()"></i>
+        <h2 class="modal-title">Eliminar orden</h2>
+        <i class="close-modal-button zmdi zmdi-close-circle-o zmdi-hc-2x clickeable" (click)="modal.CloseModal(loading.updating)"></i>
     </div>
     <div class="modal-body">
         <div class="d-flex">
-            ¿Esta seguro que desea eliminar a "{{selectedProduct?.name}}"?
+            ¿Esta seguro que desea eliminar a "{{selectedOrder?.name}}"?
         </div>
     </div>
     <div class="modal-footer">
-        <button class="btn btn-secondary" [disabled]="loading.updating" (click)="modal.CloseModal(); productForm.reset()">
+        <button class="btn btn-secondary" [disabled]="loading.updating" (click)="modal.CloseModal()">
             No, cancelar
         </button>
-        <button class="btn btn-danger" [disabled]="loading.updating" (click)="DeleteProduct()">
+        <button class="btn btn-danger" [disabled]="loading.updating" (click)="DeleteOrder()">
             <span *ngIf="!loading.updating">Si, eliminar</span>
-            <span *ngIf="loading.updating"><i class="zmdi zmdi-spinner zmdi-hc-lg zmdi-hc-spin"></i></span>
-        </button>
-    </div>
-</ng-template>
-
-<ng-template #addOrEditProductModal>
-    <div class="modal-header">
-        <h2 class="modal-title">{{ isEditing ? 'Actualizar producto' : 'Agregar un producto'}}</h2>
-        <i class="close-modal-button zmdi zmdi-close-circle-o zmdi-hc-2x clickeable" (click)="modal.CloseModal(loading.updating); productForm.reset()"></i>
-    </div>
-    <div class="modal-body">
-        <div class="w-100">
-            <form [formGroup]="productForm">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="form-group">
-                            <label>Nombre</label>
-                            <div class="input-container">
-                                <i class="input-icon zmdi zmdi-collection-text zmdi-hc-lg"></i>
-                                <input class="form-control" type="text" placeholder="Nombre del producto" formControlName="name" (keyup.enter)="RegisterProduct()">
-                            </div>
-                            <div class="error-messages" *ngIf="form.GetFormControlByName(productForm, 'name')?.touched && form.GetFormControlByName(productForm, 'name')?.errors">
-                                <span class="d-block" *ngIf="form.GetFormControlByName(productForm, 'name')?.errors.required">
-                                    Campo obligatorio
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-sm-6">
-                        <div class="form-group">
-                            <label>Precio</label>
-                            <div class="input-container">
-                                <i class="input-icon zmdi zmdi-money zmdi-hc-lg"></i>
-                                <input class="form-control" type="text" placeholder="Precio del producto" formControlName="price" (keyup.enter)="RegisterProduct()">
-                            </div>
-                            <div class="error-messages" *ngIf="form.GetFormControlByName(productForm, 'price')?.touched && form.GetFormControlByName(productForm, 'price')?.errors">
-                                <span class="d-block" *ngIf="form.GetFormControlByName(productForm, 'price')?.errors.pricenumber">
-                                    Campo obligatorio
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-sm-6">
-                        <div class="form-group">
-                            <label>Impuesto</label>
-                            <div class="input-container">
-                                <i class="input-icon zmdi zmdi-money-box zmdi-hc-lg"></i>
-                                <input class="form-control" type="text" placeholder="Impuesto del producto" formControlName="tax" (keyup.enter)="RegisterProduct()">
-                            </div>
-                            <div class="error-messages" *ngIf="form.GetFormControlByName(productForm, 'tax')?.touched && form.GetFormControlByName(productForm, 'tax')?.errors">
-                                <span class="d-block" *ngIf="form.GetFormControlByName(productForm, 'tax')?.errors.required">
-                                    Campo obligatorio
-                                </span>
-                                <span class="d-block" *ngIf="form.GetFormControlByName(productForm, 'tax')?.errors.onlynumbers">
-                                    Valor inválido
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-sm-6">
-                        <div class="form-group">
-                            <label>Unidad de medida para ventas</label>
-                            <ng-select
-                                class=""
-                                [items]="measurementTypes"
-                                bindLabel="name"
-                                bindValue="id"
-                                (change)="OnSalesMeasurementTypeChanges($event)"
-                                placeholder="Unidad de medida (ventas)"
-                                formControlName="salesMeasurementTypeId"
-                            ></ng-select>
-                            <div class="error-messages" *ngIf="form.GetFormControlByName(productForm, 'salesMeasurementTypeId')?.touched && form.GetFormControlByName(productForm, 'salesMeasurementTypeId')?.errors">
-                                <span class="d-block" *ngIf="form.GetFormControlByName(productForm, 'salesMeasurementTypeId')?.errors.required">
-                                    Campo obligatorio
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-sm-6">
-                        <div class="form-group">
-                            <label>Unidad de medida para inventario</label>
-                            <ng-select
-                                class=""
-                                [items]="measurementTypes"
-                                bindLabel="name"
-                                bindValue="id"
-                                placeholder="Unidad de medida (inventario)"
-                                formControlName="inventoryMeasurementTypeId"
-                            ></ng-select>
-                            <div class="error-messages" *ngIf="form.GetFormControlByName(productForm, 'inventoryMeasurementTypeId')?.touched && form.GetFormControlByName(productForm, 'inventoryMeasurementTypeId')?.errors">
-                                <span class="d-block" *ngIf="form.GetFormControlByName(productForm, 'inventoryMeasurementTypeId')?.errors.required">
-                                    Campo obligatorio
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12">
-                        <div class="form-group">
-                            <label>Comprador</label>
-                            <ng-select
-                                class=""
-                                [items]="buyers"
-                                bindLabel="name"
-                                bindValue="id"
-                                placeholder="Comprador"
-                                formControlName="buyerId"
-                            ></ng-select>
-                            <div class="error-messages" *ngIf="form.GetFormControlByName(productForm, 'buyerId')?.touched && form.GetFormControlByName(productForm, 'buyerId')?.errors">
-                                <span class="d-block" *ngIf="form.GetFormControlByName(productForm, 'buyerId')?.errors.required">
-                                    Campo obligatorio
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-    <div class="modal-footer">
-        <button class="btn btn-secondary" [disabled]="loading.updating" (click)="modal.CloseModal(); productForm.reset()">
-            Cancelar
-        </button>
-        <button class="btn btn-primary" [disabled]="loading.updating" (click)="RegisterProduct()">
-            <span *ngIf="!loading.updating">{{isEditing ? 'Actualizar' : 'Agregar'}}</span>
             <span *ngIf="loading.updating"><i class="zmdi zmdi-spinner zmdi-hc-lg zmdi-hc-spin"></i></span>
         </button>
     </div>
