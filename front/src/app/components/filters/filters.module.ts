@@ -5,6 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 
 import { FiltersComponent } from './filters.component';
+import { DatePickerModule } from '../date-picker/date-picker.module';
 
 const routes: Routes = [
   {
@@ -19,6 +20,7 @@ const routes: Routes = [
     FormsModule,
     CommonModule,
     NgSelectModule,
+    DatePickerModule,
     ReactiveFormsModule,
     // RouterModule.forChild(routes)
   ],

@@ -1,0 +1,9 @@
+.date-picker-container {
+    display: flex;
+    width: 100%;
+    align-items: center;
+}
+
+.input-container {
+    margin-right: .5rem;
+}

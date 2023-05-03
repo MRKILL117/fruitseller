@@ -34,10 +34,10 @@ export class PriceListComponent implements OnInit {
   }
 
   GetProducts(filters: any = null) {
-    let endpoint = `Products/WithPriceHistory`
+    let endpoint = `Products/WithPriceHistory`;
     if(!!filters) endpoint += `/FilteredBy/Text/${filters.text}/StartDate/${filters.startDate}/EndDate/${filters.endDate}`;
     this.loading.getting = true;
-    this.http.Get(`Products/WithPriceHistory`).subscribe((products: any) => {
+    this.http.Get(endpoint).subscribe((products: any) => {
       this.products = products;
       console.log(products);
       this.loading.getting = false;

@@ -61,7 +61,6 @@ label {
     position: relative;
     height: 46px !important;
 }
-
 .input-container input {
     padding-left: 35px;
     height: 100%;
@@ -87,8 +86,8 @@ label {
     left: 0;
     top: 0;
 }
-.input-container .form-control .no-icon input {
-    padding-left: 12px !important;
+.no-icon {
+    padding: 6px 1rem !important;
 }
 
 /* Card override */
@@ -111,7 +110,7 @@ label {
 }
 
 /* Table overrides */
-thead tr {
+.table thead tr {
     background-color: #51A351;
     color: white;
 }

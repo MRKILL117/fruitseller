@@ -66,16 +66,23 @@ module.exports = function(Product) {
         });
     }
 
-    Product.GetAllWithPriceHistory = function(ctx, text, startDate, endDate, callback) {
+    Product.GetAllWithPriceHistory = function(ctx, text = null, startDate = null, endDate = null, callback) {
+        const userId = ctx.accessToken.userId;
+        let where = {adminId: userId, deleted: false};
+        let wherePrices = {};
+        if(!!text && text != '*') where['name'] = {like: `%${text}%`};
+        if(!!startDate && startDate != '*') wherePrices['date'] = {gte: startDate};
+        if(!!endDate && endDate != '*') wherePrices['date'] = {lte: endDate};
+
         Product.app.models.PriceHistory.UpsertTodayPrices(ctx, (err, pricesUPdated) => {
             if(err) return callback(err);
 
-            const userId = ctx.accessToken.userId;
             Product.find({
-                where: {adminId: userId, deleted: false},
+                where,
                 include: {
                     relation: 'prices',
                     scope: {
+                        where: wherePrices,
                         order: 'date DESC'
                     }
                 },

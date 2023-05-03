@@ -1,0 +1,17 @@
+.clients-select {
+    width: 100%;
+}
+
+.flex-50-item {
+    width: 40% !important;
+    min-width: 250px;
+    max-width: 100%;
+}
+
+.small-width {
+    max-width: 70px;
+}
+
+.medium-width {
+    min-width: 120px;
+}

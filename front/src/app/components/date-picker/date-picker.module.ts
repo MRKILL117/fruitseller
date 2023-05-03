@@ -5,25 +5,25 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker'
 
-import { CreateSellOrderComponent } from './create-sell-order.component';
-import { DatePickerModule } from 'src/app/components/date-picker/date-picker.module';
+import { DatePickerComponent } from './date-picker.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: CreateSellOrderComponent
+    component: DatePickerComponent
   }
 ];
 
 @NgModule({
-  declarations: [CreateSellOrderComponent],
+  declarations: [DatePickerComponent],
   imports: [
     FormsModule,
     CommonModule,
     NgSelectModule,
-    DatePickerModule,
     ReactiveFormsModule,
-    RouterModule.forChild(routes)
-  ]
+    BsDatepickerModule.forRoot(),
+    // RouterModule.forChild(routes)
+  ],
+  exports: [DatePickerComponent]
 })
-export class CreateSellOrderModule { }
+export class DatePickerModule { }
