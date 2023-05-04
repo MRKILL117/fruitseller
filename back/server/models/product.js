@@ -69,10 +69,10 @@ module.exports = function(Product) {
     Product.GetAllWithPriceHistory = function(ctx, text = null, startDate = null, endDate = null, callback) {
         const userId = ctx.accessToken.userId;
         let where = {adminId: userId, deleted: false};
-        let wherePrices = {};
+        let wherePrices = {and: []};
         if(!!text && text != '*') where['name'] = {like: `%${text}%`};
-        if(!!startDate && startDate != '*') wherePrices['date'] = {gte: startDate};
-        if(!!endDate && endDate != '*') wherePrices['date'] = {lte: endDate};
+        if(!!startDate && startDate != '*') wherePrices.and.push({date: {gte: startDate}});
+        if(!!endDate && endDate != '*') wherePrices.and.push({date: {gte: endDate}});
 
         Product.app.models.PriceHistory.UpsertTodayPrices(ctx, (err, pricesUPdated) => {
             if(err) return callback(err);

@@ -13,9 +13,7 @@ export class DatePickerComponent implements OnInit {
 
   @ViewChild('datePicker') datePicker: any;
 
-  constructor(
-    private http: HttpService
-  ) { }
+  constructor() { }
 
   ngOnInit(): void {
     setTimeout(() => {

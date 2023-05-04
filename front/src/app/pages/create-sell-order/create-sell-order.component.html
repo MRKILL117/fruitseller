@@ -26,7 +26,7 @@
                     ></ng-select>
                 </div>
 
-                <app-date-picker class="flex-50-item my-3" [presetDate]="orderDate" placeholder="Selecciona una fecha"></app-date-picker>
+                <app-date-picker class="flex-50-item my-3" [presetDate]="orderDate.format('YYYY/MM/DD')" placeholder="Selecciona una fecha"></app-date-picker>
             </div>
         </div>
 
@@ -46,12 +46,18 @@
 
                 <tbody>
                     <tr *ngFor="let item of orderItems; let i = index">
-                        <td class="align-middle small-width" style="max-width: 50px !important;">{{i+1}}</td>
+                        <td class="align-middle small-width" style="max-width: 50px !important;">
+                            <div class="d-flex align-items-center justify-content-center">
+                                <i class="zmdi zmdi-close-circle zmdi-hc-lg clickeable mr-3" (click)="RemoveItem(i)"></i>
+                                {{i+1}}
+                            </div>
+                        </td>
                         <td class="align-middle" style="width: 150px; max-width: 100%;">
                             <ng-select
                                 class=""
                                 [items]="products"
                                 bindLabel="name"
+                                [disabled]="!selectedClient"
                                 placeholder="Productos"
                                 (change)="OnProductSelected($event, item)"
                                 [(ngModel)]="item.product"
@@ -59,28 +65,22 @@
                         </td>
                         <td class="align-middle medium-width">
                             <div class="input-container">
-                                <input class="form-control no-icon" placeholder="Piezas" type="text" [(ngModel)]="item.quantity">
+                                <input class="form-control no-icon" [disabled]="!selectedClient" placeholder="Piezas" type="text" (input)="OnWeightOrQuantityChange(item)" [(ngModel)]="item.quantity">
                             </div>
                         </td>
                         <td class="align-middle medium-width">
                             <div class="input-container">
-                                <input class="form-control no-icon" placeholder="Kilogramos" type="text" [(ngModel)]="item.weight">
+                                <input class="form-control no-icon" [disabled]="!selectedClient" placeholder="Kilogramos" type="text" (input)="OnWeightOrQuantityChange(item)" [(ngModel)]="item.weight">
                             </div>
                         </td>
                         <td class="align-middle medium-width">
-                            <div class="input-container">
-                                <input class="form-control no-icon" disabled placeholder="Impuesto" type="text" [(ngModel)]="item.tax">
-                            </div>
+                            {{item.tax ? item.tax : 'N/A'}}
                         </td>
                         <td class="align-middle medium-width">
-                            <div class="input-container">
-                                <input class="form-control no-icon" disabled placeholder="Precio" type="text" [(ngModel)]="item.price">
-                            </div>
+                            {{item.price ? item.price : 'N/A'}}
                         </td>
                         <td class="align-middle medium-width">
-                            <div class="input-container">
-                                <input class="form-control no-icon" disabled placeholder="Total" type="text" [(ngModel)]="item.total">
-                            </div>
+                            {{item.total ? item.total : 'N/A'}}
                         </td>
                     </tr>
                     <tr>

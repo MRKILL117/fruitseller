@@ -24,7 +24,7 @@ export class CreateSellOrderComponent implements OnInit {
     price: null,
     total: null,
   }
-  orderDate: string = moment().tz(environment.timezone).add(1, 'day').format('YYYY-MM-DD');
+  orderDate: moment.Moment = moment().tz(environment.timezone);
   loading: any = {
     getting: false,
     creating: false
@@ -56,7 +56,7 @@ export class CreateSellOrderComponent implements OnInit {
 
   GetProducts() {
     this.loading.getting = true;
-    this.http.Get(`Products`).subscribe((products: any) => {
+    this.http.Get(`Products/WithPriceHistory/FilteredBy/Text/*/StartDate/${this.orderDate.format('YYYY-MM-DD')}/EndDate/${this.orderDate.format('YYYY-MM-DD')}`).subscribe((products: any) => {
       this.products = products;
       this.loading.getting = false;
     }, err => {
@@ -80,15 +80,26 @@ export class CreateSellOrderComponent implements OnInit {
   PushItem() {
     this.orderItems.push(Object.assign({}, this.orderItem));
   }
+  RemoveItem(idx: number) {
+    if(this.orderItems.length > 1) this.orderItems.splice(idx, 1);
+  }
 
-  OnProductSelected(product: any, orderItem: any) {
-    orderItem.tax = product.tax;
-    orderItem.price = product.price;
-    orderItem.total = this.GetItemTotal(orderItem);
+  OnProductSelected(product: any, item: any) {
+    item.tax = product.tax;
+    item.price = product.price;
+    item.total = this.GetItemTotal(item);
+  }
+
+  OnWeightOrQuantityChange(item: any) {
+    item.total = this.GetItemTotal(item);
   }
 
   SaveOrder() {
-    
+    this.http.Post(`Orders`, {}).subscribe(newOrder => {
+      this.toast.ShowDefaultSuccess(`Orden creada exitosamente`);
+    }, err => {
+      console.error("Error creating order", err);
+    });
   }
 
   GetItemTotal(item: any): string | number {
