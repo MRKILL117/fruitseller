@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import * as moment from 'moment-timezone';
 import { HttpService } from 'src/app/services/http.service';
 import { NavigationService } from 'src/app/services/navigation.service';
@@ -28,6 +29,28 @@ export class CreateSellOrderComponent implements OnInit {
   loading: any = {
     getting: false,
     creating: false
+  }
+
+  public get orderSubtotal() {
+    let subtotal = 0;
+    this.orderItems.forEach(item => {
+      if(!!item.price) subtotal += item.price;
+    });
+    return subtotal;
+  }
+  public get orderTaxes() {
+    let taxes = 0;
+    this.orderItems.forEach(item => {
+      if(!!item.tax) taxes += item.tax;
+    });
+    return taxes;
+  }
+  public get orderTotal() {
+    let total = 0;
+    this.orderItems.forEach(item => {
+      if(!!item.total) total += item.total;
+    });
+    return total;
   }
 
   constructor(
@@ -86,7 +109,7 @@ export class CreateSellOrderComponent implements OnInit {
 
   OnProductSelected(product: any, item: any) {
     item.tax = product.tax;
-    item.price = product.price;
+    item.price = product.prices.length ? product.prices[0] : item.price;
     item.total = this.GetItemTotal(item);
   }
 
@@ -95,11 +118,28 @@ export class CreateSellOrderComponent implements OnInit {
   }
 
   SaveOrder() {
-    this.http.Post(`Orders`, {}).subscribe(newOrder => {
+    if(!this.ValidateOrderData()) {
+      this.toast.ShowDefaultWarning(`La orden no es valida`);
+    }
+
+    let order = {
+      date: this.orderDate.toISOString(),
+      items: this.orderItems,
+      subtotal: this.orderSubtotal,
+      taxes: this.orderTaxes,
+      total: this.orderTotal,
+      client: this.selectedClient
+    }
+    this.http.Post(`Orders`, {order}).subscribe(newOrder => {
       this.toast.ShowDefaultSuccess(`Orden creada exitosamente`);
     }, err => {
       console.error("Error creating order", err);
     });
+  }
+
+  ValidateOrderData() {
+    if(!this.selectedClient) return false;
+    return true;
   }
 
   GetItemTotal(item: any): string | number {

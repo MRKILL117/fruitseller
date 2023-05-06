@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { HttpService } from 'src/app/services/http.service';
+import * as moment from 'moment-timezone';
 
 @Component({
   selector: 'app-date-picker',
@@ -23,6 +23,10 @@ export class DatePickerComponent implements OnInit {
 
   ClearInput() {
     this.datePicker.bsValue = null;
+  }
+
+  OnDatePicked(date: any) {
+    console.log(moment(date).toISOString());
   }
 
 }

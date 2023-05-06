@@ -2,7 +2,7 @@
     <div class="input-container flex-grow-1">
         <i class="input-icon zmdi zmdi-calendar zmdi-hc-lg"></i>
         <input type="text" [placeholder]="placeholder" [bsConfig]="{containerClass: 'theme-dark-blue'}"
-        class="form-control" #datePicker="bsDatepicker" bsDatepicker>
+        class="form-control" #datePicker="bsDatepicker" (bsValueChange)="OnDatePicked($event)" bsDatepicker>
     </div>
     <i class="zmdi zmdi-close-circle-o zmdi-hc-2x clickeable" (click)="ClearInput()"></i>
 </div>
