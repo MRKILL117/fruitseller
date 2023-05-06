@@ -47,17 +47,9 @@ module.exports = function(Order) {
 
     Order.prototype.Delete = function(callback) {
         this.deleted = true;
-        Order.findById(this.id, {include: 'products'}, (err, order) => {
+        this.save((err, deleted) => {
             if(err) return callback(err);
-
-            Order.app.models.Product.updateAll({id: {inq: Order.products().map(prod => prod.id)}}, {orderId: null}, (err, updated) => {
-                if(err) return callback(err);
-
-                this.save((err, deleted) => {
-                    if(err) return callback(err);
-                    return callback(null, deleted);
-                });
-            });
+            return callback(null, deleted);
         });
     }
 

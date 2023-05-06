@@ -42,24 +42,24 @@
                 <table class="table table-striped">
                     <thead class="table-thead">
                         <tr>
-                            <th>Nombre</th>
-                            <th>Precio</th>
-                            <th>Impuesto</th>
-                            <th>Unidad de medida (ventas)</th>
-                            <th>Unidad de medida (inventario)</th>
-                            <th>Comprador</th>
+                            <th>#</th>
+                            <th>Fecha</th>
+                            <th>Cliente</th>
+                            <th>Impuestos</th>
+                            <th>Subtotal</th>
+                            <th>Total</th>
                             <th></th>
                         </tr>
                     </thead>
                     
                     <tbody>
                         <tr *ngFor="let order of orders">
-                            <td>{{order.name}}</td>
-                            <td>{{order.price}}</td>
-                            <td>{{order.tax}}</td>
-                            <td>{{order.salesMeasurementType?.name + " - " + order.salesMeasurementType?.abrev}}</td>
-                            <td>{{order.inventoryMeasurementType?.name + " - " + order.inventoryMeasurementType?.abrev}}</td>
-                            <td>{{order.buyer?.name ? order.buyer?.name : 'No asignado'}}</td>
+                            <td>{{order.id}}</td>
+                            <td>{{order.date | date:"medium"}}</td>
+                            <td>{{order.client.name}}</td>
+                            <td>{{order.taxes}}</td>
+                            <td>{{order.subtotal}}</td>
+                            <td>{{order.total}}</td>
                             <td>
                                 <div class="d-flex align-items-center justify-content-center">
                                     <!-- <i class="zmdi zmdi-edit zmdi-hc-lg clickeable mx-2" (click)="EditOrder(order)"></i> -->
