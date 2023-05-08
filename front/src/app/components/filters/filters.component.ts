@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { filter } from 'src/app/common/data-types.interface';
 import { FormService } from 'src/app/services/form.service';
 
 @Component({
@@ -17,14 +18,14 @@ export class FiltersComponent implements OnInit {
     options: null
   };
 
-  @Output() onSearch: EventEmitter<any> = new EventEmitter<any>();
+  @Output() onSearch: EventEmitter<filter> = new EventEmitter<filter>();
 
   timer: any = null;
   filtersForm: FormGroup = new FormGroup({
     text: new FormControl('', []),
     startDate: new FormControl(null, []),
     endDate: new FormControl(null, []),
-    options: new FormControl(null, [])
+    options: new FormControl(null, []),
   });
 
   constructor(
@@ -34,8 +35,13 @@ export class FiltersComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  SetDate(filterName: string, date: string) {
+    this.filters[filterName] = date;
+    this.Search();
+  }
+
   Search(keyupEvent: boolean = false) {
-    let filters = this.filtersForm.value;
+    let filters: filter = this.filtersForm.value;
     filters.text = !!filters.text ? filters.text : '*';
     filters.startDate = !!filters.startDate ? filters.startDate : '*';
     filters.endDate = !!filters.endDate ? filters.endDate : '*';

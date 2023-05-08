@@ -124,6 +124,18 @@
           "http": {
             "source": "req"
           }
+        },
+        {
+          "arg": "startDate",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "arg": "endDate",
+          "type": "string",
+          "required": false,
+          "description": ""
         }
       ],
       "returns": [
@@ -138,6 +150,10 @@
       "http": [
         {
           "path": "/",
+          "verb": "get"
+        },
+        {
+          "path": "/FilteredBy/StartDate/:startDate/EndDate/:endDate",
           "verb": "get"
         }
       ]

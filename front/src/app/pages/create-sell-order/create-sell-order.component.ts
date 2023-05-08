@@ -147,11 +147,11 @@ export class CreateSellOrderComponent implements OnInit {
     if(!this.selectedClient) return `No ha seleccionado cliente`;
     this.orderItems.forEach((item, idx): any => {
       if(!item.product) return errorMessage = `La fila ${idx+1} no tiene producto seleccionado`;
-      switch (item.product.salesMeasurementType.abrev) {
-        case 'kg': if(!item.weight || Number.isNaN(item.weight)) return errorMessage = `El producto ${item.product.name} no tiene cantidad de Kg valida`; break;
-        case 'pz': if(!item.quantity || Number.isNaN(item.quantity)) return errorMessage = `El producto ${item.product.name} no tiene cantidad de Pz valida`; break;
-        default: if(!item.weight || Number.isNaN(item.weight)) return errorMessage = `El producto ${item.product.name} no tiene cantidad de Kg valida`; break;
-      }
+      // switch (item.product.salesMeasurementType.abrev) {
+      //   case 'kg': if(!item.weight || Number.isNaN(item.weight)) return errorMessage = `El producto ${item.product.name} no tiene cantidad de Kg valida`; break;
+      //   case 'pz': if(!item.quantity || Number.isNaN(item.quantity)) return errorMessage = `El producto ${item.product.name} no tiene cantidad de Pz valida`; break;
+      //   default: if(!item.weight || Number.isNaN(item.weight)) return errorMessage = `El producto ${item.product.name} no tiene cantidad de Kg valida`; break;
+      // }
     });
     return errorMessage;
   }

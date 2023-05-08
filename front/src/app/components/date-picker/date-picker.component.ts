@@ -1,5 +1,6 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import * as moment from 'moment-timezone';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-date-picker',
@@ -8,8 +9,10 @@ import * as moment from 'moment-timezone';
 })
 export class DatePickerComponent implements OnInit {
 
-  @Input() placeholder: string = 'Ingrese una fecha';
+  @Input() placeholder: string = 'Seleccione una fecha';
   @Input() presetDate: string | null = null;
+
+  @Output() onDateChange: EventEmitter<string> = new EventEmitter<string>();
 
   @ViewChild('datePicker') datePicker: any;
 
@@ -26,7 +29,7 @@ export class DatePickerComponent implements OnInit {
   }
 
   OnDatePicked(date: any) {
-    console.log(moment(date).toISOString());
+    this.onDateChange.emit(moment(date).tz(environment.timezone).toISOString());
   }
 
 }

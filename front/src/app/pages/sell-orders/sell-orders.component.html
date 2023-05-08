@@ -36,7 +36,7 @@
         <div class="row justify-content-center" *ngIf="!!orders?.length; else noordersMessage">
             <!-- Filters -->
             <div class="col-12 mb-4">
-    
+                <app-filters [timerTrigger]="true" [filters]="{text:false,startDate:true,endDate:true,options:null}" (onSearch)="GetOrders($event)"></app-filters>
             </div>
             <div class="col-12 col-lg-11">
                 <table class="table table-striped">
@@ -55,11 +55,11 @@
                     <tbody>
                         <tr *ngFor="let order of orders">
                             <td>{{order.id}}</td>
-                            <td>{{order.date | date:"medium"}}</td>
+                            <td>{{order.date | date:"dd/MM/YYYY hh:mm a"}}</td>
                             <td>{{order.client.name}}</td>
-                            <td>{{order.taxes}}</td>
-                            <td>{{order.subtotal}}</td>
-                            <td>{{order.total}}</td>
+                            <td>${{order.taxes}}</td>
+                            <td>${{order.subtotal}}</td>
+                            <td>${{order.total}}</td>
                             <td>
                                 <div class="d-flex align-items-center justify-content-center">
                                     <!-- <i class="zmdi zmdi-edit zmdi-hc-lg clickeable mx-2" (click)="EditOrder(order)"></i> -->

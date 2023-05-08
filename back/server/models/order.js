@@ -12,10 +12,12 @@ module.exports = function(Order) {
         });
     }
 
-    Order.GetAll = function(ctx, callback) {
+    Order.GetAll = function(ctx, startDate, endDate, callback) {
         const userId = ctx.accessToken.userId;
+        let where = {and: [{adminId: userId}, {deleted: false},]};
+        if(!!startDate && startDate != '*') where.and.push({date: {gte: startDate}});
         Order.find({
-            where: {adminId: userId, deleted: false},
+            where,
             order: 'date DESC'
         }, (err, orders) => {
             if(err) return callback(err);

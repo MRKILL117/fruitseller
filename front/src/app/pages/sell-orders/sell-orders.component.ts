@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { onlyNumbers, priceNumber } from 'src/app/common/custom-validators.directive';
+import { filter } from 'src/app/common/data-types.interface';
 import { CsvService } from 'src/app/services/csv.service';
 import { FormService } from 'src/app/services/form.service';
 import { HttpService } from 'src/app/services/http.service';
@@ -108,9 +109,11 @@ export class SellOrdersComponent implements OnInit {
     });
   }
 
-  GetOrders() {
+  GetOrders(filters: filter | null = null) {
     this.loading.getting = true;
-    this.http.Get(`Orders`).subscribe((Orders: any) => {
+    let endpoint = `/Orders`;
+    if(!!filters) endpoint += `/FilteredBy/StartDate/${filters.startDate}/EndDate${filters.endDate}`;
+    this.http.Get(endpoint).subscribe((Orders: any) => {
       this.orders = Orders;
       this.loading.getting = false;
     }, err => {
