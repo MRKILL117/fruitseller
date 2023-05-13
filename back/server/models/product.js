@@ -76,13 +76,13 @@ module.exports = function(Product) {
 
         Product.app.models.PriceHistory.UpsertTodayPrices(ctx, (err, pricesUPdated) => {
             if(err) return callback(err);
-
+            
             Product.find({
                 where,
                 include: {
                     relation: 'prices',
                     scope: {
-                        where: wherePrices,
+                        where: !!wherePrices.and.length ? wherePrices : {},
                         order: 'date DESC'
                     }
                 },

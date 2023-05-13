@@ -99,20 +99,17 @@ export class SellOrdersComponent implements OnInit {
   }
 
   GetBuyers() {
-    this.loading.getting = true;
     this.http.Get(`Buyers`).subscribe((buyers: any) => {
       this.buyers = buyers;
-      this.loading.getting = false;
     }, err => {
       console.error("Error getting buyers", err);
-      this.loading.getting = false;
     });
   }
 
   GetOrders(filters: filter | null = null) {
     this.loading.getting = true;
     let endpoint = `/Orders`;
-    if(!!filters) endpoint += `/FilteredBy/StartDate/${filters.startDate}/EndDate${filters.endDate}`;
+    if(!!filters) endpoint += `/FilteredBy/StartDate/${filters.startDate}/EndDate/${filters.endDate}`;
     this.http.Get(endpoint).subscribe((Orders: any) => {
       this.orders = Orders;
       this.loading.getting = false;

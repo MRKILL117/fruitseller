@@ -1,7 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import * as moment from 'moment-timezone';
 import { filter } from 'src/app/common/data-types.interface';
 import { FormService } from 'src/app/services/form.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-filters',
@@ -11,6 +13,7 @@ import { FormService } from 'src/app/services/form.service';
 export class FiltersComponent implements OnInit {
 
   @Input() timerTrigger: boolean = false;
+  @Input() dateIncludesTime: boolean = false;
   @Input() filters: any = {
     text: true,
     startDate: true,
@@ -36,7 +39,10 @@ export class FiltersComponent implements OnInit {
   }
 
   SetDate(filterName: string, date: string) {
-    this.filters[filterName] = date;
+    let dateMoment = moment(date).tz(environment.timezone);
+    if(filterName.toLowerCase().includes('start')) dateMoment.startOf('day');
+    if(filterName.toLowerCase().includes('end')) dateMoment.endOf('day');
+    this.filtersForm.get(filterName)?.setValue(dateMoment.toISOString());
     this.Search();
   }
 
