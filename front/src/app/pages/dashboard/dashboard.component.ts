@@ -37,7 +37,7 @@ export class DashboardComponent implements OnInit {
     },
     {
       title: 'Compras del día',
-      route: 'daily-shopping',
+      route: 'daily-shopping-list',
       icon: 'zmdi-shopping-cart',
       img: 'shopping.jpg'
     },

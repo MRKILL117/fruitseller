@@ -46,6 +46,10 @@ const routes: Routes = [
         path: 'sell-orders/create',
         loadChildren: () => import('./pages/create-sell-order/create-sell-order.module').then( m => m.CreateSellOrderModule)
       },
+      {
+        path: 'daily-shopping-list',
+        loadChildren: () => import('./pages/daily-shopping-list/daily-shopping-list.module').then( m => m.DailyShoppingListModule)
+      },
     ]
   },
 ];
