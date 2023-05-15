@@ -140,6 +140,31 @@ var SeedMeasurementTypes = function() {
   });
 }
 
+var SeedOrderStatuses = function() {
+  return new Promise((res, rej) => {
+    const orderStatuses = [
+      {
+        id: 1,
+        name: 'Pendiente',
+      },
+      {
+        id: 2,
+        name: 'En camino',
+      },
+      {
+        id: 3,
+        name: 'Entregada',
+      },
+    ];
+    const conditions = [
+      {key: 'id'}
+    ];
+
+    let cont = 0, limit = orderStatuses.length;
+    SeedArrayInModel(app.models.OrderStatus, orderStatuses, conditions).then(() => res()).catch(err => rej(err));
+  });
+}
+
 var InitializeCornjobs = function() {
   return new Promise((res, rej) => {
     app.models.PriceHistory.DailyCronJobToUpdatePrices();
@@ -152,6 +177,7 @@ var AutoFillData = function() {
     try {
       await SeedRoles();
       await SeedUsers();
+      await SeedOrderStatuses();
       await SeedMeasurementTypes();
       await InitializeCornjobs();
     } catch (err) {

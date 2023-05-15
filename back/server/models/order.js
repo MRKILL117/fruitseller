@@ -14,8 +14,10 @@ module.exports = function(Order) {
 
     Order.GetAll = function(ctx, startDate, endDate, callback) {
         const userId = ctx.accessToken.userId;
-        let where = {and: [{adminId: userId}, {deleted: false},]};
+        let where = {and: [{adminId: userId}, {deleted: false}]};
         if(!!startDate && startDate != '*') where.and.push({date: {gte: startDate}});
+        if(!!endDate && endDate != '*') where.and.push({date: {lte: endDate}});
+        console.log(startDate);
         Order.find({
             where,
             order: 'date DESC'

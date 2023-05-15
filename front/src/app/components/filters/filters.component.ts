@@ -18,7 +18,8 @@ export class FiltersComponent implements OnInit {
     text: true,
     startDate: true,
     endDate: true,
-    options: null
+    optionsLabel: 'Seleccione una opcion',
+    options: [],
   };
 
   @Output() onSearch: EventEmitter<filter> = new EventEmitter<filter>();
@@ -43,6 +44,11 @@ export class FiltersComponent implements OnInit {
     if(filterName.toLowerCase().includes('start')) dateMoment.startOf('day');
     if(filterName.toLowerCase().includes('end')) dateMoment.endOf('day');
     this.filtersForm.get(filterName)?.setValue(dateMoment.toISOString());
+    this.Search();
+  }
+
+  OnOptionSelected(option: any) {
+    this.filtersForm.get('options')?.setValue(option);
     this.Search();
   }
 

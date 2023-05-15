@@ -28,7 +28,7 @@ export class SellOrdersComponent implements OnInit {
     updating: false,
     getting: true
   }
-  OrderForm: FormGroup = new FormGroup({
+  orderForm: FormGroup = new FormGroup({
     id: new FormControl(null, []),
     name: new FormControl('', [Validators.required]),
     price: new FormControl('', [Validators.required, priceNumber]),
@@ -85,8 +85,8 @@ export class SellOrdersComponent implements OnInit {
   }
 
   OnSalesMeasurementTypeChanges(measurementType: any) {
-    if(!!measurementType && !this.OrderForm.get('inventoryMeasurementTypeId')?.value) {
-      this.OrderForm.get('inventoryMeasurementTypeId')?.setValue(measurementType.id);
+    if(!!measurementType && !this.orderForm.get('inventoryMeasurementTypeId')?.value) {
+      this.orderForm.get('inventoryMeasurementTypeId')?.setValue(measurementType.id);
     }
   }
 
@@ -120,8 +120,8 @@ export class SellOrdersComponent implements OnInit {
   }
 
   RegisterOrder() {
-    if(this.OrderForm.invalid) {
-      this.OrderForm.markAllAsTouched();
+    if(this.orderForm.invalid) {
+      this.orderForm.markAllAsTouched();
       this.toast.ShowDefaultWarning(`Favor de llenar los campos obligatorios`);
       return;
     }
@@ -133,10 +133,10 @@ export class SellOrdersComponent implements OnInit {
       return;
     }
     
-    this.http.Post(`Orders`, {Order: this.OrderForm.value}).subscribe(newOrder => {
+    this.http.Post(`Orders`, {Order: this.orderForm.value}).subscribe(newOrder => {
       this.GetOrders();
       this.toast.ShowDefaultSuccess(`Orden creado exitosamente`);
-      this.OrderForm.reset();
+      this.orderForm.reset();
       this.modal.CloseModal();
       this.loading.updating = false;
     }, err => {
@@ -168,7 +168,7 @@ export class SellOrdersComponent implements OnInit {
   }
 
   UpdateOrder() {
-    const Order = this.OrderForm.value;
+    const Order = this.orderForm.value;
     this.http.Patch(`Orders`, {Order}).subscribe(OrderSaved => {
       this.GetOrders();
       this.toast.ShowDefaultSuccess(`Orden actualizado con éxito`);
@@ -184,9 +184,9 @@ export class SellOrdersComponent implements OnInit {
 
   EditOrder(Order: any) {
     this.isEditing = true;
-    for (const key in this.OrderForm.controls) {
-      if (Object.prototype.hasOwnProperty.call(this.OrderForm.controls, key)) {
-        const control = this.OrderForm.controls[key];
+    for (const key in this.orderForm.controls) {
+      if (Object.prototype.hasOwnProperty.call(this.orderForm.controls, key)) {
+        const control = this.orderForm.controls[key];
         control.setValue(Order[key]);
       }
     }

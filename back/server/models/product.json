@@ -32,6 +32,16 @@
         "dataScale": 2
       }
     },
+    "weightPerPiece": {
+      "type": "number",
+      "required": true,
+      "default": 1,
+      "mysql": {
+        "dataType": "DECIMAL",
+        "dataPrecision": 20,
+        "dataScale": 2
+      }
+    },
     "deleted": {
       "type": "boolean",
       "required": true,

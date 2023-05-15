@@ -2,5 +2,6 @@ export interface filter {
     text: string,
     startDate: string,
     endDate: string,
-    options: Array<any>
+    optionsLabel: string,
+    options: Array<any>,
 }

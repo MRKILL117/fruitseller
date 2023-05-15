@@ -9,10 +9,14 @@
         <app-date-picker class="flex-grow-1 mx-2" *ngIf="!!filters?.startDate" (onDateChange)="SetDate('startDate', $event)"></app-date-picker>
         <app-date-picker class="flex-grow-1 mx-2" *ngIf="!!filters?.endDate" (onDateChange)="SetDate('endDate', $event)"></app-date-picker>
         <div class="space" *ngIf="!!filters?.options"></div>
-        <div class="form-group flex-grow-1" *ngIf="!!filters?.options">
-            <div class="input-container">
-                <input class="form-control no-icon" type="date" placeholder="Buscar" formControlName="options" (keyup)="Search(true)" (keyup.enter)="Search()">
-            </div>
+        <div class="form-group flex-grow-1" *ngIf="!!filters?.options?.length">
+            <ng-select
+                class="clients-select"
+                [items]="filters.options"
+                bindLabel="name"
+                [placeholder]="filters.optionsLabel"
+                (change)="OnOptionSelected($event)"
+            ></ng-select>
         </div>
         <button class="btn btn-success" *ngIf="!timerTrigger" (click)="Search()">
             Filtrar
