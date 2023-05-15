@@ -1,28 +1,57 @@
 <div class="card d-flex flex-column">
-    <div class="d-flex align-items-center justify-content-around">
-        <div class="name">{{product?.name}}</div>
-        <div>
-            <input type="text" [(ngModel)]="product.prices[0].purchasePrice">
+    <form [formGroup]="productPriceForm">
+        <div class="d-flex align-items-center justify-content-around flex-wrap">
+            <div class="name mx-2">{{product?.name}}</div>
+            <div class="form-group mx-2">
+                <label> Precio de compra</label>
+                <div class="input-container">
+                    <i class="input-icon zmdi zmdi-money zmdi-hc-lg"></i>
+                    <input class="form-control" type="text" placeholder="Precio de compra" formControlName="purchasePrice" (keyup.enter)="UpdatePrice()">
+                </div>
+                <div class="error-messages" *ngIf="form.GetFormControlByName(productPriceForm, 'purchasePrice')?.touched && form.GetFormControlByName(productPriceForm, 'purchasePrice')?.errors">
+                    <span class="d-block" *ngIf="form.GetFormControlByName(productPriceForm, 'purchasePrice')?.errors.required">
+                        Campo obligatorio
+                    </span>
+                    <span class="d-block" *ngIf="form.GetFormControlByName(productPriceForm, 'purchasePrice')?.errors.pricenumber">
+                        Valor invalido
+                    </span>
+                </div>
+            </div>
+            <div class="form-group mx-2">
+                <label> Precio de venta</label>
+                <div class="input-container">
+                    <i class="input-icon zmdi zmdi-money zmdi-hc-lg"></i>
+                    <input class="form-control" type="text" placeholder="Precio de venta" formControlName="salePrice" (keyup.enter)="UpdatePrice()">
+                </div>
+                <div class="error-messages" *ngIf="form.GetFormControlByName(productPriceForm, 'salePrice')?.touched && form.GetFormControlByName(productPriceForm, 'salePrice')?.errors">
+                    <span class="d-block" *ngIf="form.GetFormControlByName(productPriceForm, 'salePrice')?.errors.required">
+                        Campo obligatorio
+                    </span>
+                    <span class="d-block" *ngIf="form.GetFormControlByName(productPriceForm, 'salePrice')?.errors.pricenumber">
+                        Valor invalido
+                    </span>
+                </div>
+            </div>
+            <div class="mx-2" *ngIf="!history">
+                <button class="btn btn-success" (click)="UpdatePrice()">
+                    Actualizar
+                </button>
+            </div>
+            <div *ngIf="history" class="clickeable" (click)="showHistory = !showHistory">
+                <i class="zmdi zmdi-caret-down zmdi-hc-3x" [ngClass]="{'caret-active': showHistory}"></i>
+            </div>
         </div>
-        <div>
-            <input type="text" [(ngModel)]="product.prices[0].salePrice">
+    </form>
+    <div class="d-flex flex-column price-history position-relative" [ngClass]="{'toggle-active': showHistory}">
+        <div class="div-table t-header">
+            <div class="th"><b>Fecha</b></div>
+            <div class="th"><b>Precio de compra</b></div>
+            <div class="th"><b>Precio de venta</b></div>
         </div>
-        <div class="clickeable" (click)="showHistory = !showHistory">
-            <i class="zmdi zmdi-caret-down zmdi-hc-3x" [ngClass]="{'caret-active': showHistory}"></i>
-        </div>
-    </div>
-    <div class="d-flex flex-column price-history" [ngClass]="{'toggle-active': showHistory}">
-        <div class="d-flex align-items-center justify-content-around">
-            <div class="name">Fecha</div>
-            <div>Precio de compra</div>
-            <div>Precio de venta</div>
-            <div></div>
-        </div>
-        <div class="d-flex align-items-center justify-content-around" *ngFor="let price of product?.prices">
-            <div class="name">{{price.date}}</div>
-            <div>{{price.purchasePrice}}</div>
-            <div>{{price.salePrice}}</div>
-            <div></div>
+        <div class="div-table t-body" *ngFor="let price of product?.prices">
+            <div class="th">{{price.date | date:"dd/MM/YYYY"}}</div>
+            <div class="th">${{price.purchasePrice}}</div>
+            <div class="th">${{price.salePrice}}</div>
         </div>
     </div>
 </div>

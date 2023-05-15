@@ -17,7 +17,6 @@ module.exports = function(Order) {
         let where = {and: [{adminId: userId}, {deleted: false}]};
         if(!!startDate && startDate != '*') where.and.push({date: {gte: startDate}});
         if(!!endDate && endDate != '*') where.and.push({date: {lte: endDate}});
-        console.log(startDate);
         Order.find({
             where,
             order: 'date DESC'

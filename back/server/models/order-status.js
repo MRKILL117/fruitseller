@@ -21,7 +21,7 @@ module.exports = function(OrderStatus) {
             if(err) return callback(err);
 
             return callback(null, status);
-        })
+        });
     }
 
 };

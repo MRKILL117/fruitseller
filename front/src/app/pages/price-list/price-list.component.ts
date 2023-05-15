@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit } from '@angular/core';
 import { CsvService } from 'src/app/services/csv.service';
 import { HttpService } from 'src/app/services/http.service';
 import { ModalService } from 'src/app/services/modal.service';
@@ -12,6 +12,8 @@ import { ToastService } from 'src/app/services/toast.service';
 })
 export class PriceListComponent implements OnInit {
 
+  onShowHistory: EventEmitter<any> = new EventEmitter<any>();
+  showingHistory: boolean = false;
   products: Array<any> = [];
   loading: any = {
     getting: false
@@ -39,7 +41,6 @@ export class PriceListComponent implements OnInit {
     this.loading.getting = true;
     this.http.Get(endpoint).subscribe((products: any) => {
       this.products = products;
-      console.log(products);
       this.loading.getting = false;
     }, err => {
       console.error("Error getting products", err);

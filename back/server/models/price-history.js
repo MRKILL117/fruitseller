@@ -56,6 +56,17 @@ module.exports = function(PriceHistory) {
         });
     }
 
+    PriceHistory.prototype.UpdatePrices = function(priceHistory, callback) {
+        this.purchasePrice = priceHistory.purchasePrice;
+        this.salePrice = priceHistory.salePrice;
+
+        this.save((err, saved) => {
+            if(err) return callback(err);
+
+            return callback(null, saved);
+        });
+    }
+
     PriceHistory.DailyCronJobToUpdatePrices = function() {
         // second minute hour day(month) month day(week)
         // Every day at 12:00 a.m.

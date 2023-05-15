@@ -189,8 +189,11 @@
                                 <input class="form-control" type="text" placeholder="Precio del producto" formControlName="price" (keyup.enter)="RegisterProduct()">
                             </div>
                             <div class="error-messages" *ngIf="form.GetFormControlByName(productForm, 'price')?.touched && form.GetFormControlByName(productForm, 'price')?.errors">
-                                <span class="d-block" *ngIf="form.GetFormControlByName(productForm, 'price')?.errors.pricenumber">
+                                <span class="d-block" *ngIf="form.GetFormControlByName(productForm, 'price')?.errors.required">
                                     Campo obligatorio
+                                </span>
+                                <span class="d-block" *ngIf="form.GetFormControlByName(productForm, 'price')?.errors.pricenumber">
+                                    Valor invalido
                                 </span>
                             </div>
                         </div>

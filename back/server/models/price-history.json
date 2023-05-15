@@ -33,5 +33,31 @@
   "validations": [],
   "relations": {},
   "acls": [],
-  "methods": {}
+  "methods": {
+    "prototype.UpdatePrices": {
+      "accepts": [
+        {
+          "arg": "priceHistory",
+          "type": "object",
+          "required": true,
+          "description": ""
+        }
+      ],
+      "returns": [
+        {
+          "arg": "product",
+          "type": "object",
+          "root": true,
+          "description": ""
+        }
+      ],
+      "description": "",
+      "http": [
+        {
+          "path": "/UpdatePrices",
+          "verb": "patch"
+        }
+      ]
+    }
+  }
 }

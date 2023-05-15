@@ -104,7 +104,7 @@ export class CreateSellOrderComponent implements OnInit {
   
   OnWeightOrQuantityChange(item: any) {
     if(!!item.product) {
-      const productPrice = item.product.prices.length ? item.product.prices[0].salePrice : item.price;
+      const productPrice = item.product.prices.length ? item.product.prices[0].salePrice : item.product.price;
       let productQuantity = 0;
       switch (item.product.salesMeasurementType.abrev) {
         case 'kg': productQuantity = !!item.weight ? item.weight : 0; break;
@@ -112,7 +112,8 @@ export class CreateSellOrderComponent implements OnInit {
         default: productQuantity = !!item.weight ? item.weight : 0; break;
       }
       if(!Number.isNaN(Number(productQuantity))) {
-        item.price = Number(productQuantity) * (productPrice + (productPrice*Number(this.selectedClient.utilityPercentage)/100));
+        const clientCommission = productPrice*Number(this.selectedClient.utilityPercentage)/100;
+        item.price = Number(productQuantity) * (productPrice + clientCommission);
         item.tax = item.price * this.IVA;
         item.total = item.price + item.tax;
       }
