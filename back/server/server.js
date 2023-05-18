@@ -73,11 +73,10 @@ var SeedArrayInModel = function(model, array = [], conditions = [{ key: ""}]){
       }
       conditions.forEach((condition) => {
         if(!!condition.key) filter.where[condition.key] = element[condition.key];
-      })
+      });
       model.findOrCreate(filter, element, (err) => {
         if(err) reject(err);
-        cont++;
-        if(cont == limit) resolve('ok');
+        if(++cont == limit) resolve('ok');
       });
     });
   });
@@ -93,7 +92,7 @@ var SeedRoles = function() {
     ];
     const conditions = [
       {key: 'name'}
-    ]
+    ];
   
     SeedArrayInModel(app.models.Role, roles, conditions).then(() => res()).catch(err => rej(err));
   });
@@ -114,8 +113,62 @@ var SeedUsers = function() {
     users.forEach(user => {
       app.models.Account.CreateUserWithRole(user, (err, newUser) => {
         if(err) rej(err);
+        if(++cont == limit) res();
       });
     });
+  });
+}
+
+var SeedMeasurementTypes = function() {
+  return new Promise((res, rej) => {
+    const measurementTypes = [
+      {
+        name: 'Kilogramos',
+        abrev: 'kg',
+      },
+      {
+        name: 'Piezas',
+        abrev: 'pz',
+      },
+    ];
+    const conditions = [
+      {key: 'name'}
+    ];
+
+    let cont = 0, limit = measurementTypes.length;
+    SeedArrayInModel(app.models.MeasurementType, measurementTypes, conditions).then(() => res()).catch(err => rej(err));
+  });
+}
+
+var SeedOrderStatuses = function() {
+  return new Promise((res, rej) => {
+    const orderStatuses = [
+      {
+        id: 1,
+        name: 'En proceso de entrega',
+      },
+      {
+        id: 2,
+        name: 'Entregado',
+      },
+      {
+        id: 3,
+        name: 'Pagado',
+      },
+    ];
+    const conditions = [
+      {key: 'id'}
+    ];
+
+    let cont = 0, limit = orderStatuses.length;
+    SeedArrayInModel(app.models.OrderStatus, orderStatuses, conditions).then(() => res()).catch(err => rej(err));
+  });
+}
+
+var InitializeCornjobs = function() {
+  return new Promise((res, rej) => {
+    app.models.PriceHistory.DailyCronJobToUpdatePrices();
+    res();
   });
 }
 
@@ -124,6 +177,9 @@ var AutoFillData = function() {
     try {
       await SeedRoles();
       await SeedUsers();
+      await SeedOrderStatuses();
+      await SeedMeasurementTypes();
+      await InitializeCornjobs();
     } catch (err) {
       rej(err);
     }

@@ -1,0 +1,117 @@
+<div class="content d-flex flex-column">
+    <div class="d-flex align-items-center justify-content-between">
+        <div class="page-title">
+            <i class="zmdi zmdi-arrow-back zmdi-hc-lg mr-2 clickeable" (click)="GoBack()"></i>
+            Crear orden de venta
+        </div>
+
+        <div class="d-flex">
+            <button class="btn btn-success mx-1" [disabled]="loading.creating" (click)="SaveOrder()">
+                <ng-container *ngIf="!loading.creating">
+                    <i class="zmdi zmdi-save zmdi-hc-lg mr-2"></i>
+                    Guardar
+                </ng-container>
+                <ng-container *ngIf="loading.creating">
+                    <i class="zmdi zmdi-spinner zmdi-hc-spin zmdi-hc-lg"></i>
+                </ng-container>
+            </button>
+        </div>
+    </div>
+    
+    <div class="d-flex align-items-center justify-content-between flex-wrap">
+        <div class="flex-50-item form-group my-3">
+            <ng-select
+                class="clients-select"
+                [items]="clients"
+                bindLabel="name"
+                placeholder="Clientes"
+                [(ngModel)]="selectedClient"
+            ></ng-select>
+        </div>
+
+        <app-date-picker class="flex-50-item my-3" [presetDate]="orderDate.format('YYYY/MM/DD')" placeholder="Selecciona una fecha"></app-date-picker>
+    </div>
+    <div class="flex-grow-1 overflow-auto">
+        <table class="table">
+            <thead class="position-sticky" style="top: 0; z-index: 1;">
+                <tr>
+                    <th class="small-width">#</th>
+                    <th class="medium-width">Producto</th>
+                    <th class="medium-width">Cantidad Pz</th>
+                    <th class="medium-width">Cantidad Kg</th>
+                    <th class="medium-width">Impuesto</th>
+                    <th class="medium-width">Precio</th>
+                    <th class="medium-width">Total</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr *ngFor="let item of orderItems; let i = index">
+                    <td class="align-middle small-width" style="max-width: 50px !important;">
+                        <div class="d-flex align-items-center justify-content-center">
+                            <i class="zmdi zmdi-close-circle zmdi-hc-lg clickeable mr-3" (click)="RemoveItem(i)"></i>
+                            {{i+1}}
+                        </div>
+                    </td>
+                    <td class="align-middle" style="width: 150px; max-width: 100%;">
+                        <ng-select
+                            class=""
+                            [items]="products"
+                            bindLabel="name"
+                            [disabled]="!selectedClient"
+                            placeholder="Productos"
+                            (change)="OnWeightOrQuantityChange(item)"
+                            [(ngModel)]="item.product"
+                        ></ng-select>
+                    </td>
+                    <td class="align-middle medium-width">
+                        <div class="input-container">
+                            <input class="form-control no-icon" [disabled]="!selectedClient" placeholder="Piezas" type="text" (input)="OnWeightOrQuantityChange(item)" [(ngModel)]="item.quantity">
+                        </div>
+                    </td>
+                    <td class="align-middle medium-width">
+                        <div class="input-container">
+                            <input class="form-control no-icon" [disabled]="!selectedClient" placeholder="Kilogramos" type="text" (input)="OnWeightOrQuantityChange(item)" [(ngModel)]="item.weight">
+                        </div>
+                    </td>
+                    <td class="align-middle medium-width">
+                        ${{item.tax | number:"0.2-2"}}
+                    </td>
+                    <td class="align-middle medium-width">
+                        ${{item.price | number:"0.2-2"}}
+                    </td>
+                    <td class="align-middle medium-width">
+                        ${{item.total | number:"0.2-2"}}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="7" class="px-0">
+                        <button class="btn btn-outline-success btn-block d-flex align-items-center justify-content-center"
+                        (click)="PushItem()">
+                            <i class="zmdi zmdi-plus zmdi-hc-lg mr-2"></i>
+                            Agregar
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="order-summary">
+        <div class="card">
+            <div class="d-flex flex-column">
+                <div class="summary-row">
+                    <span style="font-weight: 600;">Subtotal</span>
+                    <span>${{orderSubtotal | number:"0.2-2"}}</span>
+                </div>
+                <div class="summary-row">
+                    <span style="font-weight: 600;">Impuesto</span>
+                    <span>${{orderTaxes | number:"0.2-2"}}</span>
+                </div>
+                <div class="summary-row">
+                    <span style="font-weight: 600;">Total</span>
+                    <span>${{orderTotal | number:"0.2-2"}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

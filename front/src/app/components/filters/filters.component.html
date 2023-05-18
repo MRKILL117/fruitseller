@@ -1,0 +1,25 @@
+<form [formGroup]="filtersForm">
+    <div class="filters">
+        <div class="form-group flex-grow-1 mx-2" *ngIf="!!filters?.text">
+            <div class="input-container">
+                <i class="input-icon zmdi zmdi-search zmdi-hc-lg"></i>
+                <input class="form-control" type="text" placeholder="Buscar" formControlName="text" (keyup)="Search(true)" (keyup.enter)="Search()">
+            </div>
+        </div>
+        <app-date-picker class="flex-grow-1 mx-2" *ngIf="!!filters?.startDate" (onDateChange)="SetDate('startDate', $event)"></app-date-picker>
+        <app-date-picker class="flex-grow-1 mx-2" *ngIf="!!filters?.endDate" (onDateChange)="SetDate('endDate', $event)"></app-date-picker>
+        <div class="space" *ngIf="!!filters?.options"></div>
+        <div class="form-group flex-grow-1" *ngIf="!!filters?.options?.length">
+            <ng-select
+                class="clients-select"
+                [items]="filters.options"
+                bindLabel="name"
+                [placeholder]="filters.optionsLabel"
+                (change)="OnOptionSelected($event)"
+            ></ng-select>
+        </div>
+        <button class="btn btn-success" *ngIf="!timerTrigger" (click)="Search()">
+            Filtrar
+        </button>
+    </div>
+</form>

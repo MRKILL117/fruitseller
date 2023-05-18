@@ -148,6 +148,12 @@
           "http": {
             "source": "req"
           }
+        },
+        {
+          "arg": "text",
+          "type": "string",
+          "required": false,
+          "description": ""
         }
       ],
       "returns": [
@@ -162,6 +168,10 @@
       "http": [
         {
           "path": "/",
+          "verb": "get"
+        },
+        {
+          "path": "/FilteredBy/Text/:text",
           "verb": "get"
         }
       ]

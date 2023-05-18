@@ -15,36 +15,55 @@ export class DashboardComponent implements OnInit {
       title: 'Clientes',
       route: 'clients',
       icon: 'zmdi-accounts',
+      img: 'clients.jpg'
     },
     {
       title: 'Productos',
       route: 'products',
-      icon: 'zmdi-accounts',
+      icon: 'zmdi-archive',
+      img: 'products.png'
+    },
+    {
+      title: 'Compradores',
+      route: 'buyers',
+      icon: 'zmdi-walk',
+      img: 'buyers.png'
     },
     {
       title: 'Ordenes de venta',
       route: 'sell-orders',
-      icon: 'zmdi-accounts',
+      icon: 'zmdi-assignment-alert',
+      img: 'sell-order.jpg'
     },
     {
       title: 'Compras del día',
-      route: 'daily-shopping',
-      icon: 'zmdi-accounts',
+      route: 'daily-shopping-list',
+      icon: 'zmdi-shopping-cart',
+      img: 'shopping.jpg'
     },
     {
       title: 'Lista de precios',
-      route: 'prices-list',
-      icon: 'zmdi-accounts',
+      route: 'price-list',
+      icon: 'zmdi-money',
+      img: 'price-list.jpg'
+    },
+    {
+      title: 'Cobranza',
+      route: 'payments',
+      icon: 'zmdi-balance',
+      img: 'payments.jpg'
     },
     {
       title: 'Inventario',
       route: 'inventory',
-      icon: 'zmdi-accounts',
+      icon: 'zmdi-assignment',
+      img: 'inventory.png'
     },
     {
       title: 'Facturación',
       route: 'invoicing',
-      icon: 'zmdi-accounts',
+      icon: 'zmdi-money-box',
+      img: ''
     },
   ]
 

@@ -22,6 +22,34 @@ const routes: Routes = [
         path: 'clients',
         loadChildren: () => import('./pages/clients/clients.module').then( m => m.ClientsModule)
       },
+      {
+        path: 'products',
+        loadChildren: () => import('./pages/products/products.module').then( m => m.ProductsModule)
+      },
+      {
+        path: 'buyers',
+        loadChildren: () => import('./pages/buyers/buyers.module').then( m => m.BuyersModule)
+      },
+      {
+        path: 'inventory',
+        loadChildren: () => import('./pages/inventory/inventory.module').then( m => m.InventoryModule)
+      },
+      {
+        path: 'price-list',
+        loadChildren: () => import('./pages/price-list/price-list.module').then( m => m.PriceListModule)
+      },
+      {
+        path: 'sell-orders',
+        loadChildren: () => import('./pages/sell-orders/sell-orders.module').then( m => m.SellOrdersModule)
+      },
+      {
+        path: 'sell-orders/create',
+        loadChildren: () => import('./pages/create-sell-order/create-sell-order.module').then( m => m.CreateSellOrderModule)
+      },
+      {
+        path: 'daily-shopping-list',
+        loadChildren: () => import('./pages/daily-shopping-list/daily-shopping-list.module').then( m => m.DailyShoppingListModule)
+      },
     ]
   },
 ];

@@ -17,8 +17,8 @@ export class ModalService {
     this.modalRefs.push(modalRef);
   }
 
-  CloseModal() {
-    if(this.modalRefs.length) this.modalRefs.pop()?.hide();
+  CloseModal(loading: boolean = false) {
+    if(this.modalRefs.length && !loading) this.modalRefs.pop()?.hide();
   }
 
 }

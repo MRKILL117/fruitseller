@@ -1,0 +1,63 @@
+{
+  "name": "PriceHistory",
+  "plural": "PriceHistories",
+  "base": "Model",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "date": {
+      "type": "string",
+      "required": true
+    },
+    "purchasePrice": {
+      "type": "number",
+      "required": true,
+      "mysql": {
+        "dataType": "DECIMAL",
+        "dataPrecision": 20,
+        "dataScale": 2
+      }
+    },
+    "salePrice": {
+      "type": "number",
+      "required": true,
+      "mysql": {
+        "dataType": "DECIMAL",
+        "dataPrecision": 20,
+        "dataScale": 2
+      }
+    }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": {
+    "prototype.UpdatePrices": {
+      "accepts": [
+        {
+          "arg": "priceHistory",
+          "type": "object",
+          "required": true,
+          "description": ""
+        }
+      ],
+      "returns": [
+        {
+          "arg": "product",
+          "type": "object",
+          "root": true,
+          "description": ""
+        }
+      ],
+      "description": "",
+      "http": [
+        {
+          "path": "/UpdatePrices",
+          "verb": "patch"
+        }
+      ]
+    }
+  }
+}

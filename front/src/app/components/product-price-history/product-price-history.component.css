@@ -1,0 +1,59 @@
+.price-history {
+    height: 0px;
+    overflow-y: hidden;
+    transition: all .3s ease-in-out;
+    position: relative;
+}
+
+.toggle-active {
+    height: 250px;
+    overflow-y: auto;
+}
+
+.zmdi-caret-down {
+    transition: all .3s ease-in-out;
+}
+
+.caret-active {
+    transform: rotate(180deg);
+}
+
+.name {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.div-table {
+    display: flex;
+    align-items: center;
+}
+
+.t-header {
+    border-radius: 12px 12px 0 0 !important;
+    background-color: #51A351 !important;
+    color: white;
+    
+    position: sticky;
+    top: 0;
+}
+
+.t-body {
+    border-top: 1px solid #dee2e6;
+}
+
+div.price-history > div:nth-of-type(odd) {
+    background: #F2F2F2;
+}
+
+.th {
+    height: 50px;
+    width: 33%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sticky-top {
+    position: sticky;
+    top: 0;
+}

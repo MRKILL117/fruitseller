@@ -104,7 +104,13 @@
       "validateUpsert": true,
       "remoting": {
         "sharedMethods": {
-          "*": false
+          "*": false,
+          "CreateOne": true,
+          "CreateArray": true,
+          "GetAll": true,
+          "GetAllWithPriceHistory": true,
+          "Update": true,
+          "prototype.Delete": true
         }
       }
     }
@@ -117,7 +123,12 @@
       "validateUpsert": true,
       "remoting": {
         "sharedMethods": {
-          "*": false
+          "*": false,
+          "CreateOne": true,
+          "CreateArray": true,
+          "GetAll": true,
+          "Update": true,
+          "prototype.Delete": true
         }
       }
     }
@@ -130,7 +141,11 @@
       "validateUpsert": true,
       "remoting": {
         "sharedMethods": {
-          "*": false
+          "*": false,
+          "CreateOne": true,
+          "GetAll": true,
+          "Update": true,
+          "prototype.Delete": true
         }
       }
     }
@@ -143,7 +158,50 @@
       "validateUpsert": true,
       "remoting": {
         "sharedMethods": {
-          "*": false
+          "*": false,
+          "GetAll": true
+        }
+      }
+    }
+  },
+  "Inventory": {
+    "dataSource": "mysql",
+    "public": true,
+    "options": {
+      "allowEternalTokens": true,
+      "validateUpsert": true,
+      "remoting": {
+        "sharedMethods": {
+          "*": false,
+          "GetAll": true
+        }
+      }
+    }
+  },
+  "PriceHistory": {
+    "dataSource": "mysql",
+    "public": true,
+    "options": {
+      "allowEternalTokens": true,
+      "validateUpsert": true,
+      "remoting": {
+        "sharedMethods": {
+          "*": false,
+          "prototype.UpdatePrices": true
+        }
+      }
+    }
+  },
+  "OrderStatus": {
+    "dataSource": "mysql",
+    "public": true,
+    "options": {
+      "allowEternalTokens": true,
+      "validateUpsert": true,
+      "remoting": {
+        "sharedMethods": {
+          "*": false,
+          "GetAll": true
         }
       }
     }

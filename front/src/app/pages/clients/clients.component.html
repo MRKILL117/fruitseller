@@ -1,6 +1,7 @@
 <div class="content">
     <div class="d-flex align-items-center justify-content-between">
         <div class="page-title">
+            <i class="zmdi zmdi-home zmdi-hc-lg mr-2 clickeable" (click)="GoHome()"></i>
             Mis clientes
         </div>
 
@@ -31,12 +32,12 @@
         </div>
     </div>
 
-    <div class="row justify-content-center" *ngIf="!!clients?.length; else noClientsMessage">
+    <div class="row justify-content-center" *ngIf="!loading.getting; else bigLoading">
         <!-- Filters -->
-        <div class="col-12 mb-4">
-
+        <div class="col-12 col-lg-11 mt-3 mb-4">
+            <app-filters [timerTrigger]="true" [filters]="{text: true,startDate: false,endDate: false,options: null}" (onSearch)="GetClients($event)"></app-filters>
         </div>
-        <div class="col-12 col-lg-11">
+        <div class="col-12 col-lg-11" *ngIf="!!clients?.length; else noClientsMessage">
             <table class="table table-striped">
                 <thead class="table-thead">
                     <tr>
@@ -73,16 +74,23 @@
     </div>
 </div>
 
+<ng-template #bigLoading>
+    <div class="w-100 h-75 d-flex align-items-center justify-content-center" style="min-height: min-content;">
+        <i class="zmdi zmdi-spinner zmdi-hc-5x zmdi-hc-spin"></i>
+    </div>
+</ng-template>
 <ng-template #noClientsMessage>
-    <div class="no-items-message">
-        No tiene clientes registrados
+    <div class="col-12 col-lg-11">
+        <div class="no-items-message">
+            No tiene clientes registrados
+        </div>
     </div>
 </ng-template>
 
 <ng-template #addClientsByCsvModal>
     <div class="modal-header">
         <h2 class="modal-title">Agregar por CSV</h2>
-        <i class="close-modal-button zmdi zmdi-close-circle-o zmdi-hc-2x clickeable" (click)="modal.CloseModal()"></i>
+        <i class="close-modal-button zmdi zmdi-close-circle-o zmdi-hc-2x clickeable" (click)="modal.CloseModal(loading.updating)"></i>
     </div>
     <div class="modal-body">
         <div class="d-flex flex-column justify-content-between">
@@ -163,7 +171,7 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="form-group">
-                            <label>Nombre</label>
+                            <label>Nombre <span class="text-danger">*</span></label> 
                             <div class="input-container">
                                 <i class="input-icon zmdi zmdi-account-o zmdi-hc-lg"></i>
                                 <input class="form-control" type="text" placeholder="Nombre del cliente" formControlName="name" (keyup.enter)="RegisterClient()">
@@ -177,7 +185,7 @@
                     </div>
                     <div class="col-12">
                         <div class="form-group">
-                            <label>RFC</label>
+                            <label>RFC <span class="text-danger">*</span></label>
                             <div class="input-container">
                                 <i class="input-icon zmdi zmdi-account-o zmdi-hc-lg"></i>
                                 <input class="form-control" type="text" placeholder="RFC del cliente" formControlName="rfc" (keyup.enter)="RegisterClient()">
@@ -194,7 +202,7 @@
                     </div>
                     <div class="col-12 col-sm-6">
                         <div class="form-group">
-                            <label>Dirección</label>
+                            <label>Dirección <span class="text-danger">*</span></label>
                             <div class="input-container">
                                 <i class="input-icon zmdi zmdi-home zmdi-hc-lg"></i>
                                 <input class="form-control" type="text" placeholder="Dirección del cliente" formControlName="address" (keyup.enter)="RegisterClient()">
@@ -208,7 +216,7 @@
                     </div>
                     <div class="col-12 col-sm-6">
                         <div class="form-group">
-                            <label>Código postal</label>
+                            <label>Código postal <span class="text-danger">*</span></label>
                             <div class="input-container">
                                 <i class="input-icon zmdi zmdi-home zmdi-hc-lg"></i>
                                 <input class="form-control" type="text" placeholder="Código posal del cliente" formControlName="postalCode" (keyup.enter)="RegisterClient()">
@@ -225,7 +233,7 @@
                     </div>
                     <div class="col-12 col-sm-6">
                         <div class="form-group">
-                            <label>Estado</label>
+                            <label>Estado <span class="text-danger">*</span></label>
                             <div class="input-container">
                                 <i class="input-icon zmdi zmdi-globe zmdi-hc-lg"></i>
                                 <input class="form-control" type="text" placeholder="Estado del cliente" formControlName="state" (keyup.enter)="RegisterClient()">
@@ -239,7 +247,7 @@
                     </div>
                     <div class="col-12 col-sm-6">
                         <div class="form-group">
-                            <label>País</label>
+                            <label>País <span class="text-danger">*</span></label>
                             <div class="input-container">
                                 <i class="input-icon zmdi zmdi-globe zmdi-hc-lg"></i>
                                 <input class="form-control" type="text" placeholder="País del cliente" formControlName="country" (keyup.enter)="RegisterClient()">
@@ -251,9 +259,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-12">
+                    <div class="col-12 col-sm-6">
                         <div class="form-group">
-                            <label>Porcentaje de utilidad</label>
+                            <label>Porcentaje de utilidad <span class="text-danger">*</span></label>
                             <div class="input-container">
                                 <i class="input-icon zmdi zmdi-balance-wallet zmdi-hc-lg"></i>
                                 <input class="form-control" type="text" placeholder="Porcentaje de utilidad del cliente" formControlName="utilityPercentage" (keyup.enter)="RegisterClient()">
@@ -262,13 +270,13 @@
                                 <span class="d-block" *ngIf="form.GetFormControlByName(clientForm, 'utilityPercentage')?.errors.required">
                                     Campo obligatorio
                                 </span>
-                                <span class="d-block" *ngIf="form.GetFormControlByName(clientForm, 'utilityPercentage')?.errors.pattern">
-                                    Valor inválido
+                                <span class="d-block" *ngIf="form.GetFormControlByName(clientForm, 'utilityPercentage')?.errors.onlynumbers">
+                                    Solo números
                                 </span>
                             </div>
                         </div>
                     </div>
-                    <div class="col-12">
+                    <div class="col-12 col-sm-6">
                         <div class="form-group">
                             <label>Dias de pago</label>
                             <div class="input-container">
@@ -279,8 +287,8 @@
                                 <span class="d-block" *ngIf="form.GetFormControlByName(clientForm, 'paymentDays')?.errors.required">
                                     Campo obligatorio
                                 </span>
-                                <span class="d-block" *ngIf="form.GetFormControlByName(clientForm, 'paymentDays')?.errors.pattern">
-                                    Valor inválido
+                                <span class="d-block" *ngIf="form.GetFormControlByName(clientForm, 'paymentDays')?.errors.onlynumbers">
+                                    Solo números
                                 </span>
                             </div>
                         </div>
