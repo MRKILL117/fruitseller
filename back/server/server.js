@@ -145,15 +145,23 @@ var SeedOrderStatuses = function() {
     const orderStatuses = [
       {
         id: 1,
-        name: 'En proceso de entrega',
+        name: 'Pedido creado',
       },
       {
         id: 2,
-        name: 'Entregado',
+        name: 'Pedido entregado',
       },
       {
         id: 3,
+        name: 'Pendiente de pago',
+      },
+      {
+        id: 4,
         name: 'Pagado',
+      },
+      {
+        id: 5,
+        name: 'Incobrable',
       },
     ];
     const conditions = [
