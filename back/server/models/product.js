@@ -72,7 +72,7 @@ module.exports = function(Product) {
         let wherePrices = {and: []};
         if(!!text && text != '*') where['name'] = {like: `%${text}%`};
         if(!!startDate && startDate != '*') wherePrices.and.push({date: {gte: startDate}});
-        if(!!endDate && endDate != '*') wherePrices.and.push({date: {gte: endDate}});
+        if(!!endDate && endDate != '*') wherePrices.and.push({date: {lte: endDate}});
 
         Product.app.models.PriceHistory.UpsertTodayPrices(ctx, (err, pricesUPdated) => {
             if(err) return callback(err);

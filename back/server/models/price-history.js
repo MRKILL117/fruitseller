@@ -8,49 +8,33 @@ var priceHistoryCornjob = null;
 module.exports = function(PriceHistory) {
 
     PriceHistory.UpsertTodayPrices = function(ctx, callback) {
+        const userId = ctx.accessToken.userId;
         const todayDate = moment().tz(constants.timezone).format(constants.dateFormat);
-        const yesterday = moment().tz(constants.timezone).subtract(1, 'day').format(constants.dateFormat);
-        PriceHistory.app.models.Product.GetAll(ctx, (err, products) => {
+        PriceHistory.app.models.Product.find({
+            where: {adminId: userId, deleted: false},
+            include: {
+                relation: 'prices',
+                scope: {
+                    where: {date: {lte: todayDate}},
+                    order: 'date DESC',
+                    limit: 1
+                }
+            }
+        }, (err, products) => {
             if(err) return callback(err);
 
-            PriceHistory.find({
-                where: {
-                    and: [
-                        {or: products.map(prod => {return {productId: prod.id}})},
-                        {date: {like: `%${todayDate}%`}},
-                    ]
+            let cont = 0, limit = products.length;
+            products.forEach(product => {
+                const priceHistory = {
+                    date: todayDate,
+                    purchasePrice: !!product.prices().length ? product.prices()[0].purchasePrice : product.price,
+                    salePrice: !!product.prices().length ? product.prices()[0].salePrice : product.price,
+                    productId: product.id,
                 }
-            }, (err, prices) => {
-                if(err) return callback(err);
+                PriceHistory.findOrCreate({where: {date: todayDate, productId: product.id}}, priceHistory, (err, newPriceHistory) => {
+                    if(err) return callback(err);
 
-                if(prices.length == products.length) return callback(null, true);
-
-                let cont = 0, limit = products.length;
-                if(!limit) return callback(null, true);
-                products.forEach(product => {
-                    PriceHistory.findOne({
-                        where: {
-                            productId: product.id,
-                            or: [{date: {like: `%${todayDate}%`}}, {date: {like: `%${yesterday}%`}}]
-                        },
-                        order: 'date DESC'
-                    }, (err, priceHistoryFound) => {
-                        if(err) return callback(err);
-
-                        if(!priceHistoryFound || !priceHistoryFound.date.includes(todayDate)) {
-                            const priceHistory = {
-                                date: todayDate,
-                                purchasePrice: !!priceHistoryFound ? priceHistoryFound.purchasePrice : product.price,
-                                salePrice: !!priceHistoryFound ? priceHistoryFound.salePrice : product.price,
-                                productId: product.id,
-                            }
-                            PriceHistory.create(priceHistory, (err, newPriceHistory) => {
-                                if(err) return callback(err);
-
-                                if(++cont == limit) return callback(null, true);
-                            });
-                        } else if(++cont == limit) return callback(null, true);
-                    });
+                    if(++cont == limit) return callback(null, true);
                 });
             });
         });
@@ -62,8 +46,16 @@ module.exports = function(PriceHistory) {
 
         this.save((err, saved) => {
             if(err) return callback(err);
+            
+            let product = {
+                id: saved.productId,
+                price: saved.salePrice
+            }
+            PriceHistory.app.models.Product.upsert(product, (err, productSaved) => {
+                if(err) return callback(err);
 
-            return callback(null, saved);
+                return callback(null, saved);
+            });
         });
     }
 
