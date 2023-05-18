@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { priceNumber, onlyNumbers } from 'src/app/common/custom-validators.directive';
 import { CsvService } from 'src/app/services/csv.service';
 import { FormService } from 'src/app/services/form.service';
 import { HttpService } from 'src/app/services/http.service';
@@ -191,7 +190,6 @@ export class BuyersComponent implements OnInit {
     FILE_READER.onload = (reader) => {
       this.csv.ReadCSV(FILE_READER.result).then(res => {
         this.buyersToUpload = this.csv.FormatData(res.data, this.dataConversions);
-        console.log(this.buyersToUpload);
       });
     };
     FILE_READER.readAsText(file, 'ISO-8859-3');

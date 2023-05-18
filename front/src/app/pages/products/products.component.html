@@ -167,9 +167,9 @@
         <div class="w-100">
             <form [formGroup]="productForm">
                 <div class="row">
-                    <div class="col-12">
+                    <div class="col-12 col-sm-6">
                         <div class="form-group">
-                            <label>Nombre</label>
+                            <label>Nombre <span class="text-danger">*</span></label>
                             <div class="input-container">
                                 <i class="input-icon zmdi zmdi-collection-text zmdi-hc-lg"></i>
                                 <input class="form-control" type="text" placeholder="Nombre del producto" formControlName="name" (keyup.enter)="RegisterProduct()">
@@ -183,7 +183,24 @@
                     </div>
                     <div class="col-12 col-sm-6">
                         <div class="form-group">
-                            <label>Precio</label>
+                            <label>Código del SAT <span class="text-danger">*</span></label>
+                            <div class="input-container">
+                                <i class="input-icon zmdi zmdi-collection-text zmdi-hc-lg"></i>
+                                <input class="form-control" type="text" placeholder="Códgio del SAT del producto" formControlName="satCode" (keyup.enter)="RegisterProduct()">
+                            </div>
+                            <div class="error-messages" *ngIf="form.GetFormControlByName(productForm, 'satCode')?.touched && form.GetFormControlByName(productForm, 'satCode')?.errors">
+                                <span class="d-block" *ngIf="form.GetFormControlByName(productForm, 'satCode')?.errors.required">
+                                    Campo obligatorio
+                                </span>
+                                <span class="d-block" *ngIf="form.GetFormControlByName(productForm, 'satCode')?.errors.onlynumbers">
+                                    Solo números enteros
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6">
+                        <div class="form-group">
+                            <label>Precio <span class="text-danger">*</span></label>
                             <div class="input-container">
                                 <i class="input-icon zmdi zmdi-money zmdi-hc-lg"></i>
                                 <input class="form-control" type="text" placeholder="Precio del producto" formControlName="price" (keyup.enter)="RegisterProduct()">
@@ -200,7 +217,7 @@
                     </div>
                     <div class="col-12 col-sm-6">
                         <div class="form-group">
-                            <label>Impuesto</label>
+                            <label>Impuesto <span class="text-danger">*</span></label>
                             <div class="input-container">
                                 <i class="input-icon zmdi zmdi-money-box zmdi-hc-lg"></i>
                                 <input class="form-control" type="text" placeholder="Impuesto del producto" formControlName="tax" (keyup.enter)="RegisterProduct()">
@@ -217,7 +234,7 @@
                     </div>
                     <div class="col-12 col-sm-6">
                         <div class="form-group">
-                            <label>Unidad de medida para ventas</label>
+                            <label>Unidad de medida para ventas <span class="text-danger">*</span></label>
                             <ng-select
                                 class=""
                                 [items]="measurementTypes"
@@ -236,7 +253,7 @@
                     </div>
                     <div class="col-12 col-sm-6">
                         <div class="form-group">
-                            <label>Unidad de medida para inventario</label>
+                            <label>Unidad de medida para inventario <span class="text-danger">*</span></label>
                             <ng-select
                                 class=""
                                 [items]="measurementTypes"
@@ -254,7 +271,7 @@
                     </div>
                     <div class="col-12">
                         <div class="form-group">
-                            <label>Comprador</label>
+                            <label>Comprador <span class="text-danger">*</span></label>
                             <ng-select
                                 class=""
                                 [items]="buyers"

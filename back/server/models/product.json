@@ -42,6 +42,9 @@
         "dataScale": 2
       }
     },
+    "satCode": {
+      "type": "string"
+    },
     "deleted": {
       "type": "boolean",
       "required": true,

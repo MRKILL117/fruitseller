@@ -33,7 +33,7 @@ export class ClientsComponent implements OnInit {
     state: new FormControl('', [Validators.required]),
     country: new FormControl('', [Validators.required]),
     postalCode: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]{5}$/)]),
-    utilityPercentage: new FormControl('', [onlyNumbers()]),
+    utilityPercentage: new FormControl('', [Validators.required, onlyNumbers()]),
     paymentDays: new FormControl('', [onlyNumbers()]),
   });
   dataConversions: Array<any> = [

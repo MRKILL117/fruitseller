@@ -83,7 +83,8 @@ module.exports = function(Product) {
                     relation: 'prices',
                     scope: {
                         where: !!wherePrices.and.length ? wherePrices : {},
-                        order: 'date DESC'
+                        order: 'date DESC',
+                        limit: 50
                     }
                 },
                 order: 'name ASC'

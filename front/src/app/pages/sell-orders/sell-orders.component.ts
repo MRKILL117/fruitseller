@@ -31,8 +31,8 @@ export class SellOrdersComponent implements OnInit {
   orderForm: FormGroup = new FormGroup({
     id: new FormControl(null, []),
     name: new FormControl('', [Validators.required]),
-    price: new FormControl('', [Validators.required, priceNumber]),
-    tax: new FormControl('', [Validators.required, onlyNumbers]),
+    price: new FormControl('', [Validators.required, priceNumber()]),
+    tax: new FormControl('', [Validators.required, onlyNumbers()]),
     buyerId: new FormControl(null, [Validators.required]),
     salesMeasurementTypeId: new FormControl(null, [Validators.required]),
     inventoryMeasurementTypeId: new FormControl(null, [Validators.required]),

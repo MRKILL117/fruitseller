@@ -30,8 +30,9 @@ export class ProductsComponent implements OnInit {
   productForm: FormGroup = new FormGroup({
     id: new FormControl(null, []),
     name: new FormControl('', [Validators.required]),
-    price: new FormControl('', [Validators.required, priceNumber]),
-    tax: new FormControl('', [Validators.required, onlyNumbers]),
+    satCode: new FormControl('', [Validators.required, onlyNumbers()]),
+    price: new FormControl('', [Validators.required, priceNumber()]),
+    tax: new FormControl('', [Validators.required, onlyNumbers()]),
     buyerId: new FormControl(null, [Validators.required]),
     salesMeasurementTypeId: new FormControl(null, [Validators.required]),
     inventoryMeasurementTypeId: new FormControl(null, [Validators.required]),
@@ -40,6 +41,10 @@ export class ProductsComponent implements OnInit {
     {
       oldKey: 'Nombre',
       newKey: 'name'
+    },
+    {
+      oldKey: 'Codigo SAT',
+      newKey: 'satCode'
     },
     {
       oldKey: 'Precio',

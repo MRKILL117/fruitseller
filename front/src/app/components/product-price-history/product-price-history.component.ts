@@ -22,8 +22,8 @@ export class ProductPriceHistoryComponent implements OnInit {
 
   productPriceForm: FormGroup = new FormGroup({
     id: new FormControl('', [Validators.required]),
-    purchasePrice: new FormControl('', [Validators.required, priceNumber]),
-    salePrice: new FormControl('', [Validators.required, priceNumber]),
+    purchasePrice: new FormControl('', [Validators.required, priceNumber()]),
+    salePrice: new FormControl('', [Validators.required, priceNumber()]),
   });
 
   constructor(

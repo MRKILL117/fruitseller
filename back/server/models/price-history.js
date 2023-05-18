@@ -69,8 +69,8 @@ module.exports = function(PriceHistory) {
 
     PriceHistory.DailyCronJobToUpdatePrices = function() {
         // second minute hour day(month) month day(week)
-        // Every day at 12:00 a.m.
-        priceHistoryCornjob = new CronJob('0 0 0 * * *', function() {
+        // Every day at 4:00 a.m.
+        priceHistoryCornjob = new CronJob('0 0 4 * * *', function() {
             PriceHistory.UpsertTodayPrices(null, (err, updated) => {
                 if(err) console.error(`Error upserting today prices: ${moment().format(constants.dateFormat)}`, err);
             });
