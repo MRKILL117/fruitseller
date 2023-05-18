@@ -26,7 +26,7 @@ export class CreateSellOrderComponent implements OnInit {
     price: 0,
     total: 0,
   }
-  orderDate: moment.Moment = moment().tz(environment.timezone);
+  orderDate: moment.Moment = moment().tz(environment.timezone).add(4, 'hours');
   loading: any = {
     getting: false,
     creating: false
