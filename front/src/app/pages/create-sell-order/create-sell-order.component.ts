@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
 import * as moment from 'moment-timezone';
 import { HttpService } from 'src/app/services/http.service';
 import { NavigationService } from 'src/app/services/navigation.service';
