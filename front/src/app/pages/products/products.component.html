@@ -209,8 +209,8 @@
                                 <span class="d-block" *ngIf="form.GetFormControlByName(productForm, 'weightPerPiece')?.errors.required">
                                     Campo obligatorio
                                 </span>
-                                <span class="d-block" *ngIf="form.GetFormControlByName(productForm, 'weightPerPiece')?.errors.onlynumbers">
-                                    Solo números enteros
+                                <span class="d-block" *ngIf="form.GetFormControlByName(productForm, 'weightPerPiece')?.errors.pricenumber">
+                                    Solo numeros con un maximo de 2 decimales
                                 </span>
                             </div>
                         </div>
@@ -227,7 +227,7 @@
                                     Campo obligatorio
                                 </span>
                                 <span class="d-block" *ngIf="form.GetFormControlByName(productForm, 'price')?.errors.pricenumber">
-                                    Valor invalido
+                                    Solo numeros con un maximo de 2 decimales
                                 </span>
                             </div>
                         </div>
@@ -244,7 +244,7 @@
                                     Campo obligatorio
                                 </span>
                                 <span class="d-block" *ngIf="form.GetFormControlByName(productForm, 'tax')?.errors.onlynumbers">
-                                    Valor inválido
+                                    Solo números enteros
                                 </span>
                             </div>
                         </div>

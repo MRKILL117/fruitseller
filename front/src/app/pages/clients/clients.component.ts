@@ -28,11 +28,11 @@ export class ClientsComponent implements OnInit {
   clientForm: FormGroup = new FormGroup({
     id: new FormControl(null, []),
     name: new FormControl('', [Validators.required]),
-    rfc: new FormControl('', [Validators.required, Validators.pattern(/^[A-Za-z0-9]{12,13}$/)]),
+    rfc: new FormControl('', [Validators.required, Validators.pattern(/[A-Za-z0-9]{12,13}/)]),
     address: new FormControl('', [Validators.required]),
     state: new FormControl('', [Validators.required]),
     country: new FormControl('', [Validators.required]),
-    postalCode: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]{5}$/)]),
+    postalCode: new FormControl('', [Validators.required, Validators.minLength(5), Validators.maxLength(5), onlyNumbers()]),
     utilityPercentage: new FormControl('', [Validators.required, onlyNumbers()]),
     paymentDays: new FormControl('', [onlyNumbers()]),
   });

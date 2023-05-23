@@ -144,6 +144,7 @@
           "*": false,
           "CreateOne": true,
           "GetAll": true,
+          "prototype.GetOne": true,
           "Update": true,
           "prototype.Delete": true
         }

@@ -80,6 +80,18 @@ label {
 }
 
 /* Input overrides */
+.fake-form-control {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 16px;
+    border: 2px solid #cacaca;
+    padding: 0 12px;
+    height: 46px;
+    width: 250px;
+    max-width: 100%;
+}
+
 .input-container {
     position: relative;
     height: 46px !important;

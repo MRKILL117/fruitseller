@@ -5,17 +5,17 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { DatePickerModule } from 'src/app/components/date-picker/date-picker.module';
 
-import { CreateSellOrderComponent } from './create-sell-order.component';
+import { SellOrderComponent } from './sell-order.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: CreateSellOrderComponent
+    component: SellOrderComponent
   }
 ];
 
 @NgModule({
-  declarations: [CreateSellOrderComponent],
+  declarations: [SellOrderComponent],
   imports: [
     FormsModule,
     CommonModule,
@@ -25,4 +25,4 @@ const routes: Routes = [
     RouterModule.forChild(routes)
   ]
 })
-export class CreateSellOrderModule { }
+export class SellOrderModule { }

@@ -1,0 +1,41 @@
+.clients-select {
+    width: 100%;
+}
+
+.flex-50-item {
+    width: 40% !important;
+    min-width: 250px;
+    max-width: 100%;
+}
+
+.small-width {
+    max-width: 70px;
+}
+
+.medium-width {
+    min-width: 120px;
+}
+
+table {
+    overflow-y: visible !important;
+}
+
+.order-summary {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin: 1rem 0;
+}
+.summary-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    color: black;
+    font-size: 1.25rem;
+}
+
+.order-summary .card {
+    width: 400px;
+    max-width: 100%;
+}

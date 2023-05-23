@@ -22,17 +22,7 @@
   "acls": [],
   "methods": {
     "GetAll": {
-      "accepts": [
-        {
-          "arg": "ctx",
-          "type": "object",
-          "required": true,
-          "description": "",
-          "http": {
-            "source": "req"
-          }
-        }
-      ],
+      "accepts": [],
       "returns": [
         {
           "arg": "products",
