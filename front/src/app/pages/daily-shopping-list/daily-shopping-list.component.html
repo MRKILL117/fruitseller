@@ -40,8 +40,9 @@
         <div class="col-12">
             <app-filters *ngIf="!!buyers.length" [timerTrigger]="true" [filters]="{text:false,startDate:false,endDate:false,options:buyers,optionsLabel:'Seleccione un comprador'}" (onSearch)="OnFiltersChanged($event)"></app-filters>
         </div>
-        <div class="col-12">
-            <table class="table table-striped" *ngIf="!!orders?.length; else noOrdersMessage">
+        <div class="col-12 my-4" *ngFor="let product of products">
+            <app-product-orders [product]="product"></app-product-orders>
+            <!-- <table class="table table-striped" *ngIf="!!orders?.length; else noOrdersMessage">
                 <thead class="table-thead">
                     <tr>
                         <th>Producto</th>
@@ -65,7 +66,7 @@
                         <td>{{GetProductTotal(product) + " " + product.inventoryMeasurementType.abrev}}</td>
                     </tr>
                 </tbody>
-            </table>
+            </table> -->
         </div>
     </div>
 </div>

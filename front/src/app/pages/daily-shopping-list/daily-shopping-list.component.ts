@@ -88,7 +88,7 @@ export class DailyShoppingListComponent implements OnInit {
   }
 
   OnFiltersChanged(filters: filter | null = null) {
-    this.SetProductsArray(filters?.options);
+    this.SetProductsArray(filters?.options == '*' ? null : filters?.options);
   }
 
   GetClients() {
@@ -123,12 +123,14 @@ export class DailyShoppingListComponent implements OnInit {
         if(!!buyer) {
           if(buyer.id == item.product.buyer.id) {
             if(!!this.productsObj[item.product.name]) {
+              this.products[this.productsObj[item.product.name].arrayIdx].orders.push(order);
               this.products[this.productsObj[item.product.name].arrayIdx].weight += Number(!!item.weight ? item.weight : 0);
               this.products[this.productsObj[item.product.name].arrayIdx].quantity += Number(!!item.quantity ? item.quantity : 0);
               this.productsObj[item.product.name].productsDetected++;
             } else {
               this.products.push({
                 ...item.product,
+                orders: [order],
                 weight: Number(!!item.weight ? item.weight : 0),
                 quantity: Number(!!item.quantity ? item.quantity : 0),
               });
@@ -141,12 +143,14 @@ export class DailyShoppingListComponent implements OnInit {
         }
         else {
           if(!!this.productsObj[item.product.name]) {
+            this.products[this.productsObj[item.product.name].arrayIdx].orders.push(order);
             this.products[this.productsObj[item.product.name].arrayIdx].weight += Number(!!item.weight ? item.weight : 0);
             this.products[this.productsObj[item.product.name].arrayIdx].quantity += Number(!!item.quantity ? item.quantity : 0);
             this.productsObj[item.product.name].productsDetected++;
           } else {
             this.products.push({
               ...item.product,
+              orders: [order],
               weight: Number(!!item.weight ? item.weight : 0),
               quantity: Number(!!item.quantity ? item.quantity : 0),
             });
