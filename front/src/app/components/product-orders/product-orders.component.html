@@ -21,9 +21,15 @@
                 </div>
             </div>
             <div class="mx-2">
+                <label>Total ordenes</label>
+                <div class="text-center">
+                    {{GetProductTotal() + " " + product.inventoryMeasurementType.abrev}}
+                </div>
+            </div>
+            <div class="mx-2">
                 <label>Total a comprar</label>
                 <div class="text-center">
-                    0 {{product.inventoryMeasurementType.abrev}}
+                    {{GetProductTotal() + " " + product.inventoryMeasurementType.abrev}}
                 </div>
             </div>
             <div class="clickeable" (click)="showHistory = !showHistory">
@@ -35,12 +41,10 @@
         <div class="div-table t-header">
             <div class="th"><b>Orden No.</b></div>
             <div class="th"><b>Cantidad</b></div>
-            <div class="th"><b>Total</b></div>
         </div>
         <div class="div-table t-body" *ngFor="let order of product?.orders">
             <div class="th">{{order.id}}</div>
-            <div class="th">${{order.id}}</div>
-            <div class="th">${{order.id}}</div>
+            <div class="th">{{GetOrderProductShoppingQuantity(order) + " " + product.salesMeasurementType.abrev}}</div>
         </div>
     </div>
 </div>

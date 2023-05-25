@@ -178,11 +178,11 @@ export class DailyShoppingListComponent implements OnInit {
   }
 
   GetProductTotal(product: any) {
-    let toal = 0;
+    let total = 0;
     this.orders.forEach(order => {
-      toal += this.GetOrderProductShoppingQuantity(order, product);
+      total += this.GetOrderProductShoppingQuantity(order, product);
     });
-    return toal;
+    return total;
   }
 
   ExportData() {
@@ -212,10 +212,6 @@ export class DailyShoppingListComponent implements OnInit {
     console.log(productsMapped);
 
     this.csv.GenerateCSV('compras_del_dia', productsMapped, keys, headers);
-  }
-
-  DownloadTemplate() {
-    this.http.DownloadFileWithoutApi("assets/templates/plantilla_ordenes.csv", 'plantilla_ordenes.csv');
   }
 
 }
