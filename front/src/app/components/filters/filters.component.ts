@@ -42,8 +42,8 @@ export class FiltersComponent implements OnInit {
 
   SetDate(filterName: string, date: string) {
     let dateMoment = moment(date).tz(environment.timezone);
-    if(filterName.toLowerCase().includes('start')) dateMoment.startOf('day');
-    if(filterName.toLowerCase().includes('end')) dateMoment.endOf('day');
+    if(filterName.toLowerCase().includes('start')) this.dateIncludesTime ? dateMoment.startOf('day') : dateMoment;
+    if(filterName.toLowerCase().includes('end')) this.dateIncludesTime ? dateMoment.endOf('day') : dateMoment;
     this.filtersForm.get(filterName)?.setValue(dateMoment.toISOString());
     this.Search();
   }
@@ -56,8 +56,8 @@ export class FiltersComponent implements OnInit {
   Search(keyupEvent: boolean = false) {
     let filters: filter = this.filtersForm.value;
     filters.text = !!filters.text ? filters.text : '*';
-    filters.startDate = !!filters.startDate ? filters.startDate : '*';
-    filters.endDate = !!filters.endDate ? filters.endDate : '*';
+    filters.startDate = !!filters.startDate ? (this.dateIncludesTime ? filters.startDate : filters.startDate.split('T')[0]) : '*';
+    filters.endDate = !!filters.endDate ? (this.dateIncludesTime ? filters.endDate : filters.endDate.split('T')[0]) : '*';
     filters.options = !!filters.options ? filters.options : (this.filters.optionsMultiple ? [] : '*');
 
     if(this.timerTrigger && keyupEvent) {

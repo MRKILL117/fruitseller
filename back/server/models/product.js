@@ -84,7 +84,37 @@ module.exports = function(Product) {
                     scope: {
                         where: !!wherePrices.and.length ? wherePrices : {},
                         order: 'date DESC',
-                        limit: 50
+                        limit: 10
+                    }
+                },
+                order: 'name ASC'
+            }, (err, products) => {
+                if(err) return callback(err);
+
+                return callback(null, products);
+            });
+        });
+    }
+
+    Product.GetAllWithInventories = function(ctx, text = null, startDate = null, endDate = null, callback) {
+        const userId = ctx.accessToken.userId;
+        let where = {adminId: userId, deleted: false};
+        let whereInventories = {and: []};
+        if(!!text && text != '*') where['name'] = {like: `%${text}%`};
+        if(!!startDate && startDate != '*') whereInventories.and.push({date: {gte: startDate}});
+        if(!!endDate && endDate != '*') whereInventories.and.push({date: {lte: endDate}});
+
+        Product.app.models.Inventory.UpsertTodayInventories(ctx, (err, inventoriesUpdated) => {
+            if(err) return callback(err);
+            
+            Product.find({
+                where,
+                include: {
+                    relation: 'inventories',
+                    scope: {
+                        where: !!whereInventories.and.length ? whereInventories : {},
+                        order: 'date DESC',
+                        limit: 10
                     }
                 },
                 order: 'name ASC'

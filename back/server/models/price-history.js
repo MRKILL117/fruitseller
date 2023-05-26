@@ -1,8 +1,8 @@
 'use strict';
 
+var constants = require('./../assets/constants.js');
 var moment = require('moment-timezone');
 var CronJob = require('cron').CronJob;
-var constants = require('./../assets/constants.js');
 var priceHistoryCornjob = null;
 
 module.exports = function(PriceHistory) {
