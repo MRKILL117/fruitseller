@@ -3,5 +3,5 @@ export interface filter {
     startDate: string,
     endDate: string,
     optionsLabel: string,
-    options: Array<any>,
+    options: Array<any> | string,
 }

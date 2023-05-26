@@ -77,6 +77,11 @@
       "type": "hasMany",
       "model": "PriceHistory",
       "foreignKey": "productId"
+    },
+    "inventories": {
+      "type": "hasMany",
+      "model": "Inventory",
+      "foreignKey": "productId"
     }
   },
   "acls": [
@@ -96,6 +101,7 @@
         "CreateArray",
         "GetAll",
         "GetAllWithPriceHistory",
+        "GetAllWithInventories",
         "Update",
         "Delete"
       ]
@@ -244,6 +250,56 @@
         },
         {
           "path": "/WithPriceHistory/FilteredBy/Text/:text/StartDate/:startDate/EndDate/:endDate",
+          "verb": "get"
+        }
+      ]
+    },
+    "GetAllWithInventories": {
+      "accepts": [
+        {
+          "arg": "ctx",
+          "type": "object",
+          "required": true,
+          "description": "",
+          "http": {
+            "source": "req"
+          }
+        },
+        {
+          "arg": "text",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "arg": "startDate",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "arg": "endDate",
+          "type": "string",
+          "required": false,
+          "description": ""
+        }
+      ],
+      "returns": [
+        {
+          "arg": "products",
+          "type": "array",
+          "root": true,
+          "description": ""
+        }
+      ],
+      "description": "",
+      "http": [
+        {
+          "path": "/WithInventory",
+          "verb": "get"
+        },
+        {
+          "path": "/WithInventory/FilteredBy/Text/:text/StartDate/:startDate/EndDate/:endDate",
           "verb": "get"
         }
       ]

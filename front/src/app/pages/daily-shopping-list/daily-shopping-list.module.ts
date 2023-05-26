@@ -6,6 +6,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { FiltersModule } from 'src/app/components/filters/filters.module';
 
 import { DailyShoppingListComponent } from './daily-shopping-list.component';
+import { ProductOrdersModule } from 'src/app/components/product-orders/product-orders.module';
 
 const routes: Routes = [
   {
@@ -21,6 +22,7 @@ const routes: Routes = [
     CommonModule,
     FiltersModule,
     NgSelectModule,
+    ProductOrdersModule,
     ReactiveFormsModule,
     RouterModule.forChild(routes)
   ]

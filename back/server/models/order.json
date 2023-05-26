@@ -50,6 +50,11 @@
         "dataScale": 2
       }
     },
+    "statusId": {
+      "type": "number",
+      "required": true,
+      "default": 1
+    },
     "deleted": {
       "type": "boolean",
       "required": true,
@@ -84,6 +89,7 @@
       "property": [
         "CreateOne",
         "GetAll",
+        "GetOne",
         "Update",
         "Delete"
       ]
@@ -164,6 +170,24 @@
         },
         {
           "path": "/FilteredBy/StartDate/:startDate/EndDate/:endDate",
+          "verb": "get"
+        }
+      ]
+    },
+    "prototype.GetOne": {
+      "accepts": [],
+      "returns": [
+        {
+          "arg": "order",
+          "type": "object",
+          "root": true,
+          "description": ""
+        }
+      ],
+      "description": "",
+      "http": [
+        {
+          "path": "/",
           "verb": "get"
         }
       ]

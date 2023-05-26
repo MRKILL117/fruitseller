@@ -167,7 +167,7 @@
         <div class="w-100">
             <form [formGroup]="productForm">
                 <div class="row">
-                    <div class="col-12 col-sm-6">
+                    <div class="col-12">
                         <div class="form-group">
                             <label>Nombre <span class="text-danger">*</span></label>
                             <div class="input-container">
@@ -200,6 +200,23 @@
                     </div>
                     <div class="col-12 col-sm-6">
                         <div class="form-group">
+                            <label>Peso promedio por pieza <span class="text-danger">*</span></label>
+                            <div class="input-container">
+                                <i class="input-icon zmdi zmdi-collection-text zmdi-hc-lg"></i>
+                                <input class="form-control" type="text" placeholder="Peso promedio en Kg" formControlName="weightPerPiece" (keyup.enter)="RegisterProduct()">
+                            </div>
+                            <div class="error-messages" *ngIf="form.GetFormControlByName(productForm, 'weightPerPiece')?.touched && form.GetFormControlByName(productForm, 'weightPerPiece')?.errors">
+                                <span class="d-block" *ngIf="form.GetFormControlByName(productForm, 'weightPerPiece')?.errors.required">
+                                    Campo obligatorio
+                                </span>
+                                <span class="d-block" *ngIf="form.GetFormControlByName(productForm, 'weightPerPiece')?.errors.pricenumber">
+                                    Solo numeros con un maximo de 2 decimales
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6">
+                        <div class="form-group">
                             <label>Precio <span class="text-danger">*</span></label>
                             <div class="input-container">
                                 <i class="input-icon zmdi zmdi-money zmdi-hc-lg"></i>
@@ -210,7 +227,7 @@
                                     Campo obligatorio
                                 </span>
                                 <span class="d-block" *ngIf="form.GetFormControlByName(productForm, 'price')?.errors.pricenumber">
-                                    Valor invalido
+                                    Solo numeros con un maximo de 2 decimales
                                 </span>
                             </div>
                         </div>
@@ -227,7 +244,7 @@
                                     Campo obligatorio
                                 </span>
                                 <span class="d-block" *ngIf="form.GetFormControlByName(productForm, 'tax')?.errors.onlynumbers">
-                                    Valor inválido
+                                    Solo números enteros
                                 </span>
                             </div>
                         </div>

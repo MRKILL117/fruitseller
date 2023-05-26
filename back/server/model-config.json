@@ -109,6 +109,7 @@
           "CreateArray": true,
           "GetAll": true,
           "GetAllWithPriceHistory": true,
+          "GetAllWithInventories": true,
           "Update": true,
           "prototype.Delete": true
         }
@@ -144,6 +145,7 @@
           "*": false,
           "CreateOne": true,
           "GetAll": true,
+          "prototype.GetOne": true,
           "Update": true,
           "prototype.Delete": true
         }
@@ -173,7 +175,7 @@
       "remoting": {
         "sharedMethods": {
           "*": false,
-          "GetAll": true
+          "prototype.Update": true
         }
       }
     }

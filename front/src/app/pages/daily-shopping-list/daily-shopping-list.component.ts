@@ -88,7 +88,7 @@ export class DailyShoppingListComponent implements OnInit {
   }
 
   OnFiltersChanged(filters: filter | null = null) {
-    this.SetProductsArray(filters?.options);
+    this.SetProductsArray(filters?.options == '*' ? null : filters?.options);
   }
 
   GetClients() {
@@ -123,12 +123,14 @@ export class DailyShoppingListComponent implements OnInit {
         if(!!buyer) {
           if(buyer.id == item.product.buyer.id) {
             if(!!this.productsObj[item.product.name]) {
+              this.products[this.productsObj[item.product.name].arrayIdx].orders.push(order);
               this.products[this.productsObj[item.product.name].arrayIdx].weight += Number(!!item.weight ? item.weight : 0);
               this.products[this.productsObj[item.product.name].arrayIdx].quantity += Number(!!item.quantity ? item.quantity : 0);
               this.productsObj[item.product.name].productsDetected++;
             } else {
               this.products.push({
                 ...item.product,
+                orders: [order],
                 weight: Number(!!item.weight ? item.weight : 0),
                 quantity: Number(!!item.quantity ? item.quantity : 0),
               });
@@ -141,12 +143,14 @@ export class DailyShoppingListComponent implements OnInit {
         }
         else {
           if(!!this.productsObj[item.product.name]) {
+            this.products[this.productsObj[item.product.name].arrayIdx].orders.push(order);
             this.products[this.productsObj[item.product.name].arrayIdx].weight += Number(!!item.weight ? item.weight : 0);
             this.products[this.productsObj[item.product.name].arrayIdx].quantity += Number(!!item.quantity ? item.quantity : 0);
             this.productsObj[item.product.name].productsDetected++;
           } else {
             this.products.push({
               ...item.product,
+              orders: [order],
               weight: Number(!!item.weight ? item.weight : 0),
               quantity: Number(!!item.quantity ? item.quantity : 0),
             });
@@ -174,11 +178,11 @@ export class DailyShoppingListComponent implements OnInit {
   }
 
   GetProductTotal(product: any) {
-    let toal = 0;
+    let total = 0;
     this.orders.forEach(order => {
-      toal += this.GetOrderProductShoppingQuantity(order, product);
+      total += this.GetOrderProductShoppingQuantity(order, product);
     });
-    return toal;
+    return total;
   }
 
   ExportData() {
@@ -208,10 +212,6 @@ export class DailyShoppingListComponent implements OnInit {
     console.log(productsMapped);
 
     this.csv.GenerateCSV('compras_del_dia', productsMapped, keys, headers);
-  }
-
-  DownloadTemplate() {
-    this.http.DownloadFileWithoutApi("assets/templates/plantilla_ordenes.csv", 'plantilla_ordenes.csv');
   }
 
 }

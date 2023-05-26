@@ -27,6 +27,10 @@ module.exports = function(Order) {
         });
     }
 
+    Order.prototype.GetOne = function(callback) {
+        return callback(null, this);
+    }
+
     Order.Update = function(order, callback) {
         Order.upsert(order, (err, orderUpdated) => {
             if(err) return callback(err);

@@ -3,26 +3,25 @@ import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { DatePickerModule } from 'src/app/components/date-picker/date-picker.module';
 
-import { CreateSellOrderComponent } from './create-sell-order.component';
+import { ProductOrdersComponent } from './product-orders.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: CreateSellOrderComponent
+    component: ProductOrdersComponent
   }
 ];
 
 @NgModule({
-  declarations: [CreateSellOrderComponent],
+  declarations: [ProductOrdersComponent],
   imports: [
     FormsModule,
     CommonModule,
     NgSelectModule,
-    DatePickerModule,
     ReactiveFormsModule,
-    RouterModule.forChild(routes)
-  ]
+    // RouterModule.forChild(routes)
+  ],
+  exports: [ProductOrdersComponent]
 })
-export class CreateSellOrderModule { }
+export class ProductOrdersModule { }

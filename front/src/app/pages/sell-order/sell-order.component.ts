@@ -1,22 +1,26 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import * as moment from 'moment-timezone';
 import { HttpService } from 'src/app/services/http.service';
 import { NavigationService } from 'src/app/services/navigation.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { environment } from 'src/environments/environment';
+
 @Component({
-  selector: 'app-create-sell-order',
-  templateUrl: './create-sell-order.component.html',
-  styleUrls: ['./create-sell-order.component.css']
+  selector: 'app-sell-order',
+  templateUrl: './sell-order.component.html',
+  styleUrls: ['./sell-order.component.css']
 })
-export class CreateSellOrderComponent implements OnInit {
+export class SellOrderComponent implements OnInit {
 
   IVA: number = 0.16;
   clients: Array<any> = [];
   selectedClient: any = null;
   measurementTypes: Array<any> = [];
-  products: Array<any> = [];
-  orderItems: Array<any> = [];
+  orderId: any = null;
+  order: any = null;
+  orderStatuses: Array<any> = [];
+  orderDate: moment.Moment | null = null;
   orderItem: any = {
     product: null,
     quantity: null,
@@ -25,7 +29,6 @@ export class CreateSellOrderComponent implements OnInit {
     price: 0,
     total: 0,
   }
-  orderDate: moment.Moment = moment().tz(environment.timezone).add(4, 'hours');
   loading: any = {
     getting: false,
     creating: false
@@ -33,21 +36,21 @@ export class CreateSellOrderComponent implements OnInit {
 
   public get orderSubtotal() {
     let subtotal = 0;
-    this.orderItems.forEach(item => {
+    this.order.items.forEach((item: any) => {
       if(!!item.price) subtotal += item.price;
     });
     return subtotal;
   }
   public get orderTaxes() {
     let taxes = 0;
-    this.orderItems.forEach(item => {
+    this.order.items.forEach((item: any) => {
       if(!!item.tax) taxes += item.tax;
     });
     return taxes;
   }
   public get orderTotal() {
     let total = 0;
-    this.orderItems.forEach(item => {
+    this.order.items.forEach((item: any) => {
       if(!!item.total) total += item.total;
     });
     return total;
@@ -56,33 +59,26 @@ export class CreateSellOrderComponent implements OnInit {
   constructor(
     private http: HttpService,
     private toast: ToastService,
-    private nav: NavigationService
+    private nav: NavigationService,
+    private activatedRoute: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
     this.GetClients();
-    this.GetProducts();
-    this.PushItem();
+    this.GetOrderStatuses();
+    this.GetParams();
+  }
+
+  GetParams() {
+    this.activatedRoute.params.subscribe(params => {
+      this.orderId = params['orderId'];
+
+      this.GetOrder();
+    });
   }
 
   GoBack() {
     this.nav.GoToRoleRoute(`sell-orders`);
-  }
-
-  GetMeasurementTypes() {
-    this.http.Get(`MeasurementTypes`).subscribe((measurementTypes: any) => {
-      this.measurementTypes = measurementTypes;
-    }, err => {
-      console.error("Error getting measurement types", err);
-    });
-  }
-
-  GetProducts() {
-    this.http.Get(`Products/WithPriceHistory/FilteredBy/Text/*/StartDate/${this.orderDate.format('YYYY-MM-DD')}/EndDate/${this.orderDate.format('YYYY-MM-DD')}`).subscribe((products: any) => {
-      this.products = products;
-    }, err => {
-      console.error("Error getting products", err);
-    });
   }
 
   GetClients() {
@@ -94,11 +90,25 @@ export class CreateSellOrderComponent implements OnInit {
     });
   }
 
-  PushItem() {
-    this.orderItems.push(Object.assign({}, this.orderItem));
+  GetOrderStatuses() {
+    this.http.Get(`OrderStatuses`).subscribe((orderStatuses: any) => {
+      this.orderStatuses = orderStatuses;
+    }, err => {
+      console.error("Error getting order statuses", err);
+    })
   }
-  RemoveItem(idx: number) {
-    if(this.orderItems.length > 1) this.orderItems.splice(idx, 1);
+
+  GetOrder() {
+    this.loading.getting = true;
+    this.http.Get(`Orders/${this.orderId}`).subscribe((order: any) => {
+      this.order = order;
+      this.selectedClient = order.client;
+      this.orderDate = moment(order.date);
+      this.loading.getting = false;
+    }, err => {
+      console.error("Error getting order", err);
+      this.loading.getting = false;
+    });
   }
   
   OnWeightOrQuantityChange(item: any) {
@@ -127,14 +137,14 @@ export class CreateSellOrderComponent implements OnInit {
     }
 
     let order = {
-      date: this.orderDate.toISOString(),
-      items: this.orderItems,
+      id: this.orderId,
+      items: this.order.items,
       subtotal: this.orderSubtotal,
       taxes: this.orderTaxes,
       total: this.orderTotal,
-      client: this.selectedClient
+      statusId: this.order.statusId,
     }
-    this.http.Post(`Orders`, {order}).subscribe(newOrder => {
+    this.http.Patch(`Orders`, {order}).subscribe(newOrder => {
       this.toast.ShowDefaultSuccess(`Orden creada exitosamente`);
       this.nav.GoToRoleRoute('sell-orders');
     }, err => {
@@ -144,14 +154,14 @@ export class CreateSellOrderComponent implements OnInit {
 
   ValidateOrderData() {
     let errorMessage = null;
-    if(!this.selectedClient) return `No ha seleccionado cliente`;
-    this.orderItems.forEach((item, idx): any => {
+    if(!this.order.statusId) return errorMessage = `La orden no tiene un estatus`;
+    this.order.items.forEach((item: any, idx: number): any => {
       if(!item.product) return errorMessage = `La fila ${idx+1} no tiene producto seleccionado`;
-      // switch (item.product.salesMeasurementType.abrev) {
-      //   case 'kg': if(!item.weight || Number.isNaN(item.weight)) return errorMessage = `El producto ${item.product.name} no tiene cantidad de Kg valida`; break;
-      //   case 'pz': if(!item.quantity || Number.isNaN(item.quantity)) return errorMessage = `El producto ${item.product.name} no tiene cantidad de Pz valida`; break;
-      //   default: if(!item.weight || Number.isNaN(item.weight)) return errorMessage = `El producto ${item.product.name} no tiene cantidad de Kg valida`; break;
-      // }
+      switch (item.product.salesMeasurementType.abrev) {
+        case 'kg': if(!item.weight || Number.isNaN(item.weight)) return errorMessage = `El producto ${item.product.name} no tiene cantidad de Kg valida`; break;
+        case 'pz': if(!item.quantity || Number.isNaN(item.quantity)) return errorMessage = `El producto ${item.product.name} no tiene cantidad de Pz valida`; break;
+        default: if(!item.weight || Number.isNaN(item.weight)) return errorMessage = `El producto ${item.product.name} no tiene cantidad de Kg valida`; break;
+      }
     });
     return errorMessage;
   }

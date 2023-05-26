@@ -1,16 +1,16 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { priceNumber } from 'src/app/common/custom-validators.directive';
+import { onlyNumbers, priceNumber } from 'src/app/common/custom-validators.directive';
 import { FormService } from 'src/app/services/form.service';
 import { HttpService } from 'src/app/services/http.service';
 import { ToastService } from 'src/app/services/toast.service';
 
 @Component({
-  selector: 'app-product-price-history',
-  templateUrl: './product-price-history.component.html',
-  styleUrls: ['./product-price-history.component.css']
+  selector: 'app-product-inventory-history',
+  templateUrl: './product-inventory-history.component.html',
+  styleUrls: ['./product-inventory-history.component.css']
 })
-export class ProductPriceHistoryComponent implements OnInit {
+export class ProductInventoryHistoryComponent implements OnInit {
 
   @Input() product: any = null;
   @Input() history: boolean = false;
@@ -20,10 +20,9 @@ export class ProductPriceHistoryComponent implements OnInit {
 
   showHistory: boolean = false;
 
-  productPriceForm: FormGroup = new FormGroup({
+  productInventoryForm: FormGroup = new FormGroup({
     id: new FormControl('', [Validators.required]),
-    purchasePrice: new FormControl('', [Validators.required, priceNumber()]),
-    salePrice: new FormControl('', [Validators.required, priceNumber()]),
+    quantity: new FormControl('', [Validators.required, onlyNumbers()]),
   });
 
   constructor(
@@ -33,29 +32,28 @@ export class ProductPriceHistoryComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    if(this.history) this.productPriceForm.disable();
+    if(this.history) this.productInventoryForm.disable();
     if(this.toggleHistory) {
       this.toggleHistory.subscribe(showHistory => {
         this.history = typeof showHistory === 'boolean' ? showHistory : !this.history;
-        if(this.history) this.productPriceForm.disable();
-        else this.productPriceForm.enable();
+        if(this.history) this.productInventoryForm.disable();
+        else this.productInventoryForm.enable();
       });
     }
-    this.productPriceForm.setValue({
-      id: this.product.prices[0].id,
-      purchasePrice: this.product.prices[0].purchasePrice,
-      salePrice: this.product.prices[0].salePrice,
+    this.productInventoryForm.setValue({
+      id: this.product.inventories[0].id,
+      quantity: this.product.inventories[0].quantity
     });
   }
 
-  UpdatePrice() {
-    if (this.productPriceForm.invalid) {
+  Update() {
+    if (this.productInventoryForm.invalid) {
       this.toast.ShowDefaultWarning(`Los valores no son validos`);
       return;
     }
 
-    let priceHistory = this.productPriceForm.value;
-    this.http.Patch(`/PriceHistories/${priceHistory.id}/UpdatePrices`, { priceHistory }).subscribe(updated => {
+    let inventory = this.productInventoryForm.value;
+    this.http.Patch(`/Inventories/${inventory.id}`, { inventory }).subscribe(updated => {
       this.toast.ShowDefaultSuccess(`Precios actualizados`);
     }, err => {
       console.error("Error updating prices", err);

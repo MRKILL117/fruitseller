@@ -43,6 +43,10 @@ const routes: Routes = [
         loadChildren: () => import('./pages/sell-orders/sell-orders.module').then( m => m.SellOrdersModule)
       },
       {
+        path: 'edit-sell-orders/:orderId',
+        loadChildren: () => import('./pages/sell-order/sell-order.module').then( m => m.SellOrderModule)
+      },
+      {
         path: 'sell-orders/create',
         loadChildren: () => import('./pages/create-sell-order/create-sell-order.module').then( m => m.CreateSellOrderModule)
       },

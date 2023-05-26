@@ -5,12 +5,7 @@
     position: relative;
 }
 
-.form-group {
-    margin: 0;
-}
-
 .toggle-active {
-    margin-top: 1.8rem;
     height: 250px;
     overflow-y: auto;
 }
@@ -52,7 +47,7 @@ div.price-history > div:nth-of-type(odd) {
 
 .th {
     height: 50px;
-    width: 33%;
+    width: 50%;
     display: flex;
     align-items: center;
     justify-content: center;

@@ -31,6 +31,7 @@ export class ProductsComponent implements OnInit {
     id: new FormControl(null, []),
     name: new FormControl('', [Validators.required]),
     satCode: new FormControl('', [Validators.required, onlyNumbers()]),
+    weightPerPiece: new FormControl('', [Validators.required, priceNumber()]),
     price: new FormControl('', [Validators.required, priceNumber()]),
     tax: new FormControl('', [Validators.required, onlyNumbers()]),
     buyerId: new FormControl(null, [Validators.required]),

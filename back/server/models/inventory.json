@@ -7,13 +7,53 @@
     "validateUpsert": true
   },
   "properties": {
+    "date": {
+      "type": "string",
+      "required": true
+    },
+    "quantity": {
+      "type": "string",
+      "required": true
+    },
     "lastModified": {
       "type": "string",
       "required": true
     }
   },
   "validations": [],
-  "relations": {},
+  "relations": {
+    "product": {
+      "type": "belongsTo",
+      "model": "Product",
+      "foreignKey": "productId"
+    }
+  },
   "acls": [],
-  "methods": {}
+  "methods": {
+    "prototype.Update": {
+      "accepts": [
+        {
+          "arg": "inventory",
+          "type": "object",
+          "required": true,
+          "description": ""
+        }
+      ],
+      "returns": [
+        {
+          "arg": "product",
+          "type": "object",
+          "root": true,
+          "description": ""
+        }
+      ],
+      "description": "",
+      "http": [
+        {
+          "path": "/",
+          "verb": "patch"
+        }
+      ]
+    }
+  }
 }

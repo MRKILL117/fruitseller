@@ -195,7 +195,13 @@
                                     Campo obligatorio
                                 </span>
                                 <span class="d-block" *ngIf="form.GetFormControlByName(clientForm, 'rfc')?.errors.pattern">
-                                    Valor inválido
+                                    Valor con formato inválido
+                                </span>
+                                <span class="d-block" *ngIf="form.GetFormControlByName(clientForm, 'postalCode')?.errors.minlength">
+                                    Mínimo {{form.GetFormControlByName(clientForm, 'postalCode')?.errors.minlength.requiredLength}} caracteres
+                                </span>
+                                <span class="d-block" *ngIf="form.GetFormControlByName(clientForm, 'postalCode')?.errors.maxlength">
+                                    Máximo {{form.GetFormControlByName(clientForm, 'postalCode')?.errors.maxlength.requiredLength}} caracteres
                                 </span>
                             </div>
                         </div>
@@ -225,8 +231,14 @@
                                 <span class="d-block" *ngIf="form.GetFormControlByName(clientForm, 'postalCode')?.errors.required">
                                     Campo obligatorio
                                 </span>
-                                <span class="d-block" *ngIf="form.GetFormControlByName(clientForm, 'postalCode')?.errors.pattern">
-                                    Valor inválido
+                                <span class="d-block" *ngIf="form.GetFormControlByName(clientForm, 'postalCode')?.errors.onlynumbers">
+                                    Solo números enteros
+                                </span>
+                                <span class="d-block" *ngIf="form.GetFormControlByName(clientForm, 'postalCode')?.errors.minlength">
+                                    Mínimo {{form.GetFormControlByName(clientForm, 'postalCode')?.errors.minlength.requiredLength}} caracteres
+                                </span>
+                                <span class="d-block" *ngIf="form.GetFormControlByName(clientForm, 'postalCode')?.errors.maxlength">
+                                    Máximo {{form.GetFormControlByName(clientForm, 'postalCode')?.errors.maxlength.requiredLength}} caracteres
                                 </span>
                             </div>
                         </div>
