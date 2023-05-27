@@ -6,7 +6,7 @@
     "database": "fruitseller",
     "password": "bscWEngpvLMO",
     "name": "mysql",
-    "user": "fruitseller",
+    "user": "fruitselleruser",
     "connector": "mysql"
   }
 }
