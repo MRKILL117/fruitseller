@@ -4,9 +4,9 @@
     "port": 3306,
     "url": "",
     "database": "fruitseller",
-    "password": "",
+    "password": "bscWEngpvLMO",
     "name": "mysql",
-    "user": "root",
+    "user": "fruitseller",
     "connector": "mysql"
   }
 }
