@@ -23,7 +23,7 @@
     "bootstrap": "^4.6.1",
     "jquery": "^3.6.0",
     "moment-timezone": "^0.5.43",
-    "ngx-bootstrap": "^8.0.0",
+    "ngx-bootstrap": "^7.1.2",
     "ngx-papaparse": "^7.0.0",
     "ngx-toastr": "^14.2.2",
     "popper.js": "^1.16.1",
