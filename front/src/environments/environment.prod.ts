@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  apiBaseUrl: 'http://localhost:3000/api',
+  apiBaseUrl: 'http://18.222.191.129/api',
   timezone: 'America/Mexico_City',
 };
