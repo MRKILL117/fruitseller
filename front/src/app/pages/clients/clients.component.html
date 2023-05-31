@@ -143,7 +143,7 @@
 <ng-template #deleteClientModal>
     <div class="modal-header">
         <h2 class="modal-title">Eliminar cliente</h2>
-        <i class="close-modal-button zmdi zmdi-close-circle-o zmdi-hc-2x clickeable" (click)="modal.CloseModal(); clientForm.reset()"></i>
+        <i class="close-modal-button zmdi zmdi-close-circle-o zmdi-hc-2x clickeable" (click)="modal.CloseModal()"></i>
     </div>
     <div class="modal-body">
         <div class="d-flex">
@@ -151,7 +151,7 @@
         </div>
     </div>
     <div class="modal-footer">
-        <button class="btn btn-secondary" (click)="modal.CloseModal(); clientForm.reset()">
+        <button class="btn btn-secondary" (click)="modal.CloseModal()">
             No, cancelar
         </button>
         <button class="btn btn-danger" (click)="DeleteClient()">
@@ -163,7 +163,7 @@
 <ng-template #addOrEditClientModal>
     <div class="modal-header">
         <h2 class="modal-title">{{ isEditing ? 'Actualizar cliente' : 'Agregar un cliente'}}</h2>
-        <i class="close-modal-button zmdi zmdi-close-circle-o zmdi-hc-2x clickeable" (click)="modal.CloseModal(); clientForm.reset()"></i>
+        <i class="close-modal-button zmdi zmdi-close-circle-o zmdi-hc-2x clickeable" (click)="CancelEdition()"></i>
     </div>
     <div class="modal-body">
         <div class="w-100">
@@ -310,7 +310,7 @@
         </div>
     </div>
     <div class="modal-footer">
-        <button class="btn btn-secondary" (click)="modal.CloseModal(); clientForm.reset()">
+        <button class="btn btn-secondary" (click)="CancelEdition()">
             Cancelar
         </button>
         <button class="btn btn-primary" (click)="RegisterClient()">

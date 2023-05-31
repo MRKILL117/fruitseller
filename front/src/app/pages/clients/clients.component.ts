@@ -160,6 +160,12 @@ export class ClientsComponent implements OnInit {
     });
   }
 
+  CancelEdition() {
+    this.modal.CloseModal(this.loading.updating);
+    this.isEditing = false;
+    this.clientForm.reset();
+  }
+
   EditClient(client: any) {
     this.isEditing = true;
     for (const key in this.clientForm.controls) {

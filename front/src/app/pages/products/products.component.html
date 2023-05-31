@@ -161,7 +161,7 @@
 <ng-template #addOrEditProductModal>
     <div class="modal-header">
         <h2 class="modal-title">{{ isEditing ? 'Actualizar producto' : 'Agregar un producto'}}</h2>
-        <i class="close-modal-button zmdi zmdi-close-circle-o zmdi-hc-2x clickeable" (click)="modal.CloseModal(loading.updating); productForm.reset()"></i>
+        <i class="close-modal-button zmdi zmdi-close-circle-o zmdi-hc-2x clickeable" (click)="CancelEdition()"></i>
     </div>
     <div class="modal-body">
         <div class="w-100">
@@ -309,7 +309,7 @@
         </div>
     </div>
     <div class="modal-footer">
-        <button class="btn btn-secondary" [disabled]="loading.updating" (click)="modal.CloseModal(); productForm.reset()">
+        <button class="btn btn-secondary" [disabled]="loading.updating" (click)="CancelEdition()">
             Cancelar
         </button>
         <button class="btn btn-primary" [disabled]="loading.updating" (click)="RegisterProduct()">
