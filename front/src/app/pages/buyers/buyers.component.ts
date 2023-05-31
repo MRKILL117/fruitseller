@@ -92,6 +92,7 @@ export class BuyersComponent implements OnInit {
     if(this.buyerForm.invalid) {
       this.buyerForm.markAllAsTouched();
       this.toast.ShowDefaultWarning(`Favor de llenar los campos obligatorios`);
+      return;
     }
 
     this.loading.updating = true;
@@ -151,6 +152,12 @@ export class BuyersComponent implements OnInit {
       this.toast.ShowDefaultDanger(`Error al actualizar comprador`);
       this.loading.updating = false;
     });
+  }
+
+  CancelEdition() {
+    this.modal.CloseModal();
+    this.isEditing = false;
+    this.buyerForm.reset();
   }
 
   EditBuyer(buyer: any) {

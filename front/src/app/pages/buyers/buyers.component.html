@@ -147,7 +147,7 @@
         </div>
     </div>
     <div class="modal-footer">
-        <button class="btn btn-secondary" [disabled]="loading.updating" (click)="modal.CloseModal(); buyerForm.reset()">
+        <button class="btn btn-secondary" [disabled]="loading.updating" (click)="CancelEdition()">
             No, cancelar
         </button>
         <button class="btn btn-danger" [disabled]="loading.updating" (click)="DeleteBuyer()">
@@ -203,7 +203,7 @@
         </div>
     </div>
     <div class="modal-footer">
-        <button class="btn btn-secondary" [disabled]="loading.updating" (click)="modal.CloseModal(); buyerForm.reset()">
+        <button class="btn btn-secondary" [disabled]="loading.updating" (click)="CancelEdition()">
             Cancelar
         </button>
         <button class="btn btn-primary" [disabled]="loading.updating" (click)="RegisterBuyer()">
