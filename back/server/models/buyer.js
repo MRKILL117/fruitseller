@@ -15,7 +15,7 @@ module.exports = function(Buyer) {
             Buyer.create(buyer, (err, newBuyer) => {
                 if(err) return callback(err);
 
-                let cont = 0, limit = buyer.products.length;
+                let cont = 0, limit = !!buyer.products ? buyer.products.length : 0;
                 if(!limit) return callback(null, newBuyer);
                 buyer.products.forEach(product => {
                     let where = {deleted: false};

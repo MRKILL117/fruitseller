@@ -188,6 +188,12 @@ export class ProductsComponent implements OnInit {
     });
   }
 
+  CancelEdition() {
+    this.modal.CloseModal(this.loading.updating);
+    this.isEditing = false;
+    this.productForm.reset();
+  }
+
   EditProduct(Product: any) {
     this.isEditing = true;
     for (const key in this.productForm.controls) {

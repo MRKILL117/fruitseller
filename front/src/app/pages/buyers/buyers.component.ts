@@ -155,7 +155,7 @@ export class BuyersComponent implements OnInit {
   }
 
   CancelEdition() {
-    this.modal.CloseModal();
+    this.modal.CloseModal(this.loading.updating);
     this.isEditing = false;
     this.buyerForm.reset();
   }
