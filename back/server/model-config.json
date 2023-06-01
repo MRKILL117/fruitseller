@@ -207,5 +207,9 @@
         }
       }
     }
+  },
+  "Address": {
+    "dataSource": "mysql",
+    "public": true
   }
 }
