@@ -6,7 +6,9 @@
     "validateUpsert": true
   },
   "scope": {
-    "include:": ["addresses"]
+    "include:": [
+      "addresses"
+    ]
   },
   "properties": {
     "name": {
@@ -35,6 +37,14 @@
       "type": "belongsTo",
       "model": "Account",
       "foreignKey": "adminId"
+    },
+    "addresses": {
+      "type": "hasMany",
+      "model": "Address",
+      "foreignKey": "clientId",
+      "options": {
+        "nestRemoting": true
+      }
     }
   },
   "acls": [
