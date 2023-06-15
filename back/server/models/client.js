@@ -59,13 +59,11 @@ module.exports = function(Client) {
         }
         Client.find({
             where,
+            include: 'addresses',
             order: 'name ASC'
         }, (err, clients) => {
             if(err) return callback(err);
 
-            clients.forEach(client => {
-                console.log(client.addresses());
-            })
             return callback(null, clients);
         });
     }

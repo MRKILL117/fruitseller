@@ -56,9 +56,9 @@
                     <tr *ngFor="let client of clients">
                         <td>{{client.name}}</td>
                         <td>{{client.rfc}}</td>
-                        <td>{{client.address?.street + " #" + client.address?.externalNumber + (!!client.address?.internalNumber ? ("int. " + client.address?.internalNumber) : "")}}</td>
-                        <td>{{client.address?.postalCode}}</td>
-                        <td>{{client.address?.state + ", " + client.address?.country}}</td>
+                        <td>{{client.addresses[0]?.street + " #" + client.addresses[0]?.externalNumber + (!!client.addresses[0]?.internalNumber ? (" int. " + client.addresses[0]?.internalNumber) : "")}}</td>
+                        <td>{{client.addresses[0]?.postalCode}}</td>
+                        <td>{{client.addresses[0]?.province + ", " + client.addresses[0]?.country}}</td>
                         <td>{{client.utilityPercentage + "%"}}</td>
                         <td>{{client.paymentDays ? client.paymentDays : 'N/A'}}</td>
                         <td>
@@ -209,7 +209,7 @@
                     <div class="col-12 px-0">
                         <form [formGroup]="addressForm">
                             <div class="row">
-                                <div class="col-12 col-sm-6">
+                                <div class="col-12">
                                     <div class="form-group">
                                         <label>Dirección <span class="text-danger">*</span></label>
                                         <div class="input-container">
