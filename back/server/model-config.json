@@ -207,5 +207,18 @@
         }
       }
     }
+  },
+  "Address": {
+    "dataSource": "mysql",
+    "public": true,
+    "options": {
+      "allowEternalTokens": true,
+      "validateUpsert": true,
+      "remoting": {
+        "sharedMethods": {
+          "*": false
+        }
+      }
+    }
   }
 }
