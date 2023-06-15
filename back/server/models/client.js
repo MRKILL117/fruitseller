@@ -71,8 +71,12 @@ module.exports = function(Client) {
     Client.Update = function(client, callback) {
         Client.upsert(client, (err, clientUpdated) => {
             if(err) return callback(err);
+            
+            Client.app.models.Address.upsert(client.address, (err, addressUpdated) => {
+                if(err) return callback(err);
 
-            return callback(null, clientUpdated);
+                return callback(null, clientUpdated);
+            });
         });
     }
 
