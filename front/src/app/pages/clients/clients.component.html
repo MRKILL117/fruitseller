@@ -32,13 +32,13 @@
         </div>
     </div>
 
-    <div class="row justify-content-center" *ngIf="!loading.getting; else bigLoading">
+    <div class="row justify-content-center">
         <!-- Filters -->
         <div class="col-12 col-lg-11 mt-3 mb-4">
             <app-filters [timerTrigger]="true" [filters]="{text: true,startDate: false,endDate: false,options: null}" (onSearch)="GetClients($event)"></app-filters>
         </div>
-        <div class="col-12 col-lg-11" *ngIf="!!clients?.length; else noClientsMessage">
-            <table class="table table-striped">
+        <div class="col-12 col-lg-11" *ngIf="!loading.getting; else bigLoading">
+            <table class="table table-striped" *ngIf="!!clients?.length; else noClientsMessage">
                 <thead class="table-thead">
                     <tr>
                         <th>Nombre</th>
@@ -56,9 +56,9 @@
                     <tr *ngFor="let client of clients">
                         <td>{{client.name}}</td>
                         <td>{{client.rfc}}</td>
-                        <td>{{client.address}}</td>
-                        <td>{{client.postalCode}}</td>
-                        <td>{{client.state + ", " + client.country}}</td>
+                        <td>{{client.address?.street + " #" + client.address?.externalNumber + (!!client.address?.internalNumber ? ("int. " + client.address?.internalNumber) : "")}}</td>
+                        <td>{{client.address?.postalCode}}</td>
+                        <td>{{client.address?.state + ", " + client.address?.country}}</td>
                         <td>{{client.utilityPercentage + "%"}}</td>
                         <td>{{client.paymentDays ? client.paymentDays : 'N/A'}}</td>
                         <td>
@@ -75,14 +75,14 @@
 </div>
 
 <ng-template #bigLoading>
-    <div class="w-100 h-75 d-flex align-items-center justify-content-center" style="min-height: min-content;">
+    <div class="col-12 w-100 h-75 d-flex align-items-center justify-content-center" style="min-height: min-content;">
         <i class="zmdi zmdi-spinner zmdi-hc-5x zmdi-hc-spin"></i>
     </div>
 </ng-template>
 <ng-template #noClientsMessage>
     <div class="col-12 col-lg-11">
         <div class="no-items-message">
-            No tiene clientes registrados
+            No se encontraron clientes
         </div>
     </div>
 </ng-template>
@@ -206,70 +206,124 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col-sm-6">
-                        <div class="form-group">
-                            <label>Dirección <span class="text-danger">*</span></label>
-                            <div class="input-container">
-                                <i class="input-icon zmdi zmdi-home zmdi-hc-lg"></i>
-                                <input class="form-control" type="text" placeholder="Dirección del cliente" formControlName="address" (keyup.enter)="RegisterClient()">
+                    <div class="col-12 px-0">
+                        <form [formGroup]="addressForm">
+                            <div class="row">
+                                <div class="col-12 col-sm-6">
+                                    <div class="form-group">
+                                        <label>Dirección <span class="text-danger">*</span></label>
+                                        <div class="input-container">
+                                            <i class="input-icon zmdi zmdi-home zmdi-hc-lg"></i>
+                                            <input class="form-control" type="text" placeholder="Dirección del cliente" formControlName="street" (keyup.enter)="RegisterClient()">
+                                        </div>
+                                        <div class="error-messages" *ngIf="form.GetFormControlByName(addressForm, 'street')?.touched && form.GetFormControlByName(addressForm, 'street')?.errors">
+                                            <span class="d-block" *ngIf="form.GetFormControlByName(addressForm, 'street')?.errors.required">
+                                                Campo obligatorio
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-6">
+                                    <div class="form-group">
+                                        <label>Número exterior <span class="text-danger">*</span></label>
+                                        <div class="input-container">
+                                            <i class="input-icon zmdi zmdi-home zmdi-hc-lg"></i>
+                                            <input class="form-control" type="text" placeholder="Numero exterior" formControlName="externalNumber" (keyup.enter)="RegisterClient()">
+                                        </div>
+                                        <div class="error-messages" *ngIf="form.GetFormControlByName(addressForm, 'externalNumber')?.touched && form.GetFormControlByName(addressForm, 'externalNumber')?.errors">
+                                            <span class="d-block" *ngIf="form.GetFormControlByName(addressForm, 'externalNumber')?.errors.required">
+                                                Campo obligatorio
+                                            </span>
+                                            <span class="d-block" *ngIf="form.GetFormControlByName(addressForm, 'externalNumber')?.errors.onlynumbers">
+                                                Solo números enteros
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-6">
+                                    <div class="form-group">
+                                        <label>Número interior</label>
+                                        <div class="input-container">
+                                            <i class="input-icon zmdi zmdi-home zmdi-hc-lg"></i>
+                                            <input class="form-control" type="text" placeholder="Numero interior" formControlName="internalNumber" (keyup.enter)="RegisterClient()">
+                                        </div>
+                                        <div class="error-messages" *ngIf="form.GetFormControlByName(addressForm, 'internalNumber')?.touched && form.GetFormControlByName(addressForm, 'internalNumber')?.errors">
+                                            <span class="d-block" *ngIf="form.GetFormControlByName(addressForm, 'internalNumber')?.errors.required">
+                                                Campo obligatorio
+                                            </span>
+                                            <span class="d-block" *ngIf="form.GetFormControlByName(addressForm, 'internalNumber')?.errors.onlynumbers">
+                                                Solo números enteros
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-6">
+                                    <div class="form-group">
+                                        <label>Código postal <span class="text-danger">*</span></label>
+                                        <div class="input-container">
+                                            <i class="input-icon zmdi zmdi-home zmdi-hc-lg"></i>
+                                            <input class="form-control" type="text" placeholder="Código posal del cliente" formControlName="postalCode" (keyup.enter)="RegisterClient()">
+                                        </div>
+                                        <div class="error-messages" *ngIf="form.GetFormControlByName(addressForm, 'postalCode')?.touched && form.GetFormControlByName(addressForm, 'postalCode')?.errors">
+                                            <span class="d-block" *ngIf="form.GetFormControlByName(addressForm, 'postalCode')?.errors.required">
+                                                Campo obligatorio
+                                            </span>
+                                            <span class="d-block" *ngIf="form.GetFormControlByName(addressForm, 'postalCode')?.errors.onlynumbers">
+                                                Solo números enteros
+                                            </span>
+                                            <span class="d-block" *ngIf="form.GetFormControlByName(addressForm, 'postalCode')?.errors.minlength">
+                                                Mínimo {{form.GetFormControlByName(addressForm, 'postalCode')?.errors.minlength.requiredLength}} caracteres
+                                            </span>
+                                            <span class="d-block" *ngIf="form.GetFormControlByName(addressForm, 'postalCode')?.errors.maxlength">
+                                                Máximo {{form.GetFormControlByName(addressForm, 'postalCode')?.errors.maxlength.requiredLength}} caracteres
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-6">
+                                    <div class="form-group">
+                                        <label>Ciudad <span class="text-danger">*</span></label>
+                                        <div class="input-container">
+                                            <i class="input-icon zmdi zmdi-globe zmdi-hc-lg"></i>
+                                            <input class="form-control" type="text" placeholder="Ciudad del cliente" formControlName="city" (keyup.enter)="RegisterClient()">
+                                        </div>
+                                        <div class="error-messages" *ngIf="form.GetFormControlByName(addressForm, 'city')?.touched && form.GetFormControlByName(addressForm, 'city')?.errors">
+                                            <span class="d-block" *ngIf="form.GetFormControlByName(addressForm, 'city')?.errors.required">
+                                                Campo obligatorio
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-6">
+                                    <div class="form-group">
+                                        <label>Estado <span class="text-danger">*</span></label>
+                                        <div class="input-container">
+                                            <i class="input-icon zmdi zmdi-globe zmdi-hc-lg"></i>
+                                            <input class="form-control" type="text" placeholder="Estado del cliente" formControlName="province" (keyup.enter)="RegisterClient()">
+                                        </div>
+                                        <div class="error-messages" *ngIf="form.GetFormControlByName(addressForm, 'province')?.touched && form.GetFormControlByName(addressForm, 'province')?.errors">
+                                            <span class="d-block" *ngIf="form.GetFormControlByName(addressForm, 'province')?.errors.required">
+                                                Campo obligatorio
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-6">
+                                    <div class="form-group">
+                                        <label>País <span class="text-danger">*</span></label>
+                                        <div class="input-container">
+                                            <i class="input-icon zmdi zmdi-globe zmdi-hc-lg"></i>
+                                            <input class="form-control" type="text" placeholder="País del cliente" formControlName="country" (keyup.enter)="RegisterClient()">
+                                        </div>
+                                        <div class="error-messages" *ngIf="form.GetFormControlByName(addressForm, 'country')?.touched && form.GetFormControlByName(addressForm, 'country')?.errors">
+                                            <span class="d-block" *ngIf="form.GetFormControlByName(addressForm, 'country')?.errors.required">
+                                                Campo obligatorio
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="error-messages" *ngIf="form.GetFormControlByName(clientForm, 'address')?.touched && form.GetFormControlByName(clientForm, 'address')?.errors">
-                                <span class="d-block" *ngIf="form.GetFormControlByName(clientForm, 'address')?.errors.required">
-                                    Campo obligatorio
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-sm-6">
-                        <div class="form-group">
-                            <label>Código postal <span class="text-danger">*</span></label>
-                            <div class="input-container">
-                                <i class="input-icon zmdi zmdi-home zmdi-hc-lg"></i>
-                                <input class="form-control" type="text" placeholder="Código posal del cliente" formControlName="postalCode" (keyup.enter)="RegisterClient()">
-                            </div>
-                            <div class="error-messages" *ngIf="form.GetFormControlByName(clientForm, 'postalCode')?.touched && form.GetFormControlByName(clientForm, 'postalCode')?.errors">
-                                <span class="d-block" *ngIf="form.GetFormControlByName(clientForm, 'postalCode')?.errors.required">
-                                    Campo obligatorio
-                                </span>
-                                <span class="d-block" *ngIf="form.GetFormControlByName(clientForm, 'postalCode')?.errors.onlynumbers">
-                                    Solo números enteros
-                                </span>
-                                <span class="d-block" *ngIf="form.GetFormControlByName(clientForm, 'postalCode')?.errors.minlength">
-                                    Mínimo {{form.GetFormControlByName(clientForm, 'postalCode')?.errors.minlength.requiredLength}} caracteres
-                                </span>
-                                <span class="d-block" *ngIf="form.GetFormControlByName(clientForm, 'postalCode')?.errors.maxlength">
-                                    Máximo {{form.GetFormControlByName(clientForm, 'postalCode')?.errors.maxlength.requiredLength}} caracteres
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-sm-6">
-                        <div class="form-group">
-                            <label>Estado <span class="text-danger">*</span></label>
-                            <div class="input-container">
-                                <i class="input-icon zmdi zmdi-globe zmdi-hc-lg"></i>
-                                <input class="form-control" type="text" placeholder="Estado del cliente" formControlName="state" (keyup.enter)="RegisterClient()">
-                            </div>
-                            <div class="error-messages" *ngIf="form.GetFormControlByName(clientForm, 'state')?.touched && form.GetFormControlByName(clientForm, 'state')?.errors">
-                                <span class="d-block" *ngIf="form.GetFormControlByName(clientForm, 'state')?.errors.required">
-                                    Campo obligatorio
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-sm-6">
-                        <div class="form-group">
-                            <label>País <span class="text-danger">*</span></label>
-                            <div class="input-container">
-                                <i class="input-icon zmdi zmdi-globe zmdi-hc-lg"></i>
-                                <input class="form-control" type="text" placeholder="País del cliente" formControlName="country" (keyup.enter)="RegisterClient()">
-                            </div>
-                            <div class="error-messages" *ngIf="form.GetFormControlByName(clientForm, 'country')?.touched && form.GetFormControlByName(clientForm, 'country')?.errors">
-                                <span class="d-block" *ngIf="form.GetFormControlByName(clientForm, 'country')?.errors.required">
-                                    Campo obligatorio
-                                </span>
-                            </div>
-                        </div>
+                        </form>
                     </div>
                     <div class="col-12 col-sm-6">
                         <div class="form-group">
@@ -314,7 +368,7 @@
             Cancelar
         </button>
         <button class="btn btn-primary" (click)="RegisterClient()">
-            {{isEditing ? 'Actualizar' : 'Agregar'}}
+            {{isEditing ? 'Actualizar' : 'Agregar' }}
         </button>
     </div>
 </ng-template>

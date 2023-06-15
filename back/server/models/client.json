@@ -5,25 +5,14 @@
   "options": {
     "validateUpsert": true
   },
+  "scope": {
+    "include:": ["addresses"]
+  },
   "properties": {
     "name": {
       "type": "string"
     },
     "rfc": {
-      "type": "string"
-    },
-    "address": {
-      "type": "string"
-    },
-    "state": {
-      "type": "string"
-    },
-    "country": {
-      "type": "string",
-      "required": true,
-      "default": "Mexico"
-    },
-    "postalCode": {
       "type": "string"
     },
     "utilityPercentage": {

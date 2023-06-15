@@ -14,8 +14,12 @@ module.exports = function(Client) {
             client.adminId = userId;
             Client.create(client, (err, newClient) => {
                 if(err) return callback(err);
-
-                return callback(null, newClient);
+                
+                client.address.clientId = newClient.id;
+                Client.app.models.Address.CreateOne(client.address, (err, newAddress) => {
+                    if(err) return callback(err);
+                    return callback(null, newClient);
+                });
             });
         });
     }
@@ -51,7 +55,6 @@ module.exports = function(Client) {
                 {state: {like: `%${text}%`}},
                 {country: {like: `%${text}%`}},
                 {postalCode: {like: `%${text}%`}},
-                {address: {like: `%${text}%`}}
             ]
         }
         Client.find({
@@ -60,6 +63,9 @@ module.exports = function(Client) {
         }, (err, clients) => {
             if(err) return callback(err);
 
+            clients.forEach(client => {
+                console.log(client.addresses());
+            })
             return callback(null, clients);
         });
     }

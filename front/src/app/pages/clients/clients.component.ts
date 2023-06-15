@@ -29,10 +29,16 @@ export class ClientsComponent implements OnInit {
     id: new FormControl(null, []),
     name: new FormControl('', [Validators.required]),
     rfc: new FormControl('', [Validators.required, Validators.pattern(/[A-Za-z0-9]{12,13}/)]),
-    address: new FormControl('', [Validators.required]),
-    state: new FormControl('', [Validators.required]),
-    country: new FormControl('', [Validators.required]),
-    postalCode: new FormControl('', [Validators.required, Validators.minLength(5), Validators.maxLength(5), onlyNumbers()]),
+    address: new FormGroup({
+      id: new FormControl(null, []),
+      street: new FormControl('', [Validators.required]),
+      externalNumber: new FormControl('', [Validators.required, onlyNumbers()]),
+      internalNumber: new FormControl('', []),
+      city: new FormControl('', [Validators.required]),
+      province: new FormControl('', [Validators.required]),
+      country: new FormControl('', [Validators.required]),
+      postalCode: new FormControl('', [Validators.required, Validators.minLength(5), Validators.maxLength(5), onlyNumbers()]),
+    }),
     utilityPercentage: new FormControl('', [Validators.required, onlyNumbers()]),
     paymentDays: new FormControl('', [onlyNumbers()]),
   });
@@ -74,6 +80,10 @@ export class ClientsComponent implements OnInit {
   public get csvAcceptLabel() {
     if(!!this.clientsFailed.length) return 'Reintentar';
     return `Subir`;
+  }
+
+  public get addressForm() {
+    return this.clientForm.get('address') as FormGroup;
   }
 
   constructor(
@@ -168,12 +178,23 @@ export class ClientsComponent implements OnInit {
 
   EditClient(client: any) {
     this.isEditing = true;
-    for (const key in this.clientForm.controls) {
-      if (Object.prototype.hasOwnProperty.call(this.clientForm.controls, key)) {
-        const control = this.clientForm.controls[key];
-        control.setValue(client[key]);
-      }
-    }
+    this.clientForm.setValue({
+      id: client.id,
+      name: client.name,
+      rfc: client.rfc,
+      address: {
+        id: !!client.address ? client.address.id : null,
+        street: !!client.address ? client.address.street : null,
+        externalNumber: !!client.address ? client.address.externalNumber : null,
+        internalNumber: !!client.address ? client.address.internalNumber : null,
+        city: !!client.address ? client.address.city : null,
+        province: !!client.address ? client.address.province : null,
+        country: !!client.address ? client.address.country : null,
+        postalCode: !!client.address ? client.address.postalCode : null,
+      },
+      utilityPercentage: client.utilityPercentage,
+      paymentDays: client.paymentDays,
+    });
   }
 
   DeleteClient() {
