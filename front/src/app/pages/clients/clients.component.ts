@@ -235,4 +235,25 @@ export class ClientsComponent implements OnInit {
     });
   }
 
+  GenerateClientAddress(client: any) {
+    return client.addresses[0].street + " #" + client.addresses[0].externalNumber + (!!client.addresses[0].internalNumber ? (" int. " + client.addresses[0].internalNumber) : "")
+  }
+
+  GenerateCsv() {
+    let headers: any = ['Nombre', 'RFC', 'Dirección', 'Localidad', 'País', 'Porcentaje de utilidad', 'Días de pago'];
+    let keys: any = ['name', 'rfc', 'addressFormated', 'location', 'country', 'utilityPercentage', 'paymentDays'];
+    let clients: Array<any> = this.clients.map(client => {
+      return {
+        name: client.name,
+        rfc: client.rfc,
+        addressFormated: this.GenerateClientAddress(client),
+        location: `${client.addresses[0].province}, ${client.addresses[0].country}`,
+        country: client.addresses[0].country,
+        utilityPercentage: client.utilityPercentage,
+        paymentDays: client.paymentDays,
+      }
+    })
+    this.csv.GenerateCSV("clientes", clients, keys, headers);
+  }
+
 }
