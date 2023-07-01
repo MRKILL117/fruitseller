@@ -16,7 +16,7 @@ module.exports = function(Client) {
                 if(err) return callback(err);
                 
                 client.address.clientId = newClient.id;
-                client.address.default = true;
+                client.address.isDefault = true;
                 Client.app.models.Address.CreateOne(client.address, (err, newAddress) => {
                     if(err) return callback(err);
                     return callback(null, newClient);
@@ -60,7 +60,12 @@ module.exports = function(Client) {
         }
         Client.find({
             where,
-            include: 'addresses',
+            include: {
+                relation: 'addresses',
+                scope: {
+                  order: 'isDefault DESC'
+                }
+            },
             order: 'name ASC'
         }, (err, clients) => {
             if(err) return callback(err);

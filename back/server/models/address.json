@@ -34,7 +34,7 @@
       "type": "string",
       "required": true
     },
-    "default": {
+    "isDefault": {
       "type": "boolean",
       "required": true,
       "default": false

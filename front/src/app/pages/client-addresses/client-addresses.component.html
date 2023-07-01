@@ -42,7 +42,7 @@
                     <button class="btn btn-danger" (click)="selectedAddress = address; modal.OpenModal(deleteAddressModal)">
                         Eliminar
                     </button>
-                    <button class="btn btn-info" *ngIf="!address.default" (click)="SetAsDefault(address)">
+                    <button class="btn btn-info" *ngIf="!address.isDefault" (click)="SetAsDefault(address)">
                         Establecer como predeterminada
                     </button>
                 </div>

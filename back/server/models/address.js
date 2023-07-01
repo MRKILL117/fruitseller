@@ -41,10 +41,10 @@ module.exports = function(Address) {
         let where = {
             clientId: this.clientId
         };
-        Address.updateAll(where, {default: false}, (err, updated) => {
+        Address.updateAll(where, {isDefault: false}, (err, updated) => {
             if(err) return callback(err);
             
-            this.default = true;
+            this.isDefault = true;
             this.save((err, saved) => {
                 if(err) return callback(err);
 
