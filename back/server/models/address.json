@@ -38,16 +38,133 @@
       "type": "boolean",
       "required": true,
       "default": false
+    },
+    "deleted": {
+      "type": "boolean",
+      "required": true,
+      "default": false
     }
   },
   "validations": [],
   "relations": {
-    "client": {
+    "address": {
       "type": "belongsTo",
-      "model": "Client",
-      "foreignKey": "clientId"
+      "model": "address",
+      "foreignKey": "addressId"
     }
   },
   "acls": [],
-  "methods": {}
+  "methods": {
+    "CreateOne": {
+      "accepts": [
+        {
+          "arg": "address",
+          "type": "object",
+          "required": true,
+          "description": ""
+        }
+      ],
+      "returns": [
+        {
+          "arg": "token",
+          "type": "object",
+          "root": true,
+          "description": ""
+        }
+      ],
+      "description": "",
+      "http": [
+        {
+          "path": "/",
+          "verb": "post"
+        }
+      ]
+    },
+    "GetAllOfClient": {
+      "accepts": [
+        {
+          "arg": "clientId",
+          "type": "number",
+          "required": true,
+          "description": ""
+        }
+      ],
+      "returns": [
+        {
+          "arg": "addresses",
+          "type": "array",
+          "root": true,
+          "description": ""
+        }
+      ],
+      "description": "",
+      "http": [
+        {
+          "path": "/OfClient/:clientId",
+          "verb": "get"
+        }
+      ]
+    },
+    "Update": {
+      "accepts": [
+        {
+          "arg": "address",
+          "type": "object",
+          "required": true,
+          "description": ""
+        }
+      ],
+      "returns": [
+        {
+          "arg": "address",
+          "type": "object",
+          "root": true,
+          "description": ""
+        }
+      ],
+      "description": "",
+      "http": [
+        {
+          "path": "/",
+          "verb": "patch"
+        }
+      ]
+    },
+    "prototype.Delete": {
+      "accepts": [],
+      "returns": [
+        {
+          "arg": "address",
+          "type": "object",
+          "root": true,
+          "description": ""
+        }
+      ],
+      "description": "",
+      "http": [
+        {
+          "path": "/",
+          "verb": "delete"
+        }
+      ]
+    },
+    "prototype.SetAsDefault": {
+      "accepts": [],
+      "returns": [
+        {
+          "arg": "address",
+          "type": "object",
+          "root": true,
+          "description": ""
+        }
+      ],
+      "description": "",
+      "http": [
+        {
+          "path": "/SetAsDefault",
+          "verb": "patch"
+        }
+      ]
+    }
+  }
 }

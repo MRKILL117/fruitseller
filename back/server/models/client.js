@@ -16,6 +16,7 @@ module.exports = function(Client) {
                 if(err) return callback(err);
                 
                 client.address.clientId = newClient.id;
+                client.address.default = true;
                 Client.app.models.Address.CreateOne(client.address, (err, newAddress) => {
                     if(err) return callback(err);
                     return callback(null, newClient);

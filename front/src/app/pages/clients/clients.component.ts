@@ -103,6 +103,10 @@ export class ClientsComponent implements OnInit {
     this.nav.GoToRoleRoute('');
   }
 
+  GoToClientAddresses(client: any) {
+    this.nav.GoToRoleRoute(`clients/${client.id}/addresses`);
+  }
+
   GetClients(filters: any = null) {
     this.loading.getting = true;
     let endpoint = `/Clients`;

@@ -47,7 +47,7 @@
                     <tr>
                         <th>Nombre</th>
                         <th>RFC</th>
-                        <th>Dirección</th>
+                        <th>Dirección principal</th>
                         <th>CP</th>
                         <th>Localidad</th>
                         <th>% utiliad</th>
@@ -66,9 +66,14 @@
                         <td>{{client.utilityPercentage + "%"}}</td>
                         <td>{{client.paymentDays ? client.paymentDays : 'N/A'}}</td>
                         <td>
-                            <div class="d-flex align-items-center justify-content-center">
-                                <i class="zmdi zmdi-edit zmdi-hc-lg clickeable mx-2" (click)="EditClient(client); modal.OpenModal(addOrEditClientModal)"></i>
-                                <i class="zmdi zmdi-delete zmdi-hc-lg clickeable mx-2" (click)="selectedClient = client; modal.OpenModal(deleteClientModal)"></i>
+                            <div class="d-flex flex-column justify-content-around" style="gap: 12px;">
+                                <button class="btn btn-outline-primary" (click)="GoToClientAddresses(client)">
+                                    Ver direcciones
+                                </button>
+                                <div class="d-flex align-items-center justify-content-center">
+                                    <i class="zmdi zmdi-edit zmdi-hc-lg clickeable mx-2" (click)="EditClient(client); modal.OpenModal(addOrEditClientModal)"></i>
+                                    <i class="zmdi zmdi-delete zmdi-hc-lg clickeable mx-2" (click)="selectedClient = client; modal.OpenModal(deleteClientModal)"></i>
+                                </div>
                             </div>
                         </td>
                     </tr>
