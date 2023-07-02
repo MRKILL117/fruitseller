@@ -9,35 +9,31 @@ module.exports = function(Buyer) {
             deleted: false
         };
         if(typeof buyer === 'object') where['name'] = {like: `%${buyer.name}%`};
-        else if(typeof buyer === 'string') where['name'] = {like: `%${buyer}%`};
+        else if(typeof buyer === 'string') {
+            where['name'] = {like: `%${buyer}%`};
+            buyer = {name: buyer};
+        }
         else where['id'] = buyer;
-        Buyer.findOne({where}, (err, buyerFound) => {
+        buyer.adminId = userId;
+        Buyer.findOrCreate({where}, buyer, (err, newBuyer) => {
             if(err) return callback(err);
 
-            if(!!buyerFound) return callback(null, buyerFound);
-
-            if(typeof buyer === 'string') buyer = {name: buyer};
-            buyer.adminId = userId;
-            Buyer.create(buyer, (err, newBuyer) => {
-                if(err) return callback(err);
-
-                let cont = 0, limit = !!buyer.products ? buyer.products.length : 0;
-                if(!limit) return callback(null, newBuyer);
-                buyer.products.forEach(product => {
-                    let where = {deleted: false};
-                    if(typeof product === 'string') where['name'] = {like: `${product}`};
-                    else if(typeof product === 'object') where['id'] = product.id;
-                    Buyer.app.models.Product.findOne({where}, (err, productInstance) => {
-                        if(err) return callback(err);
-                        
-                        if(!!productInstance && !productInstance.buyerId) {
-                            productInstance.buyerId = newBuyer.id;
-                            productInstance.save((err, saved) => {
-                                if(err) return callback(err);
-                                if(++cont == limit) return callback(null, newBuyer);
-                            });
-                        } else if(++cont == limit) return callback(null, newBuyer);
-                    });
+            let cont = 0, limit = !!buyer.products ? buyer.products.length : 0;
+            if(!limit) return callback(null, newBuyer);
+            buyer.products.forEach(product => {
+                let where = {deleted: false};
+                if(typeof product === 'string') where['name'] = {like: `${product}`};
+                else if(typeof product === 'object') where['id'] = product.id;
+                Buyer.app.models.Product.findOne({where}, (err, productInstance) => {
+                    if(err) return callback(err);
+                    
+                    if(!!productInstance && !productInstance.buyerId) {
+                        productInstance.buyerId = newBuyer.id;
+                        productInstance.save((err, saved) => {
+                            if(err) return callback(err);
+                            if(++cont == limit) return callback(null, newBuyer);
+                        });
+                    } else if(++cont == limit) return callback(null, newBuyer);
                 });
             });
         });
