@@ -4,13 +4,19 @@ module.exports = function(Buyer) {
 
     Buyer.CreateOne = function(ctx, buyer, callback) {
         const userId = ctx.accessToken.userId;
-        Buyer.findOne({
-            where: {name: {like: `${buyer.name}`}, adminId: userId, deleted: false}
-        }, (err, buyerFound) => {
+        let where = {
+            adminId: userId,
+            deleted: false
+        };
+        if(typeof buyer === 'object') where['name'] = {like: `%${buyer.name}%`};
+        else if(typeof buyer === 'string') where['name'] = {like: `%${buyer}%`};
+        else where['id'] = buyer;
+        Buyer.findOne({where}, (err, buyerFound) => {
             if(err) return callback(err);
-    
-            if(!!buyerFound) return callback('El comprador ya existe');
 
+            if(!!buyerFound) return callback(null, buyerFound);
+
+            if(typeof buyer === 'string') buyer = {name: buyer};
             buyer.adminId = userId;
             Buyer.create(buyer, (err, newBuyer) => {
                 if(err) return callback(err);
