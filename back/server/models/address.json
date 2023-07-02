@@ -8,31 +8,25 @@
   },
   "properties": {
     "street": {
-      "type": "string",
-      "required": true
+      "type": "string"
     },
     "externalNumber": {
-      "type": "string",
-      "required": true
+      "type": "string"
     },
     "internalNumber": {
       "type": "string"
     },
     "postalCode": {
-      "type": "string",
-      "required": true
+      "type": "string"
     },
     "city": {
-      "type": "string",
-      "required": true
+      "type": "string"
     },
     "province": {
-      "type": "string",
-      "required": true
+      "type": "string"
     },
     "country": {
-      "type": "string",
-      "required": true
+      "type": "string"
     },
     "isDefault": {
       "type": "boolean",

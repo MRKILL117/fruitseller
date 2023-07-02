@@ -1,7 +1,7 @@
 <div class="content">
     <div class="d-flex align-items-center justify-content-between">
         <div class="page-title">
-            <i class="zmdi zmdi-home zmdi-hc-lg mr-2 clickeable" (click)="GoBack()"></i>
+            <i class="zmdi zmdi-arrow-back zmdi-hc-lg mr-2 clickeable" (click)="GoBack()"></i>
             Direcciones
         </div>
 
@@ -14,7 +14,7 @@
     </div>
 
     <div class="row mt-5">
-        <div class="col-12 col-md-6 col-xl-4" *ngFor="let address of addresses; let i = index">
+        <div class="col-12 col-md-6 col-xl-4 mb-4" *ngFor="let address of addresses; let i = index">
             <div class="card">
                 <div class="card-header">
                     <h2 class="card-title">Dirección {{i+1}}</h2>

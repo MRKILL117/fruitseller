@@ -52,16 +52,28 @@ export class ClientsComponent implements OnInit {
       newKey: 'rfc'
     },
     {
-      oldKey: 'Dirección',
-      newKey: 'address'
+      oldKey: 'Calle',
+      newKey: 'street'
+    },
+    {
+      oldKey: 'No. exterior',
+      newKey: 'externalNumber'
+    },
+    {
+      oldKey: 'No. interior',
+      newKey: 'internalNumber'
     },
     {
       oldKey: 'Código postal',
       newKey: 'postalCode'
     },
     {
+      oldKey: 'Ciudad',
+      newKey: 'city'
+    },
+    {
       oldKey: 'Estado',
-      newKey: 'state'
+      newKey: 'province'
     },
     {
       oldKey: 'País',
@@ -223,20 +235,28 @@ export class ClientsComponent implements OnInit {
     const FILE_READER = new FileReader();
     FILE_READER.onload = (reader) => {
       this.csv.ReadCSV(FILE_READER.result).then(res => {
-        this.clientsToUpload = this.FormatData(res.data);
+        console.log(res.data);
+        this.clientsToUpload = this.csv.FormatData(res.data, this.dataConversions).map(client => {
+          return {
+            name: client.name,
+            rfc: client.rfc,
+            utilityPercentage: client.utilityPercentage,
+            paymentDays: client.paymentDays,
+            address: {
+              street: client.street,
+              externalNumber: client.externalNumber,
+              internalNumber: client.internalNumber,
+              postalCode: client.postalCode,
+              city: client.city,
+              province: client.province,
+              country: client.country,
+            },
+          }
+        });
+        console.log(this.clientsToUpload);
       });
     };
     FILE_READER.readAsText(file, 'ISO-8859-3');
-  }
-
-  FormatData(students: Array<any>) {
-    return students.map(student => {
-      let dataFormatted: any = {};
-      this.dataConversions.forEach(conversion => {
-        dataFormatted[conversion.newKey] = student[conversion.oldKey];
-      });
-      return dataFormatted;
-    });
   }
 
   GenerateClientAddress(client: any) {
