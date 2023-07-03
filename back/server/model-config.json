@@ -216,7 +216,12 @@
       "validateUpsert": true,
       "remoting": {
         "sharedMethods": {
-          "*": false
+          "*": false,
+          "CreateOne": true,
+          "GetAllOfClient": true,
+          "Update": true,
+          "prototype.Delete": true,
+          "prototype.SetAsDefault": true
         }
       }
     }

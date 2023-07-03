@@ -14,6 +14,7 @@ export class CreateSellOrderComponent implements OnInit {
   IVA: number = 0.16;
   clients: Array<any> = [];
   selectedClient: any = null;
+  selectedAddress: any = null;
   measurementTypes: Array<any> = [];
   products: Array<any> = [];
   orderItems: Array<any> = [];
@@ -132,7 +133,8 @@ export class CreateSellOrderComponent implements OnInit {
       subtotal: this.orderSubtotal,
       taxes: this.orderTaxes,
       total: this.orderTotal,
-      client: this.selectedClient
+      client: this.selectedClient,
+      address: this.selectedAddress,
     }
     this.http.Post(`Orders`, {order}).subscribe(newOrder => {
       this.toast.ShowDefaultSuccess(`Orden creada exitosamente`);
@@ -145,6 +147,7 @@ export class CreateSellOrderComponent implements OnInit {
   ValidateOrderData() {
     let errorMessage = null;
     if(!this.selectedClient) return `No ha seleccionado cliente`;
+    if(!this.selectedAddress) return `No ha seleccionado una dirección`;
     this.orderItems.forEach((item, idx): any => {
       if(!item.product) return errorMessage = `La fila ${idx+1} no tiene producto seleccionado`;
       // switch (item.product.salesMeasurementType.abrev) {
@@ -154,6 +157,18 @@ export class CreateSellOrderComponent implements OnInit {
       // }
     });
     return errorMessage;
+  }
+
+  OnClientSelected(client: any) {
+    if(!!client) {
+      const defaultAddress = client.addresses.find((address: any) => address.isDefault);
+      if(!!defaultAddress) this.selectedAddress = defaultAddress;
+      else this.selectedAddress = client.addresses[0];
+    }
+  }
+
+  GenerateClientAddress(address: any) {
+    return address.street + " #" + address.externalNumber + (!!address.internalNumber ? (" int. " + address.internalNumber) : "")
   }
 
 }

@@ -1,0 +1,214 @@
+<div class="content">
+    <div class="d-flex align-items-center justify-content-between">
+        <div class="page-title">
+            <i class="zmdi zmdi-arrow-back zmdi-hc-lg mr-2 clickeable" (click)="GoBack()"></i>
+            Direcciones
+        </div>
+
+        <div class="d-flex">
+            <button class="btn btn-success mx-1" (click)="modal.OpenModal(addOrEditAddressModal)">
+                <i class="zmdi zmdi-plus-circle-o zmdi-hc-lg mr-2"></i>
+                Agregar
+            </button>
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-12 col-md-6 col-xl-4 mb-4" *ngFor="let address of addresses; let i = index">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Dirección {{i+1}}</h2>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex flex-column">
+                        <div>
+                            {{GenerateClientAddress(address)}}
+                        </div>
+                        <div>
+                            {{address.postalCode}}
+                        </div>
+                        <div>
+                            {{address.city + ", " + address.province}}
+                        </div>
+                        <div>
+                            {{address.country}}
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer d-flex flex-column" style="gap: 12px;">
+                    <button class="btn btn-warning" (click)="EnableEdition(address); modal.OpenModal(addOrEditAddressModal)">
+                        Editar
+                    </button>
+                    <button class="btn btn-danger" (click)="selectedAddress = address; modal.OpenModal(deleteAddressModal)">
+                        Eliminar
+                    </button>
+                    <button class="btn btn-info" *ngIf="!address.isDefault" (click)="SetAsDefault(address)">
+                        Establecer como predeterminada
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #deleteAddressModal>
+    <div class="modal-header">
+        <h2 class="modal-title">Eliminar dirección</h2>
+        <i class="close-modal-button zmdi zmdi-close-circle-o zmdi-hc-2x clickeable" (click)="modal.CloseModal()"></i>
+    </div>
+    <div class="modal-body">
+        <div class="d-flex">
+            ¿Esta seguro que desea eliminar la dirección "{{GenerateClientAddress(selectedAddress)}}"?
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="modal.CloseModal()">
+            No, cancelar
+        </button>
+        <button class="btn btn-danger" (click)="Delete()">
+            Si, eliminar
+        </button>
+    </div>
+</ng-template>
+
+<ng-template #addOrEditAddressModal>
+    <div class="modal-header">
+        <h2 class="modal-title">{{ isEditing ? 'Actualizar dirección' : 'Agregar una dirección'}}</h2>
+        <i class="close-modal-button zmdi zmdi-close-circle-o zmdi-hc-2x clickeable" (click)="CancelEdition()"></i>
+    </div>
+    <div class="modal-body">
+        <div class="w-100">
+            <form [formGroup]="addressForm">
+                <div class="row">
+                    <div class="col-12 px-0">
+                        <form [formGroup]="addressForm">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label>Dirección <span class="text-danger">*</span></label>
+                                        <div class="input-container">
+                                            <i class="input-icon zmdi zmdi-home zmdi-hc-lg"></i>
+                                            <input class="form-control" type="text" placeholder="Calle" formControlName="street" (keyup.enter)="Create()">
+                                        </div>
+                                        <div class="error-messages" *ngIf="form.GetFormControlByName(addressForm, 'street')?.touched && form.GetFormControlByName(addressForm, 'street')?.errors">
+                                            <span class="d-block" *ngIf="form.GetFormControlByName(addressForm, 'street')?.errors.required">
+                                                Campo obligatorio
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-6">
+                                    <div class="form-group">
+                                        <label>Número exterior <span class="text-danger">*</span></label>
+                                        <div class="input-container">
+                                            <i class="input-icon zmdi zmdi-home zmdi-hc-lg"></i>
+                                            <input class="form-control" type="text" placeholder="Numero exterior" formControlName="externalNumber" (keyup.enter)="Create()">
+                                        </div>
+                                        <div class="error-messages" *ngIf="form.GetFormControlByName(addressForm, 'externalNumber')?.touched && form.GetFormControlByName(addressForm, 'externalNumber')?.errors">
+                                            <span class="d-block" *ngIf="form.GetFormControlByName(addressForm, 'externalNumber')?.errors.required">
+                                                Campo obligatorio
+                                            </span>
+                                            <span class="d-block" *ngIf="form.GetFormControlByName(addressForm, 'externalNumber')?.errors.onlynumbers">
+                                                Solo números enteros
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-6">
+                                    <div class="form-group">
+                                        <label>Número interior</label>
+                                        <div class="input-container">
+                                            <i class="input-icon zmdi zmdi-home zmdi-hc-lg"></i>
+                                            <input class="form-control" type="text" placeholder="Numero interior" formControlName="internalNumber" (keyup.enter)="Create()">
+                                        </div>
+                                        <div class="error-messages" *ngIf="form.GetFormControlByName(addressForm, 'internalNumber')?.touched && form.GetFormControlByName(addressForm, 'internalNumber')?.errors">
+                                            <span class="d-block" *ngIf="form.GetFormControlByName(addressForm, 'internalNumber')?.errors.required">
+                                                Campo obligatorio
+                                            </span>
+                                            <span class="d-block" *ngIf="form.GetFormControlByName(addressForm, 'internalNumber')?.errors.onlynumbers">
+                                                Solo números enteros
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-6">
+                                    <div class="form-group">
+                                        <label>Código postal <span class="text-danger">*</span></label>
+                                        <div class="input-container">
+                                            <i class="input-icon zmdi zmdi-home zmdi-hc-lg"></i>
+                                            <input class="form-control" type="text" placeholder="Código posal" formControlName="postalCode" (keyup.enter)="Create()">
+                                        </div>
+                                        <div class="error-messages" *ngIf="form.GetFormControlByName(addressForm, 'postalCode')?.touched && form.GetFormControlByName(addressForm, 'postalCode')?.errors">
+                                            <span class="d-block" *ngIf="form.GetFormControlByName(addressForm, 'postalCode')?.errors.required">
+                                                Campo obligatorio
+                                            </span>
+                                            <span class="d-block" *ngIf="form.GetFormControlByName(addressForm, 'postalCode')?.errors.onlynumbers">
+                                                Solo números enteros
+                                            </span>
+                                            <span class="d-block" *ngIf="form.GetFormControlByName(addressForm, 'postalCode')?.errors.minlength">
+                                                Mínimo {{form.GetFormControlByName(addressForm, 'postalCode')?.errors.minlength.requiredLength}} caracteres
+                                            </span>
+                                            <span class="d-block" *ngIf="form.GetFormControlByName(addressForm, 'postalCode')?.errors.maxlength">
+                                                Máximo {{form.GetFormControlByName(addressForm, 'postalCode')?.errors.maxlength.requiredLength}} caracteres
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-6">
+                                    <div class="form-group">
+                                        <label>Ciudad <span class="text-danger">*</span></label>
+                                        <div class="input-container">
+                                            <i class="input-icon zmdi zmdi-globe zmdi-hc-lg"></i>
+                                            <input class="form-control" type="text" placeholder="Ciudad" formControlName="city" (keyup.enter)="Create()">
+                                        </div>
+                                        <div class="error-messages" *ngIf="form.GetFormControlByName(addressForm, 'city')?.touched && form.GetFormControlByName(addressForm, 'city')?.errors">
+                                            <span class="d-block" *ngIf="form.GetFormControlByName(addressForm, 'city')?.errors.required">
+                                                Campo obligatorio
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-6">
+                                    <div class="form-group">
+                                        <label>Estado <span class="text-danger">*</span></label>
+                                        <div class="input-container">
+                                            <i class="input-icon zmdi zmdi-globe zmdi-hc-lg"></i>
+                                            <input class="form-control" type="text" placeholder="Estado" formControlName="province" (keyup.enter)="Create()">
+                                        </div>
+                                        <div class="error-messages" *ngIf="form.GetFormControlByName(addressForm, 'province')?.touched && form.GetFormControlByName(addressForm, 'province')?.errors">
+                                            <span class="d-block" *ngIf="form.GetFormControlByName(addressForm, 'province')?.errors.required">
+                                                Campo obligatorio
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-6">
+                                    <div class="form-group">
+                                        <label>País <span class="text-danger">*</span></label>
+                                        <div class="input-container">
+                                            <i class="input-icon zmdi zmdi-globe zmdi-hc-lg"></i>
+                                            <input class="form-control" type="text" placeholder="País" formControlName="country" (keyup.enter)="Create()">
+                                        </div>
+                                        <div class="error-messages" *ngIf="form.GetFormControlByName(addressForm, 'country')?.touched && form.GetFormControlByName(addressForm, 'country')?.errors">
+                                            <span class="d-block" *ngIf="form.GetFormControlByName(addressForm, 'country')?.errors.required">
+                                                Campo obligatorio
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="CancelEdition()">
+            Cancelar
+        </button>
+        <button class="btn btn-primary" (click)="Create()">
+            {{isEditing ? 'Actualizar' : 'Agregar' }}
+        </button>
+    </div>
+</ng-template>

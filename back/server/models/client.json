@@ -5,11 +5,7 @@
   "options": {
     "validateUpsert": true
   },
-  "scope": {
-    "include:": [
-      "addresses"
-    ]
-  },
+  "scope": {},
   "properties": {
     "name": {
       "type": "string"

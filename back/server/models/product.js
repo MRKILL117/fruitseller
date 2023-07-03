@@ -11,12 +11,17 @@ module.exports = function(Product) {
     
             if(!!productFound) return callback('El producto ya existe');
 
-            product.adminId = userId;
-            Product.create(product, (err, newproduct) => {
+            Product.app.models.Buyer.CreateOne(ctx, !!product.buyer ? product.buyer : product.buyerId, (err, newBuyer) => {
                 if(err) return callback(err);
 
-                return callback(null, newproduct);
-            });
+                product.buyerId = newBuyer.id;
+                product.adminId = userId;
+                Product.create(product, (err, newproduct) => {
+                    if(err) return callback(err);
+    
+                    return callback(null, newproduct);
+                });
+            })
         });
     }
 

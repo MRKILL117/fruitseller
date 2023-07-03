@@ -26,6 +26,10 @@
                             <i class="zmdi zmdi-file-plus"></i>
                             <span class="pl-2">Subir archivo</span>
                         </div>
+                        <div class="d-flex align-items-center px-3 my-1 clickeable-hover" (click)="GenerateCsv()">
+                            <i class="zmdi zmdi-download"></i>
+                            <span class="pl-2">Exportar clientes</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -43,7 +47,7 @@
                     <tr>
                         <th>Nombre</th>
                         <th>RFC</th>
-                        <th>Direccion</th>
+                        <th>Dirección principal</th>
                         <th>CP</th>
                         <th>Localidad</th>
                         <th>% utiliad</th>
@@ -56,15 +60,20 @@
                     <tr *ngFor="let client of clients">
                         <td>{{client.name}}</td>
                         <td>{{client.rfc}}</td>
-                        <td>{{client.addresses[0]?.street + " #" + client.addresses[0]?.externalNumber + (!!client.addresses[0]?.internalNumber ? (" int. " + client.addresses[0]?.internalNumber) : "")}}</td>
+                        <td>{{GenerateClientAddress(client)}}</td>
                         <td>{{client.addresses[0]?.postalCode}}</td>
                         <td>{{client.addresses[0]?.province + ", " + client.addresses[0]?.country}}</td>
                         <td>{{client.utilityPercentage + "%"}}</td>
                         <td>{{client.paymentDays ? client.paymentDays : 'N/A'}}</td>
                         <td>
-                            <div class="d-flex align-items-center justify-content-center">
-                                <i class="zmdi zmdi-edit zmdi-hc-lg clickeable mx-2" (click)="EditClient(client); modal.OpenModal(addOrEditClientModal)"></i>
-                                <i class="zmdi zmdi-delete zmdi-hc-lg clickeable mx-2" (click)="selectedClient = client; modal.OpenModal(deleteClientModal)"></i>
+                            <div class="d-flex flex-column justify-content-around" style="gap: 12px;">
+                                <button class="btn btn-outline-primary" (click)="GoToClientAddresses(client)">
+                                    Ver direcciones
+                                </button>
+                                <div class="d-flex align-items-center justify-content-center">
+                                    <i class="zmdi zmdi-edit zmdi-hc-lg clickeable mx-2" (click)="EditClient(client); modal.OpenModal(addOrEditClientModal)"></i>
+                                    <i class="zmdi zmdi-delete zmdi-hc-lg clickeable mx-2" (click)="selectedClient = client; modal.OpenModal(deleteClientModal)"></i>
+                                </div>
                             </div>
                         </td>
                     </tr>

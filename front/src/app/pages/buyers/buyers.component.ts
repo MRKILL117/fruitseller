@@ -28,7 +28,7 @@ export class BuyersComponent implements OnInit {
   buyerForm: FormGroup = new FormGroup({
     id: new FormControl(null, []),
     name: new FormControl('', [Validators.required]),
-    products: new FormControl(null, [])
+    products: new FormControl(null, []),
   });
   dataConversions: Array<any> = [
     {
@@ -196,10 +196,37 @@ export class BuyersComponent implements OnInit {
     const FILE_READER = new FileReader();
     FILE_READER.onload = (reader) => {
       this.csv.ReadCSV(FILE_READER.result).then(res => {
-        this.buyersToUpload = this.csv.FormatData(res.data, this.dataConversions);
+        this.buyersToUpload = this.JoinBuyers(this.csv.FormatData(res.data, this.dataConversions));
       });
     };
     FILE_READER.readAsText(file, 'ISO-8859-3');
+  }
+
+  JoinBuyers(buyers: any) {
+    let buyersMap: Map<string, any> = new Map<string, any>();
+    buyers.forEach((buyer: any) => {
+      if(buyersMap.has(buyer.name?.toLowerCase())) {
+        buyersMap.get(buyer.name?.toLowerCase()).products = buyersMap.get(buyer.name?.toLowerCase()).products.concat(buyer.products);
+      }
+      else buyersMap.set(buyer.name, buyer);
+    });
+    return Array.from(buyersMap.values());
+  }
+
+  GenerateCsv() {
+    let headers: any = ['Nombre', 'Productos'];
+    let keys: any = ['name', 'products'];
+    let buyers: Array<any> = this.buyers.map(buyer => {
+      let productsList = ``;
+      buyer.products.forEach((prod: any, idx: number) => {
+        productsList += `${prod.name}${idx != (buyer.products.length - 1) ? ', ' : ''}`;
+      });
+      return {
+        name: buyer.name,
+        products: !!productsList ? productsList : 'Sin productos',
+      }
+    });
+    this.csv.GenerateCSV("compradores", buyers, keys, headers);
   }
 
 }
