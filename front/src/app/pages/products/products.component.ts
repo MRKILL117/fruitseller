@@ -256,16 +256,16 @@ export class ProductsComponent implements OnInit {
   GenerateCsv() {
     let headers: any = ['Nombre', 'Código SAT', 'Peso promedio por pieza', 'Precio', 'Impuesto', 'Unidad de medida para ventas', 'Unidad de medida para inventario', 'Comprador'];
     let keys: any = ['name', 'satCode', 'weightPerPiece', 'price', 'tax', 'salesMeasurementType', 'inventoryMeasurementType', 'buyer'];
-    let products: Array<any> = this.products.map(product => {
+    let products: Array<any> = this.products.map((product: any) => {
       return {
         name: product.name,
         satCode: product.satCode,
         weightPerPiece: `${product.weightPerPiece} kg`,
         price: product.price,
         tax: product.tax,
-        salesMeasurementType: product.salesMeasurementType.abrev,
-        inventoryMeasurementType: product.inventoryMeasurementType.abrev,
-        buyer: product.buyer.name,
+        salesMeasurementType: !!product.salesMeasurementType ? product.salesMeasurementType.abrev : 'No asignado',
+        inventoryMeasurementType: !!product.inventoryMeasurementType ? product.inventoryMeasurementType.abrev : 'No asignado',
+        buyer: !!product.buyer ? product.buyer.name : 'No asignado',
       }
     })
     this.csv.GenerateCSV("productos", products, keys, headers);

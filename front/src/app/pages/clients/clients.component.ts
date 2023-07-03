@@ -271,8 +271,8 @@ export class ClientsComponent implements OnInit {
         name: client.name,
         rfc: client.rfc,
         addressFormated: this.GenerateClientAddress(client),
-        location: `${client.addresses[0].province}, ${client.addresses[0].country}`,
-        country: client.addresses[0].country,
+        location: `${client.addresses[0]?.province}, ${client.addresses[0]?.country}`,
+        country: client.addresses[0]?.country,
         utilityPercentage: client.utilityPercentage,
         paymentDays: client.paymentDays,
       }

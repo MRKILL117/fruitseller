@@ -18,18 +18,31 @@
         </div>
     </div>
     
-    <div class="d-flex align-items-center justify-content-between flex-wrap">
-        <div class="flex-50-item form-group my-3">
+    <div class="head-row">
+        <div class="form-group head-item my-3">
             <ng-select
                 class="clients-select"
                 [items]="clients"
                 bindLabel="name"
                 placeholder="Clientes"
+                (change)="OnClientSelected($event)"
                 [(ngModel)]="selectedClient"
             ></ng-select>
         </div>
 
-        <app-date-picker *ngIf="!!orderDate" class="flex-50-item my-3" [presetDate]="orderDate.format('YYYY/MM/DD')" placeholder="Selecciona una fecha"></app-date-picker>
+        <div class="form-group head-item my-3">
+            <ng-select
+                *ngIf="!!selectedClient && selectedClient.addresses.length > 1"
+                class="clients-select"
+                placeholder="Dirección"
+                [(ngModel)]="selectedAddress">
+                <ng-option *ngFor="let address of selectedClient.addresses" [value]="address">
+                    {{GenerateClientAddress(address)}}
+                </ng-option>
+            </ng-select>
+        </div>
+
+        <app-date-picker *ngIf="!!orderDate" class="head-item my-3" [presetDate]="orderDate.format('YYYY/MM/DD')" placeholder="Selecciona una fecha"></app-date-picker>
     </div>
     <div class="flex-grow-1 overflow-auto">
         <table class="table">
