@@ -2,12 +2,6 @@
     width: 100%;
 }
 
-.flex-50-item {
-    width: 40% !important;
-    min-width: 250px;
-    max-width: 100%;
-}
-
 .small-width {
     max-width: 70px;
 }
@@ -38,4 +32,19 @@ table {
 .order-summary .card {
     width: 400px;
     max-width: 100%;
+}
+
+.h-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 24px;
+}
+
+.h-item {
+    flex-basis: 20%;
+    flex-grow: 1;
+    width: 260px;
+    min-height: 46px;
+    height: fit-content;
 }
