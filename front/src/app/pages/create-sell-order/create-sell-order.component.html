@@ -32,8 +32,9 @@
 
         <div class="form-group head-item my-3">
             <ng-select
-                *ngIf="!!selectedClient && selectedClient.addresses.length > 1"
+                *ngIf="!!selectedClient"
                 class="clients-select"
+                [disabled]="selectedClient.addresses.length == 1"
                 placeholder="Dirección"
                 [(ngModel)]="selectedAddress">
                 <ng-option *ngFor="let address of selectedClient.addresses" [value]="address">
