@@ -65,7 +65,6 @@ export class SellOrderComponent implements OnInit {
 
   ngOnInit(): void {
     this.GetClients();
-    this.GetOrderStatuses();
     this.GetParams();
   }
 
@@ -92,10 +91,21 @@ export class SellOrderComponent implements OnInit {
 
   GetOrderStatuses() {
     this.http.Get(`OrderStatuses`).subscribe((orderStatuses: any) => {
-      this.orderStatuses = orderStatuses;
+      this.orderStatuses = this.FilterOrderStatuses(orderStatuses);
+      this.loading.getting = false;
     }, err => {
       console.error("Error getting order statuses", err);
-    })
+      this.loading.getting = false;
+    });
+  }
+
+  FilterOrderStatuses(orderStatuses: Array<any>) {
+    return orderStatuses.filter(status => {
+      let statusesToRemove = ['Pagado', 'Incobrable'];
+      if(this.order.status.name != 'Pedido creado') statusesToRemove.push('Pedido creado');
+      
+      return !statusesToRemove.includes(status.name);
+    });
   }
 
   GetOrder() {
@@ -104,7 +114,7 @@ export class SellOrderComponent implements OnInit {
       this.order = order;
       this.selectedClient = order.client;
       this.orderDate = moment(order.date);
-      this.loading.getting = false;
+      this.GetOrderStatuses();
     }, err => {
       console.error("Error getting order", err);
       this.loading.getting = false;
@@ -142,7 +152,7 @@ export class SellOrderComponent implements OnInit {
       subtotal: this.orderSubtotal,
       taxes: this.orderTaxes,
       total: this.orderTotal,
-      statusId: this.order.statusId,
+      statusId: this.GetOrderStatusId(),
     }
     this.http.Patch(`Orders`, {order}).subscribe(newOrder => {
       this.toast.ShowDefaultSuccess(`Orden creada exitosamente`);
@@ -150,6 +160,19 @@ export class SellOrderComponent implements OnInit {
     }, err => {
       console.error("Error creating order", err);
     });
+  }
+
+  GetOrderStatusId() {
+    let statusId = this.order.statusId;
+    if(!!this.order.client.paymentDays) {
+      const currentStatus = this.orderStatuses.find(status => status.id == statusId);
+      if(currentStatus?.name == 'Pedido entregado') {
+        const newStatus = this.orderStatuses.find(status => status.name == 'Pendiente de pago');
+        statusId = newStatus?.id;
+      }
+    }
+
+    return statusId;
   }
 
   ValidateOrderData() {

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import * as moment from 'moment-timezone';
 import { onlyNumbers, priceNumber } from 'src/app/common/custom-validators.directive';
 import { filter } from 'src/app/common/data-types.interface';
 import { CsvService } from 'src/app/services/csv.service';
@@ -221,6 +222,23 @@ export class SellOrdersComponent implements OnInit {
       });
     };
     FILE_READER.readAsText(file, 'ISO-8859-3');
+  }
+
+  GenerateCsv() {
+    let headers: any = ['id', 'Estatus', 'Fecha', 'Cliente', 'Impuestos', 'Subtotal', 'Total'];
+    let keys: any = ['id', 'status', 'date', 'client', 'taxes', 'subtotal', 'total'];
+    let orders: Array<any> = this.orders.map(order => {
+      return {
+        id: order.id,
+        status: order.status?.name,
+        date: moment(order.date).format('DD/MM/YYYY'),
+        client: order.client?.name,
+        taxes: `$${order.taxes}`,
+        subtotal: `$${order.subtotal}`,
+        total: `$${order.total}`,
+      }
+    });
+    this.csv.GenerateCSV("ordenes_de_venta", orders, keys, headers);
   }
 
 }
