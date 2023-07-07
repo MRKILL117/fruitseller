@@ -26,23 +26,13 @@ export class ProductOrdersComponent implements OnInit {
 
   GetOrderProductShoppingQuantity(order: any): number {
     if(!order || !this.product) return 0;
-    const itemInOrder = order.items.find((item: any) => item.product.id == this.product.id);
-    if(!itemInOrder) return 0;
     let orderQuantityNeeded;
-    switch (itemInOrder.product.inventoryMeasurementType.abrev) {
-      case 'kg': orderQuantityNeeded = Number(!!itemInOrder.weight ? itemInOrder.weight : 0); break;
-      case 'pz': orderQuantityNeeded = Number(!!itemInOrder.quantity ? itemInOrder.quantity : 0); break;
-      default: orderQuantityNeeded = Number(!!itemInOrder.weight ? itemInOrder.weight : 0); break;
+    switch (this.product.measurementType) {
+      case 'kg': orderQuantityNeeded = Number(!!order.weight ? order.weight : 0); break;
+      case 'pz': orderQuantityNeeded = Number(!!order.quantity ? order.quantity : 0); break;
+      default: orderQuantityNeeded = Number(!!order.weight ? order.weight : 0); break;
     }
     return orderQuantityNeeded;
-  }
-
-  GetProductTotal() {
-    let total = 0;
-    this.product.orders.forEach((order: any) => {
-      total += this.GetOrderProductShoppingQuantity(order);
-    });
-    return total;
   }
 
 }

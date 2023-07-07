@@ -5,7 +5,7 @@
             <div class="mx-2">
                 <label>Unidad de medida</label>
                 <div class="text-center">
-                    {{product.inventoryMeasurementType?.abrev}}
+                    {{product.measurementType}}
                 </div>
             </div>
             <div class="mx-2">
@@ -17,19 +17,24 @@
             <div class="mx-2">
                 <label>Inventario</label>
                 <div class="text-center">
-                    0 {{product.inventoryMeasurementType?.abrev}}
+                    {{ product.inventory + " " + product.measurementType}}
                 </div>
             </div>
             <div class="mx-2">
                 <label>Total ordenes</label>
                 <div class="text-center">
-                    {{GetProductTotal() + " " + product.inventoryMeasurementType?.abrev}}
+                    {{product.totalOrders + " " + product.measurementType}}
                 </div>
             </div>
             <div class="mx-2">
                 <label>Total a comprar</label>
                 <div class="text-center">
-                    {{GetProductTotal() + " " + product.inventoryMeasurementType?.abrev}}
+                    <span *ngIf="product.inventory < product.totalToBuy">
+                        {{ product.totalToBuy - product.inventory + " " + product.measurementType}}
+                    </span>
+                    <span *ngIf="product.inventory > product.totalToBuy">
+                        {{ "0 " + product.measurementType}}
+                    </span>
                 </div>
             </div>
             <div class="clickeable" (click)="showHistory = !showHistory">
@@ -40,11 +45,14 @@
     <div class="d-flex flex-column price-history position-relative" [ngClass]="{'toggle-active': showHistory}">
         <div class="div-table t-header">
             <div class="th"><b>Orden No.</b></div>
+            <div class="th"><b>Inventario</b></div>
             <div class="th"><b>Cantidad</b></div>
         </div>
         <div class="div-table t-body" *ngFor="let order of product?.orders">
             <div class="th">{{order.id}}</div>
-            <div class="th">{{GetOrderProductShoppingQuantity(order) + " " + product.salesMeasurementType?.abrev}}</div>
+            <div class="th">{{order.currentInventory + " " + product.measurementType}}</div>
+            <div class="th" *ngIf="order.isAccurate">{{order.quantity + " " + product.measurementType}}</div>
+            <div class="th" *ngIf="!order.isAccurate">{{order.oldQuantity + " " + order.measurementType + " (" + order.quantity + " " + product.measurementType + " aprox.)"}}</div>
         </div>
     </div>
 </div>

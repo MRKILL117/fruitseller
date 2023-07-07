@@ -12,8 +12,14 @@
       "required": true
     },
     "quantity": {
-      "type": "string",
-      "required": true
+      "type": "number",
+      "required": true,
+      "default": 0,
+      "mysql": {
+        "dataType": "DECIMAL",
+        "dataPrecision": 20,
+        "dataScale": 2
+      }
     },
     "lastModified": {
       "type": "string",
