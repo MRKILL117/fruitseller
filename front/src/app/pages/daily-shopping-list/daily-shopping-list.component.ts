@@ -21,6 +21,7 @@ export class DailyShoppingListComponent implements OnInit {
   orders: Array<any> = [];
   clients: Array<any> = [];
   products: Array<any> = [];
+  productsWithInventories: Array<any> = [];
   productsObj: any = {};
   selectedOrder: any = null;
   isEditing: boolean = false;
@@ -71,8 +72,8 @@ export class DailyShoppingListComponent implements OnInit {
 
   ngOnInit(): void {
     this.GetBuyers();
-    this.GetOrders();
     this.GetClients();
+    this.GetProductWithInventories();
   }
 
   GoHome() {
@@ -99,6 +100,16 @@ export class DailyShoppingListComponent implements OnInit {
     });
   }
 
+  GetProductWithInventories() {
+    this.http.Get(`Products/WithInventory`).subscribe((productsWithInventories: any) => {
+      this.productsWithInventories = productsWithInventories;
+
+      this.GetOrders();
+    }, err => {
+      console.error("Error getting products inventories", err);
+    });
+  }
+
   GetOrders() {
     this.loading.getting = true;
     let endpoint = `/Orders`;
@@ -106,7 +117,7 @@ export class DailyShoppingListComponent implements OnInit {
     endpoint += `/FilteredBy/StartDate/${yesterday}/EndDate/*`;
     this.http.Get(endpoint).subscribe((orders: any) => {
       this.orders = orders;
-      this.OnFiltersChanged()
+      this.OnFiltersChanged();
       this.loading.getting = false;
     }, err => {
       console.error("Error getting orders", err);
@@ -115,101 +126,131 @@ export class DailyShoppingListComponent implements OnInit {
   }
 
   SetProductsArray(buyer: any = null) {
-    this.products = [];
-    this.productsObj = {};
-    let arrayIdx = 0;
+    let productsMap: Map<number, any> = new Map<number, any>();
+    let isAccurate = true;
     this.orders.forEach((order: any) => {
       order.items.forEach((item: any) => {
+        const productInventory: any = this.productsWithInventories.find(product => product.id == item.product.id);
+        let productQuantity = 0;
+        let productQuantityInInventory = !!productInventory ? productInventory.inventories[0].quantity : 0;
+        isAccurate = true;
+        switch (item.product.inventoryMeasurementType.abrev) {
+          case 'kg':
+            if(!!item.quantity) {
+              productQuantity = Number(item.quantity) * item.product.weightPerPiece;
+              isAccurate = false;
+            }
+            else productQuantity = Number(item.weight);
+            break;
+          case 'pz':
+            if(!!item.weight) {
+              productQuantity = Number(item.weight) / item.product.weightPerPiece;
+              isAccurate = false;
+            }
+            else productQuantity = Number(item.quantity);
+            break;
+        }
+
         if(!!buyer) {
           if(buyer.id == item.product.buyer.id) {
-            if(!!this.productsObj[item.product.name]) {
-              this.products[this.productsObj[item.product.name].arrayIdx].orders.push(order);
-              this.products[this.productsObj[item.product.name].arrayIdx].weight += Number(!!item.weight ? item.weight : 0);
-              this.products[this.productsObj[item.product.name].arrayIdx].quantity += Number(!!item.quantity ? item.quantity : 0);
-              this.productsObj[item.product.name].productsDetected++;
-            } else {
-              this.products.push({
-                ...item.product,
-                orders: [order],
-                weight: Number(!!item.weight ? item.weight : 0),
-                quantity: Number(!!item.quantity ? item.quantity : 0),
+            if(productsMap.has(item.product.id)) {
+              let productMapped: any = productsMap.get(item.product.id);
+              let orderMatch = productMapped.orders.slice(-1)[0];
+              productMapped.totalOrders += productQuantity;
+              productMapped.totalToBuy += productQuantity;
+              productMapped.orders.push({
+                id: order.id,
+                currentInventory: orderMatch.nextInventory,
+                nextInventory: orderMatch.nextInventory > productQuantity ? orderMatch.nextInventory - productQuantity : 0,
+                measurementType: !!item.quantity ? 'pz' : 'kg',
+                oldQuantity: !!item.quantity ? Number(item.quantity) : (!!item.weight ? Number(item.weight) : 0),
+                quantity: productQuantity,
+                isAccurate
               });
-              this.productsObj[item.product.name] = {
-                productsDetected: 1,
-                arrayIdx: arrayIdx++,
-              };
+            } else {
+              productsMap.set(item.product.id, {
+                name: item.product.name,
+                measurementType: item.product.inventoryMeasurementType.abrev,
+                buyer: item.product.buyer,
+                inventory: productQuantityInInventory,
+                totalOrders: productQuantity,
+                totalToBuy: productQuantity,
+                orders: [
+                  {
+                    id: order.id,
+                    currentInventory: productQuantityInInventory,
+                    nextInventory: productQuantityInInventory > productQuantity ? productQuantityInInventory - productQuantity : 0,
+                    measurementType: !!item.quantity ? 'pz' : 'kg',
+                    oldQuantity: !!item.quantity ? Number(item.quantity) : (!!item.weight ? Number(item.weight) : 0),
+                    quantity: productQuantity,
+                    isAccurate
+                  }
+                ],
+              });
             }
           }
         }
         else {
-          if(!!this.productsObj[item.product.name]) {
-            this.products[this.productsObj[item.product.name].arrayIdx].orders.push(order);
-            this.products[this.productsObj[item.product.name].arrayIdx].weight += Number(!!item.weight ? item.weight : 0);
-            this.products[this.productsObj[item.product.name].arrayIdx].quantity += Number(!!item.quantity ? item.quantity : 0);
-            this.productsObj[item.product.name].productsDetected++;
-          } else {
-            this.products.push({
-              ...item.product,
-              orders: [order],
-              weight: Number(!!item.weight ? item.weight : 0),
-              quantity: Number(!!item.quantity ? item.quantity : 0),
+          if(productsMap.has(item.product.id)) {
+            let productMapped: any = productsMap.get(item.product.id);
+            let orderMatch = productMapped.orders.slice(-1)[0];
+            productMapped.totalOrders += productQuantity;
+            productMapped.totalToBuy += productQuantity;
+            productMapped.orders.push({
+              id: order.id,
+              currentInventory: orderMatch.nextInventory,
+              nextInventory: orderMatch.nextInventory > productQuantity ? orderMatch.nextInventory - productQuantity : 0,
+              measurementType: !!item.quantity ? 'pz' : 'kg',
+              oldQuantity: !!item.quantity ? Number(item.quantity) : (!!item.weight ? Number(item.weight) : 0),
+              quantity: productQuantity,
+              isAccurate
             });
-            this.productsObj[item.product.name] = {
-              productsDetected: 1,
-              arrayIdx: arrayIdx++,
-            };
+          } else {
+            productsMap.set(item.product.id, {
+              name: item.product.name,
+              measurementType: item.product.inventoryMeasurementType.abrev,
+              buyer: item.product.buyer,
+              inventory: productQuantityInInventory,
+              totalOrders: productQuantity,
+              totalToBuy: productQuantity,
+              orders: [
+                {
+                  id: order.id,
+                  currentInventory: productQuantityInInventory,
+                  nextInventory: productQuantityInInventory > productQuantity ? productQuantityInInventory - productQuantity : 0,
+                  measurementType: !!item.quantity ? 'pz' : 'kg',
+                  oldQuantity: !!item.quantity ? Number(item.quantity) : (!!item.weight ? Number(item.weight) : 0),
+                  quantity: productQuantity,
+                  isAccurate
+                }
+              ],
+            });
           }
         }
       });
     });
-  }
 
-  GetOrderProductShoppingQuantity(order: any, product: any): number {
-    if(!order || !product) return 0;
-    const itemInOrder = order.items.find((item: any) => item.product.id == product.id);
-    if(!itemInOrder) return 0;
-    let orderQuantityNeeded;
-    switch (itemInOrder.product.inventoryMeasurementType.abrev) {
-      case 'kg': orderQuantityNeeded = Number(!!itemInOrder.weight ? itemInOrder.weight : 0); break;
-      case 'pz': orderQuantityNeeded = Number(!!itemInOrder.quantity ? itemInOrder.quantity : 0); break;
-      default: orderQuantityNeeded = Number(!!itemInOrder.weight ? itemInOrder.weight : 0); break;
-    }
-    return orderQuantityNeeded;
-  }
-
-  GetProductTotal(product: any) {
-    let total = 0;
-    this.orders.forEach(order => {
-      total += this.GetOrderProductShoppingQuantity(order, product);
-    });
-    return total;
+    this.products = Array.from(productsMap.values());
   }
 
   ExportData() {
-    let headers: any = ['Producto', 'Unidad de medida', 'Inventario incial'];
-    let keys: any = ['product', 'measurement', 'inventory'];
-    headers = headers.concat(this.orders.map(order => `Pedido No. ${order.id}`));
-    keys = keys.concat(this.orders.map(order => `order${order.id}`));
+    let headers: any = ['Producto', 'Unidad de medida', 'Inventario incial', 'Total odenes', 'Total a comprar'];
+    let keys: any = ['product', 'measurement', 'inventory', 'totalOrders', 'totalToBuy'];
+    // headers = headers.concat(this.orders.map(order => `Pedido No. ${order.id}`));
+    // keys = keys.concat(this.orders.map(order => `order${order.id}`));
     let productsMapped = this.products.map(product => {
       let productMapped: any = {
         product: product.name,
-        measurement: product.inventoryMeasurementType.abrev,
-        inventory: 0,
-        total: this.GetProductTotal(product)
+        measurement: product.measurementType,
+        inventory: product.inventory,
+        totalOrders: product.totalOrders,
+        totalToBuy: product.inventory < product.totalToBuy ? product.totalToBuy - product.inventory : 0,
       };
-      this.orders.forEach(order => {
-        let orderKey = `order${order.id}`;
-        productMapped[orderKey] = this.GetOrderProductShoppingQuantity(order, product);
-      });
 
       return productMapped;
     });
     headers.push('Total');
     keys.push('total');
-
-    console.log(headers);
-    console.log(keys);
-    console.log(productsMapped);
 
     this.csv.GenerateCSV('compras_del_dia', productsMapped, keys, headers);
   }
