@@ -114,7 +114,7 @@ export class DailyShoppingListComponent implements OnInit {
     this.loading.getting = true;
     let endpoint = `/Orders`;
     let yesterday = moment().tz(environment.timezone).subtract(1, 'day').startOf('day').add(6, 'hours').toISOString();
-    endpoint += `/FilteredBy/StartDate/${false ? yesterday : '*'}/EndDate/*`;
+    endpoint += `/FilteredBy/StartDate/${yesterday}/EndDate/*`;
     this.http.Get(endpoint).subscribe((orders: any) => {
       this.orders = orders;
       this.OnFiltersChanged();
