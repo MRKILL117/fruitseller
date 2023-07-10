@@ -58,6 +58,10 @@ const routes: Routes = [
         path: 'daily-shopping-list',
         loadChildren: () => import('./pages/daily-shopping-list/daily-shopping-list.module').then( m => m.DailyShoppingListModule)
       },
+      {
+        path: 'payments',
+        loadChildren: () => import('./pages/payments/payments.module').then( m => m.PaymentsModule)
+      },
     ]
   },
 ];
