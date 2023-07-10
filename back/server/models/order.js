@@ -12,7 +12,7 @@ module.exports = function(Order) {
         });
     }
 
-    Order.GetAll = function(ctx, startDate, endDate, callback) {
+    Order.GetAll = function(ctx, startDate, endDate, statuses = [], callback) {
         const userId = ctx.accessToken.userId;
         let where = {and: [{adminId: userId}, {deleted: false}]};
         if(!!startDate && startDate != '*') where.and.push({date: {gte: startDate}});
