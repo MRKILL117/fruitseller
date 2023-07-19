@@ -67,12 +67,18 @@
                         {{item.product?.name}}
                     </td>
                     <td class="align-middle medium-width">
-                        <div class="input-container">
+                        <div *ngIf="paymentMode" class="fake-form-control">
+                            {{item.quantity}}
+                        </div>
+                        <div class="input-container" *ngIf="!paymentMode">
                             <input class="form-control no-icon" placeholder="Piezas" type="text" (input)="OnWeightOrQuantityChange(item)" [(ngModel)]="item.quantity">
                         </div>
                     </td>
                     <td class="align-middle medium-width">
-                        <div class="input-container">
+                        <div *ngIf="paymentMode" class="fake-form-control">
+                            {{item.weight}}
+                        </div>
+                        <div class="input-container" *ngIf="!paymentMode">
                             <input class="form-control no-icon" placeholder="Kilogramos" type="text" (input)="OnWeightOrQuantityChange(item)" [(ngModel)]="item.weight">
                         </div>
                     </td>

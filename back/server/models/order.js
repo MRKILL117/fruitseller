@@ -17,6 +17,27 @@ module.exports = function(Order) {
         let where = {and: [{adminId: userId}, {deleted: false}]};
         if(!!startDate && startDate != '*') where.and.push({date: {gte: startDate}});
         if(!!endDate && endDate != '*') where.and.push({date: {lte: endDate}});
+        if(!!statuses && statuses.length) where.and.push({
+            or: statuses.map(status => {return {statusId: status.id}})
+        });
+        Order.find({
+            where,
+            order: 'date DESC'
+        }, (err, orders) => {
+            if(err) return callback(err);
+
+            return callback(null, orders);
+        });
+    }
+    
+    Order.GetAllOfPayments = function(ctx, startDate, endDate, statuses = [], callback) {
+        const userId = ctx.accessToken.userId;
+        let where = {and: [{adminId: userId}, {deleted: false}, {statusId: {gte: 3}}]};
+        if(!!startDate && startDate != '*') where.and.push({date: {gte: startDate}});
+        if(!!endDate && endDate != '*') where.and.push({date: {lte: endDate}});
+        if(!!statuses && statuses.length) where.and.push({
+            or: statuses.map(status => {return {statusId: status.id}})
+        });
         Order.find({
             where,
             order: 'date DESC'

@@ -4,7 +4,6 @@ import * as moment from 'moment-timezone';
 import { HttpService } from 'src/app/services/http.service';
 import { NavigationService } from 'src/app/services/navigation.service';
 import { ToastService } from 'src/app/services/toast.service';
-import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-sell-order',
@@ -17,6 +16,7 @@ export class SellOrderComponent implements OnInit {
   clients: Array<any> = [];
   selectedClient: any = null;
   measurementTypes: Array<any> = [];
+  paymentMode: boolean = false;
   orderId: any = null;
   order: any = null;
   orderStatuses: Array<any> = [];
@@ -64,6 +64,8 @@ export class SellOrderComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    let paymentMode = localStorage.getItem('paymentMode');
+    if(paymentMode !== null) this.paymentMode = JSON.parse(paymentMode);
     this.GetClients();
     this.GetParams();
   }
@@ -77,7 +79,11 @@ export class SellOrderComponent implements OnInit {
   }
 
   GoBack() {
-    this.nav.GoToRoleRoute(`sell-orders`);
+    if(this.paymentMode) {
+      localStorage.removeItem('paymentMode');
+      this.nav.GoToRoleRoute(`payments`);
+    }
+    else this.nav.GoToRoleRoute(`sell-orders`);
   }
 
   GetClients() {
@@ -101,8 +107,12 @@ export class SellOrderComponent implements OnInit {
 
   FilterOrderStatuses(orderStatuses: Array<any>) {
     return orderStatuses.filter(status => {
-      let statusesToRemove = ['Pagado', 'Incobrable'];
-      if(this.order.status.name != 'Pedido creado') statusesToRemove.push('Pedido creado');
+      let statusesToRemove: Array<string> = [];
+      if(this.order.status.name != 'Pedido creado') {
+        statusesToRemove = ['Pagado', 'Incobrable'];
+        statusesToRemove.push('Pedido creado');
+      }
+      if(this.paymentMode) statusesToRemove = ['Pedido creado', 'Pedido entregado'];
       
       return !statusesToRemove.includes(status.name);
     });

@@ -19,6 +19,7 @@ export class FiltersComponent implements OnInit {
     startDate: true,
     endDate: true,
     optionsLabel: 'Seleccione una opcion',
+    multiple: false,
     optionsMultiple: false,
     options: [],
   };
@@ -58,7 +59,7 @@ export class FiltersComponent implements OnInit {
     filters.text = !!filters.text ? filters.text : '*';
     filters.startDate = !!filters.startDate ? (this.dateIncludesTime ? filters.startDate : filters.startDate.split('T')[0]) : '*';
     filters.endDate = !!filters.endDate ? (this.dateIncludesTime ? filters.endDate : filters.endDate.split('T')[0]) : '*';
-    filters.options = !!filters.options ? filters.options : (this.filters.optionsMultiple ? [] : '*');
+    filters.options = !!filters.options ? filters.options : [];
 
     if(this.timerTrigger && keyupEvent) {
       if(!!this.timer) clearTimeout(this.timer);

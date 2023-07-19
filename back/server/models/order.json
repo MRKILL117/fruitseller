@@ -93,6 +93,7 @@
       "property": [
         "CreateOne",
         "GetAll",
+        "GetAllOfPayments",
         "GetOne",
         "Update",
         "Delete"
@@ -184,6 +185,56 @@
         },
         {
           "path": "/FilteredBy/StartDate/:startDate/EndDate/:endDate/Statuses/:statuses",
+          "verb": "get"
+        }
+      ]
+    },
+    "GetAllOfPayments": {
+      "accepts": [
+        {
+          "arg": "ctx",
+          "type": "object",
+          "required": true,
+          "description": "",
+          "http": {
+            "source": "req"
+          }
+        },
+        {
+          "arg": "startDate",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "arg": "endDate",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "arg": "statuses",
+          "type": "array",
+          "required": false,
+          "description": ""
+        }
+      ],
+      "returns": [
+        {
+          "arg": "orders",
+          "type": "array",
+          "root": true,
+          "description": ""
+        }
+      ],
+      "description": "",
+      "http": [
+        {
+          "path": "/OfPayments",
+          "verb": "get"
+        },
+        {
+          "path": "/OfPayments/FilteredBy/StartDate/:startDate/EndDate/:endDate/Statuses/:statuses",
           "verb": "get"
         }
       ]
