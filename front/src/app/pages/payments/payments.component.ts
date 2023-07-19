@@ -37,7 +37,7 @@ export class PaymentsComponent implements OnInit {
 
   GetOrders(filters: filter | null = null) {
     this.loading.getting = true;
-    let endpoint = `/Orders`;
+    let endpoint = `/Orders/OfPayments`;
     if(!!filters) endpoint += `/FilteredBy/StartDate/${filters.startDate}/EndDate/${filters.endDate}/Statuses/${JSON.stringify(filters.options)}`;
     this.http.Get(endpoint).subscribe((Orders: any) => {
       this.orders = Orders;
@@ -64,6 +64,20 @@ export class PaymentsComponent implements OnInit {
       }
     });
     this.csv.GenerateCSV("cobranza", orders, keys, headers);
+  }
+
+  GetTotalORdersByStatus(name: string) {
+    let total = 0;
+    this.orders.forEach(order => {
+      if(name == order.status.name) total += order.total;
+    });
+
+    return total;
+  }
+
+  GoToOrder(order: any) {
+    localStorage.setItem('paymentMode', JSON.stringify(true));
+    this.nav.GoToRoleRoute('edit-sell-orders/' + order.id);
   }
 
 }

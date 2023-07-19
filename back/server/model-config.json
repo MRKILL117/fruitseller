@@ -145,6 +145,7 @@
           "*": false,
           "CreateOne": true,
           "GetAll": true,
+          "GetAllOfPayments": true,
           "prototype.GetOne": true,
           "Update": true,
           "prototype.Delete": true

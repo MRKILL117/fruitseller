@@ -29,6 +29,22 @@
         <div class="col-12 mb-4">
             <app-filters *ngIf="!!orderStatuses.length" [timerTrigger]="true" [filters]="{text:false,startDate:true,endDate:true,options:orderStatuses,optionsLabel:'Filtrar por estado'}" (onSearch)="GetOrders($event)"></app-filters>
         </div>
+        <div class="col-12 col-lg-11">
+            <div class="total-card">
+                <div class="total">
+                    <span>Pendientes:</span>
+                    <span>${{GetTotalORdersByStatus('Pendiente de pago') | number:"0.2-2"}}</span>
+                </div>
+                <div class="total">
+                    <span>Pagadas:</span>
+                    <span>${{GetTotalORdersByStatus('Pagado') | number:"0.2-2"}}</span>
+                </div>
+                <div class="total">
+                    <span>Incobrables:</span>
+                    <span>${{GetTotalORdersByStatus('Incobrable') | number:"0.2-2"}}</span>
+                </div>
+            </div>
+        </div>
         <div class="col-12 col-lg-11" *ngIf="!loading.getting; else bigLoading">
             <table class="table table-striped" *ngIf="!!orders?.length; else noOrdersMessage">
                 <thead class="table-thead">
@@ -46,7 +62,7 @@
                 
                 <tbody>
                     <tr *ngFor="let order of orders">
-                        <td class="clickeable" (click)="nav.GoToRoleRoute('edit-sell-orders/' + order.id)">{{order.id}}</td>
+                        <td class="clickeable" (click)="GoToOrder(order)">{{order.id}}</td>
                         <td>{{order.status.name}}</td>
                         <td>{{order.date | date:"dd/MM/YYYY hh:mm a"}}</td>
                         <td>{{order.client.name}}</td>
