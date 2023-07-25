@@ -140,6 +140,7 @@ export class SellOrdersComponent implements OnInit {
   SetAsDelivered(order: any) {
     this.http.Patch(`/Orders/${order.id}/Deliver`, {}).subscribe(orderUpdated => {
       this.toast.ShowDefaultSuccess(`Orden actualizada`);
+      this.GetOrders();
     }, err => {
       let defaultMessage = `Error al actualizar orden`;
       this.toast.ShowDefaultDanger(this.http.GetErrorMessage(err) || defaultMessage);
