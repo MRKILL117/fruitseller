@@ -57,5 +57,21 @@ export class HttpService {
       a.remove();
     });
   }
+
+  public GetErrorMessage(error: any) {
+    let messages = [];
+    if(!error) return null;
+    if(!!error.error?.error?.message) return error.error.error.message;
+    if(!!error.error?.error?.details.messages) {
+      for (const property in error.error.error.details.messages) {
+        if (Object.prototype.hasOwnProperty.call(error.error.error.details.messages, property)) {
+          console.log("key", property);
+          const errorMessage = error.error.error.details.messages[property];
+          messages.push(`${property}: ${Array.isArray(errorMessage) ? errorMessage.join(', ') : errorMessage}`);
+        }
+      }
+    }
+    return messages.join('\n');
+  }
   
 }

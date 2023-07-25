@@ -234,23 +234,20 @@ export class DailyShoppingListComponent implements OnInit {
   }
 
   ExportData() {
-    let headers: any = ['Producto', 'Unidad de medida', 'Inventario incial', 'Total odenes', 'Total a comprar'];
-    let keys: any = ['product', 'measurement', 'inventory', 'totalOrders', 'totalToBuy'];
-    // headers = headers.concat(this.orders.map(order => `Pedido No. ${order.id}`));
-    // keys = keys.concat(this.orders.map(order => `order${order.id}`));
+    let headers: any = ['Comprador', 'Producto', 'Unidad de medida', 'Inventario incial', 'Total odenes', 'Total a comprar'];
+    let keys: any = ['buyer', 'product', 'measurement', 'inventory', 'totalOrders', 'totalToBuy'];
     let productsMapped = this.products.map(product => {
       let productMapped: any = {
+        buyer: product.buyer.name,
         product: product.name,
         measurement: product.measurementType,
-        inventory: product.inventory,
-        totalOrders: product.totalOrders,
-        totalToBuy: product.inventory < product.totalToBuy ? product.totalToBuy - product.inventory : 0,
+        inventory: `${product.inventory.toFixed(2)} ${product.measurementType}`,
+        totalOrders: `${product.totalOrders.toFixed(2)} ${product.measurementType}`,
+        totalToBuy: `${(product.inventory < product.totalToBuy ? product.totalToBuy - product.inventory : 0).toFixed(2)} ${product.measurementType}`,
       };
 
       return productMapped;
     });
-    headers.push('Total');
-    keys.push('total');
 
     this.csv.GenerateCSV('compras_del_dia', productsMapped, keys, headers);
   }

@@ -134,6 +134,7 @@ export class CreateSellOrderComponent implements OnInit {
       taxes: this.orderTaxes,
       total: this.orderTotal,
       client: this.selectedClient,
+      clientId: this.selectedClient.id,
       clientAddress: this.selectedAddress,
     }
     this.http.Post(`Orders`, {order}).subscribe(newOrder => {

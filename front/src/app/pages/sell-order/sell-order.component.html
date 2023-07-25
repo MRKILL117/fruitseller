@@ -27,7 +27,11 @@
             {{GenerateClientAddress(order?.clientAddress)}}
         </div>
 
-        <div class="form-group my-3 h-item">
+        <div class="fake-form-control h-item">
+            {{order.status?.name}}
+        </div>
+
+        <!-- <div class="form-group my-3 h-item">
             <ng-select
                 class="clients-select"
                 [items]="orderStatuses"
@@ -36,7 +40,7 @@
                 placeholder="Estatus"
                 [(ngModel)]="order.statusId"
             ></ng-select>
-        </div>
+        </div> -->
 
         <div class="fake-form-control h-item">
             {{orderDate?.format('YYYY/MM/DD')}}

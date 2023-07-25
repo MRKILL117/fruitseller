@@ -18,8 +18,13 @@ module.exports = function(Client) {
                 client.address.clientId = newClient.id;
                 client.address.isDefault = true;
                 Client.app.models.Address.CreateOne(client.address, (err, newAddress) => {
-                    if(err) return callback(err);
-                    return callback(null, newClient);
+                    if(err) {
+                        newClient.destroy((err2, destroyed) => {
+                            if(err2) return callback(err2);
+                            return callback(err);
+                        });
+                    }
+                    else return callback(null, newClient);
                 });
             });
         });
@@ -75,24 +80,36 @@ module.exports = function(Client) {
     }
 
     Client.Update = function(client, callback) {
-        Client.upsert(client, (err, clientUpdated) => {
+        Client.findOne({where: {rfc: {like: `%${client.rfc}%`}}}, (err, clientFound) => {
             if(err) return callback(err);
-            
-            if(!client.address.id) client.address.clientId = client.id;
-            Client.app.models.Address.upsert(client.address, (err, addressUpdated) => {
-                if(err) return callback(err);
 
-                return callback(null, clientUpdated);
+            if(!!clientFound && clientFound.id != client.id) return callback(`El RFC ya está registrado`);
+            Client.upsert(client, (err, clientUpdated) => {
+                if(err) return callback(err);
+            
+                if(!client.address.id) client.address.clientId = client.id;
+
+                Client.app.models.Address.upsert(client.address, (err, addressUpdated) => {
+                    if(err) return callback(err);
+    
+                    return callback(null, clientUpdated);
+                });
             });
         });
     }
 
     Client.prototype.Delete = function(callback) {
-        this.deleted = true;
-        this.save((err, deleted) => {
+        Client.app.models.Orders.find({where: {clientId: this.id}}, (err, clientOrders) => {
             if(err) return callback(err);
 
-            return callback(null, deleted);
+            if(!!clientOrders.length) return callback(`El cliente ya tiene ordenes`);
+            this.deleted = true;
+            this.rfc = null;
+            this.save((err, deleted) => {
+                if(err) return callback(err);
+    
+                return callback(null, deleted);
+            });
         });
     }
 
