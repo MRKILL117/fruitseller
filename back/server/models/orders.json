@@ -1,5 +1,5 @@
 {
-  "name": "Order",
+  "name": "Orders",
   "base": "Model",
   "idInjection": true,
   "options": {
@@ -7,7 +7,8 @@
   },
   "scope": {
     "include": [
-      "status"
+      "status",
+      "actualClient"
     ]
   },
   "properties": {
@@ -17,7 +18,7 @@
     },
     "client": {
       "type": "object",
-      "required": true
+      "required": false
     },
     "clientAddress": {
       "type": "object",
@@ -76,6 +77,11 @@
       "type": "belongsTo",
       "model": "OrderStatus",
       "foreignKey": "statusId"
+    },
+    "actualClient": {
+      "type": "belongsTo",
+      "model": "Client",
+      "foreignKey": "clientId"
     }
   },
   "acls": [
@@ -96,7 +102,8 @@
         "GetAllOfPayments",
         "GetOne",
         "Update",
-        "Delete"
+        "Delete",
+        "SetAsDelivered"
       ]
     }
   ],
@@ -297,6 +304,24 @@
         {
           "path": "/",
           "verb": "delete"
+        }
+      ]
+    },
+    "prototype.SetAsDelivered": {
+      "accepts": [],
+      "returns": [
+        {
+          "arg": "order",
+          "type": "object",
+          "root": true,
+          "description": ""
+        }
+      ],
+      "description": "",
+      "http": [
+        {
+          "path": "/Deliver",
+          "verb": "patch"
         }
       ]
     }

@@ -19,7 +19,6 @@ export class SellOrdersComponent implements OnInit {
 
   measurementTypes: Array<any> = [];
   orders: Array<any> = [];
-  buyers: Array<any> = [];
   selectedOrder: any = null;
   isEditing: boolean = false;
   ordersCsv: any;
@@ -76,8 +75,6 @@ export class SellOrdersComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.GetBuyers();
-    this.GetMeasurementTypes();
     this.GetOrders();
   }
 
@@ -91,22 +88,6 @@ export class SellOrdersComponent implements OnInit {
     }
   }
 
-  GetMeasurementTypes() {
-    this.http.Get(`MeasurementTypes`).subscribe((measurementTypes: any) => {
-      this.measurementTypes = measurementTypes;
-    }, err => {
-      console.error("Error getting measurement types", err);
-    });
-  }
-
-  GetBuyers() {
-    this.http.Get(`Buyers`).subscribe((buyers: any) => {
-      this.buyers = buyers;
-    }, err => {
-      console.error("Error getting buyers", err);
-    });
-  }
-
   GetOrders(filters: filter | null = null) {
     this.loading.getting = true;
     let endpoint = `/Orders`;
@@ -117,33 +98,6 @@ export class SellOrdersComponent implements OnInit {
     }, err => {
       console.error("Error getting Orders", err);
       this.loading.getting = false;
-    });
-  }
-
-  RegisterOrder() {
-    if(this.orderForm.invalid) {
-      this.orderForm.markAllAsTouched();
-      this.toast.ShowDefaultWarning(`Favor de llenar los campos obligatorios`);
-      return;
-    }
-
-    this.loading.updating = true;
-    
-    if(this.isEditing) {
-      this.UpdateOrder();
-      return;
-    }
-    
-    this.http.Post(`Orders`, {Order: this.orderForm.value}).subscribe(newOrder => {
-      this.GetOrders();
-      this.toast.ShowDefaultSuccess(`Orden creado exitosamente`);
-      this.orderForm.reset();
-      this.modal.CloseModal();
-      this.loading.updating = false;
-    }, err => {
-      this.toast.ShowDefaultDanger(`Error al crear orden`);
-      console.error("Error creating Order", err);
-      this.loading.updating = false;
     });
   }
   
@@ -168,31 +122,6 @@ export class SellOrdersComponent implements OnInit {
     });
   }
 
-  UpdateOrder() {
-    const Order = this.orderForm.value;
-    this.http.Patch(`Orders`, {Order}).subscribe(OrderSaved => {
-      this.GetOrders();
-      this.toast.ShowDefaultSuccess(`Orden actualizado con éxito`);
-      this.modal.CloseModal();
-      this.isEditing = false;
-      this.loading.updating = false;
-    }, err => {
-      console.error("Error patching Order", err);
-      this.toast.ShowDefaultDanger(`Error al actualizar orden`);
-      this.loading.updating = false;
-    });
-  }
-
-  EditOrder(Order: any) {
-    this.isEditing = true;
-    for (const key in this.orderForm.controls) {
-      if (Object.prototype.hasOwnProperty.call(this.orderForm.controls, key)) {
-        const control = this.orderForm.controls[key];
-        control.setValue(Order[key]);
-      }
-    }
-  }
-
   DeleteOrder() {
     this.loading.updating = true;
     this.http.Delete(`Orders/${this.selectedOrder.id}`, {}).subscribe(deletedOrder => {
@@ -202,8 +131,20 @@ export class SellOrdersComponent implements OnInit {
       this.loading.updating = false;
     }, err => {
       console.error("Error deleting Order", err);
-      this.toast.ShowDefaultDanger(`Error al eliminar orden`);
+      let defaultMessage = `Error al eliminar orden`;
+      this.toast.ShowDefaultDanger(this.http.GetErrorMessage(err) || defaultMessage);
       this.loading.updating = false;
+    });
+  }
+  
+  SetAsDelivered(order: any) {
+    this.http.Patch(`/Orders/${order.id}/Deliver`, {}).subscribe(orderUpdated => {
+      this.toast.ShowDefaultSuccess(`Orden actualizada`);
+      this.GetOrders();
+    }, err => {
+      let defaultMessage = `Error al actualizar orden`;
+      this.toast.ShowDefaultDanger(this.http.GetErrorMessage(err) || defaultMessage);
+      console.error("Error delivering order", err);
     });
   }
 

@@ -58,17 +58,22 @@
                 
                 <tbody>
                     <tr *ngFor="let order of orders">
-                        <td class="clickeable" (click)="nav.GoToRoleRoute('edit-sell-orders/' + order.id)">{{order.id}}</td>
-                        <td>{{order.status.name}}</td>
-                        <td>{{order.date | date:"dd/MM/YYYY hh:mm a"}}</td>
-                        <td>{{order.client.name}}</td>
-                        <td>${{order.taxes}}</td>
-                        <td>${{order.subtotal}}</td>
-                        <td>${{order.total}}</td>
+                        <td class="align-middle clickeable" (click)="nav.GoToRoleRoute('edit-sell-orders/' + order.id)">{{order.id}}</td>
+                        <td class="align-middle">{{order.status.name}}</td>
+                        <td class="align-middle">{{order.date | date:"dd/MM/YYYY hh:mm a"}}</td>
+                        <td class="align-middle">{{order.client.name}}</td>
+                        <td class="align-middle">${{order.taxes}}</td>
+                        <td class="align-middle">${{order.subtotal}}</td>
+                        <td class="align-middle">${{order.total}}</td>
                         <td>
-                            <div class="d-flex align-items-center justify-content-center">
-                                <!-- <i class="zmdi zmdi-edit zmdi-hc-lg clickeable mx-2" (click)="EditOrder(order)"></i> -->
-                                <i class="zmdi zmdi-delete zmdi-hc-lg clickeable mx-2" (click)="selectedOrder = order; modal.OpenModal(deleteorderModal)"></i>
+                            <div class="d-flex flex-column" style="gap: 12px;">
+                                <div class="d-flex align-items-center justify-content-center" style="gap: 12px;">
+                                    <i class="zmdi zmdi-edit zmdi-hc-lg clickeable" (click)="nav.GoToRoleRoute('edit-sell-orders/' + order.id)"></i>
+                                    <i class="zmdi zmdi-delete zmdi-hc-lg clickeable" (click)="selectedOrder = order; modal.OpenModal(deleteorderModal)"></i>
+                                </div>
+                                <button class="btn btn-primary" *ngIf="order.statusId == 1" (click)="SetAsDelivered(order)">
+                                    Entregar
+                                </button>
                             </div>
                         </td>
                     </tr>

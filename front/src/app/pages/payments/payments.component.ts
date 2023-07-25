@@ -12,6 +12,7 @@ import { ToastService } from 'src/app/services/toast.service';
 })
 export class PaymentsComponent implements OnInit {
 
+  clients: Array<any> = [];
   orders: Array<any> = [];
   orderStatuses: Array<any> = [];
   loading: any = {
@@ -66,7 +67,7 @@ export class PaymentsComponent implements OnInit {
     this.csv.GenerateCSV("cobranza", orders, keys, headers);
   }
 
-  GetTotalORdersByStatus(name: string) {
+  GetTotalOrdersByStatus(name: string) {
     let total = 0;
     this.orders.forEach(order => {
       if(name == order.status.name) total += order.total;
@@ -78,6 +79,29 @@ export class PaymentsComponent implements OnInit {
   GoToOrder(order: any) {
     localStorage.setItem('paymentMode', JSON.stringify(true));
     this.nav.GoToRoleRoute('edit-sell-orders/' + order.id);
+  }
+
+  ToggleStatusEdition(order: any) {
+    order.editStatus = !!!order.editStatus;
+  }
+
+  SaveOrderStatus(order: any) {
+    if(!order.statusId) {
+      this.toast.ShowDefaultWarning(`Selecciona un status`);
+      return;
+    }
+
+    this.loading.updating = true;
+    this.http.Patch(`/Orders`, {order}).subscribe(orderSaved => {
+      this.toast.ShowDefaultSuccess(`Estatus actualizado`);
+      this.ToggleStatusEdition(order);
+      this.GetOrders();
+      this.loading.updating = false;
+    }, err => {
+      console.error("Error updating order status", err);
+      this.loading.updating = false;
+
+    });
   }
 
 }

@@ -134,7 +134,7 @@
       }
     }
   },
-  "Order": {
+  "Orders": {
     "dataSource": "mysql",
     "public": true,
     "options": {
@@ -148,7 +148,8 @@
           "GetAllOfPayments": true,
           "prototype.GetOne": true,
           "Update": true,
-          "prototype.Delete": true
+          "prototype.Delete": true,
+          "prototype.SetAsDelivered": true
         }
       }
     }
