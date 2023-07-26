@@ -98,6 +98,7 @@
       "permission": "ALLOW",
       "property": [
         "CreateOne",
+        "CreateArray",
         "GetAll",
         "GetAllOfPayments",
         "GetOne",
@@ -138,6 +139,40 @@
       "http": [
         {
           "path": "/",
+          "verb": "post"
+        }
+      ]
+    },
+    "CreateArray": {
+      "accepts": [
+        {
+          "arg": "ctx",
+          "type": "object",
+          "required": true,
+          "description": "",
+          "http": {
+            "source": "req"
+          }
+        },
+        {
+          "arg": "products",
+          "type": "array",
+          "required": true,
+          "description": ""
+        }
+      ],
+      "returns": [
+        {
+          "arg": "data",
+          "type": "object",
+          "root": true,
+          "description": ""
+        }
+      ],
+      "description": "",
+      "http": [
+        {
+          "path": "/Array",
           "verb": "post"
         }
       ]

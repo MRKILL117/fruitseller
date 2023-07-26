@@ -144,6 +144,7 @@
         "sharedMethods": {
           "*": false,
           "CreateOne": true,
+          "CreateArray": true,
           "GetAll": true,
           "GetAllOfPayments": true,
           "prototype.GetOne": true,
