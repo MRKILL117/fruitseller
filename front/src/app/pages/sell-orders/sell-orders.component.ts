@@ -39,24 +39,34 @@ export class SellOrdersComponent implements OnInit {
   });
   dataConversions: Array<any> = [
     {
-      oldKey: 'Nombre',
-      newKey: 'name'
+      oldKey: 'No. Orden',
+      newKey: 'orderId'
     },
     {
-      oldKey: 'Precio',
-      newKey: 'price'
+      oldKey: 'Cliente',
+      newKey: 'clientRfcOrId'
     },
     {
-      oldKey: 'Impuesto',
-      newKey: 'tax'
+      oldKey: 'Dirección',
+      newKey: 'addressId'
     },
     {
-      oldKey: 'Unidad de medida ventas',
-      newKey: 'salesMeasurementType'
+      oldKey: 'Fecha',
+      newKey: 'date'
     },
     {
-      oldKey: 'Unidad de medida inventario',
-      newKey: 'inventoryMeasurementType'
+      oldKey: 'Producto',
+      newKey: 'productNameOrId'
+    },
+    {
+      oldKey: 'Piezas',
+      newKey: 'quantity',
+      type: 'number'
+    },
+    {
+      oldKey: 'Kilos',
+      newKey: 'weight',
+      type: 'number'
     },
   ];
 
@@ -103,12 +113,13 @@ export class SellOrdersComponent implements OnInit {
   
   RegisterOrders() {
     this.loading.updating = true;
-    this.http.Post(`Orders/Array`, {Orders: this.ordersToUpload}).subscribe((data: any) => {
+    this.http.Post(`Orders/Array`, {products: this.ordersToUpload}).subscribe((data: any) => {
+      console.log(data);
       this.GetOrders();
-      this.ordersFailed = data.OrdersFailed;
-      if(!!data.OrdersSuccess.length) this.toast.ShowDefaultSuccess(`${data.OrdersSuccess.length} ordenes creados correctamente`);
-      if(data.OrdersFailed.length) {
-        this.toast.ShowDefaultWarning(`${data.OrdersFailed.length} ordenes no se pudieron crear`);
+      this.ordersFailed = data.ordersFailed;
+      if(!!data.ordersSuccess.length) this.toast.ShowDefaultSuccess(`${data.ordersSuccess.length} ordenes creados correctamente`);
+      if(data.ordersFailed.length) {
+        this.toast.ShowDefaultWarning(`${data.ordersFailed.length} ordenes no se pudieron crear`);
       }
       else {
         this.modal.CloseModal();

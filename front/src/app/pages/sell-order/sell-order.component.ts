@@ -133,7 +133,7 @@ export class SellOrderComponent implements OnInit {
   
   OnWeightOrQuantityChange(item: any) {
     if(!!item.product) {
-      const productPrice = item.product.prices.length ? item.product.prices[0].salePrice : item.product.price;
+      const productPrice = item.product?.prices?.length ? item.product.prices[0].salePrice : item.product.price;
       let productQuantity = 0;
       switch (item.product.salesMeasurementType.abrev) {
         case 'kg': productQuantity = !!item.weight ? item.weight : 0; break;

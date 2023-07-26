@@ -1,5 +1,8 @@
 'use strict';
 
+var moment = require('moment-timezone');
+const constants = require('./../assets/constants');
+
 var isOrderReadyToDeliver = function(order) {
     let errorMessages = [];
     order.items.forEach(item => {
@@ -26,6 +29,106 @@ module.exports = function(Orders) {
             if(err) return callback(err);
 
             return callback(null, newOrder);
+        });
+    }
+
+    Orders.CreateArray = function(ctx, products, callback) {
+        let data = {
+            ordersFailed: [],
+            ordersSuccess: []
+        }
+        Orders.MapPorductsInOrders(products, (err, ordersMap) => {
+            if(err) return callback(err);
+
+            let orders = Array.from(ordersMap.values());
+            let cont = 0, limit = orders.length;
+            if(!limit) return callback(null, data);
+            orders.forEach(order => {
+                Orders.CreateOne(ctx, order, (err, newOrder) => {
+                    if(err) {
+                        data.ordersFailed.push({order, reason: typeof err === 'string' ? err : null});
+                    }
+                    else data.ordersSuccess.push(newOrder);
+                    if(++cont == limit) return callback(null, data);
+                });
+            });
+        });
+    }
+
+    Orders.MapPorductsInOrders = function(products, callback) {
+        let ordersMap = new Map();
+        let cont = 0, limit = products.length;
+        if(!limit) return callback(null, []);
+        products.forEach(product => {
+            Orders.app.models.Product.findOne({
+                where: {
+                    or: [{name: {like: `%${product.productNameOrId}%`}}, {id: product.productNameOrId}]
+                }
+            }, (err, productFound) => {
+                if(err) return callback(err);
+
+                Orders.app.models.Client.findOne({
+                    where: {
+                        or: [{rfc: {like: `%${product.clientRfcOrId}%`}}, {id: product.clientRfcOrId}]
+                    },
+                    include: {
+                        relation: 'addresses',
+                        scope: {
+                            where: {or:[{isDefault: true},{id: product.addressId}]},
+                            order: 'isDefault ASC'
+                        }
+                    }
+                }, (err, client) => {
+                    if(err) return callback(err);
+
+                    if(!!productFound && !!client) {
+                        let item = {
+                            product: productFound,
+                            quantity: product.quantity,
+                            weight: product.weight,
+                            price: 0,
+                            tax: 0,
+                            total: 0
+                        };
+                        productFound = productFound.toJSON();
+                        const productPrice = productFound.price;
+                        let productQuantity = 0;
+                        switch (productFound.salesMeasurementType.abrev) {
+                            case 'kg': productQuantity = !!product.weight ? product.weight : 0; break;
+                            case 'pz': productQuantity = !!product.quantity ? product.quantity : 0; break;
+                            default: productQuantity = !!product.weight ? product.weight : 0; break;
+                        }
+                        if(!Number.isNaN(Number(productQuantity))) {
+                            const clientCommission = productPrice*client.utilityPercentage/100;
+                            item.price = Number(productQuantity) * (productPrice + clientCommission);
+                            item.tax = item.price * 0.16;
+                            item.total = item.price + item.tax;
+                        }
+                        if(ordersMap.has(product.orderId)) {
+                            let order = ordersMap.get(product.orderId);
+                            order.subtotal += item.price;
+                            order.taxes += item.tax;
+                            order.total += item.total;
+                            order.items.push(item);
+                            if(++cont == limit) return callback(null, ordersMap);
+                        } else {
+                            let order = {
+                                client,
+                                clientId: client.id,
+                                date: !!product.date ? moment(product.date).tz(constants.timezone).toISOString() : moment().tz(constants.timezone).toISOString(),
+                                clientAddress: !!client.addresses().length ? client.addresses().pop().toJSON() : null,
+                                subtotal: item.price,
+                                taxes: item.tax,
+                                total: item.total,
+                                items: [item]
+                            }
+                            ordersMap.set(product.orderId, order);
+                            if(++cont == limit) return callback(null, ordersMap);
+                        }
+                    } else if(++cont == limit) return callback(null, ordersMap);
+                });
+
+            });
         });
     }
 
