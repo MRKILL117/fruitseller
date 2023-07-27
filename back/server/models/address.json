@@ -7,6 +7,9 @@
     "validateUpsert": true
   },
   "properties": {
+    "alias": {
+      "type": "string"
+    },
     "street": {
       "type": "string"
     },

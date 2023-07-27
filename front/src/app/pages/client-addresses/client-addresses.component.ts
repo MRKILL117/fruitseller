@@ -25,6 +25,7 @@ export class ClientAddressesComponent implements OnInit {
   }
   addressForm: FormGroup = new FormGroup({
     id: new FormControl(null, []),
+    alias: new FormControl('', [Validators.required]),
     street: new FormControl('', [Validators.required]),
     externalNumber: new FormControl('', [Validators.required, onlyNumbers()]),
     internalNumber: new FormControl(null, [onlyNumbers()]),
@@ -88,10 +89,11 @@ export class ClientAddressesComponent implements OnInit {
     this.http.Post(`Addresses`, {address: this.addressForm.value}).subscribe(newAddress => {
       this.GetAddresses();
       this.toast.ShowDefaultSuccess(`Dirección creada exitosamente`);
-      this.addressForm.reset();
       this.modal.CloseModal();
+      this.addressForm.reset();
     }, err => {
-      this.toast.ShowDefaultDanger(`Error al crear dirección`);
+      let defaultMessage = `Error al crear la dirección`;
+      this.toast.ShowDefaultDanger(this.http.GetErrorMessage(err) || defaultMessage);
       console.error("Error creating address", err);
     });
   }
@@ -102,10 +104,12 @@ export class ClientAddressesComponent implements OnInit {
       this.GetAddresses();
       this.toast.ShowDefaultSuccess(`Dirección actualizada con éxito`);
       this.modal.CloseModal();
+      this.addressForm.reset();
       this.isEditing = false;
     }, err => {
+      let defaultMessage = `Error al actualizar la dirección`;
+      this.toast.ShowDefaultDanger(this.http.GetErrorMessage(err) || defaultMessage);
       console.error("Error patching address", err);
-      this.toast.ShowDefaultDanger(`Error al actualizar dirección`);
     });
   }
 
@@ -119,6 +123,7 @@ export class ClientAddressesComponent implements OnInit {
     this.isEditing = true;
     this.addressForm.setValue({
       id: !!address.id ? address.id : null,
+      alias: !!address.alias ? address.alias : null,
       street: !!address.street ? address.street : null,
       externalNumber: !!address.externalNumber ? address.externalNumber : null,
       internalNumber: !!address.internalNumber ? address.internalNumber : null,
@@ -136,8 +141,9 @@ export class ClientAddressesComponent implements OnInit {
       this.toast.ShowDefaultSuccess(`Dirección eliminada correctamente`);
       this.modal.CloseModal();
     }, err => {
+      let defaultMessage = `Error al eliminar la dirección`;
+      this.toast.ShowDefaultDanger(this.http.GetErrorMessage(err) || defaultMessage);
       console.error("Error deleting address", err);
-      this.toast.ShowDefaultDanger(`Error al eliminar dirección`);
     });
   }
 
@@ -146,6 +152,8 @@ export class ClientAddressesComponent implements OnInit {
       this.toast.ShowDefaultSuccess(`Dirección establecida como predeterminada`);
       this.GetAddresses();
     }, err => {
+      let defaultMessage = `Error al actualizar la dirección`;
+      this.toast.ShowDefaultDanger(this.http.GetErrorMessage(err) || defaultMessage);
       console.error("Error setting as default", err);
     });
   }

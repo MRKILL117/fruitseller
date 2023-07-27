@@ -74,14 +74,14 @@ module.exports = function(Orders) {
                     include: {
                         relation: 'addresses',
                         scope: {
-                            where: {or:[{isDefault: true},{id: product.addressId}]},
+                            where: {or:[{isDefault: true},{id: product.addressAliasOrId},{alias: {like: `%${product.addressAliasOrId}%`}}]},
                             order: 'isDefault ASC'
                         }
                     }
                 }, (err, client) => {
                     if(err) return callback(err);
 
-                    if(!!productFound && !!client) {
+                    if(!!productFound && !!client && !!client.addresses().length) {
                         let item = {
                             product: productFound,
                             quantity: product.quantity,
@@ -125,7 +125,13 @@ module.exports = function(Orders) {
                             ordersMap.set(product.orderId, order);
                             if(++cont == limit) return callback(null, ordersMap);
                         }
-                    } else if(++cont == limit) return callback(null, ordersMap);
+                    } else {
+                        // let errorMessage;
+                        // if(!productFound) errorMessage = `No se enctontró un producto con id o nombre: "${product.productNameOrId}"`
+                        // if(!client) errorMessage = `No se enctontró un cliente con id o RFC: "${product.productNameOrId}"`
+                        // if(!client.addresses().length) errorMessage = `El cliente ${client.name} no tiene direcciones"`
+                        if(++cont == limit) return callback(null, ordersMap);
+                    }
                 });
 
             });
