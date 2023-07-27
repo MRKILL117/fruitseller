@@ -3,10 +3,15 @@
 module.exports = function(Address) {
 
     Address.CreateOne = function(address, callback) {
-        Address.create(address, (err, newAddress) => {
+        Address.CheckAliasAvailability(address, (err, isAvailable) => {
             if(err) return callback(err);
 
-            return callback(null, newAddress);
+            if(!isAvailable) return callback(`El alias ya está siendo usado por otra dirección`);
+            Address.create(address, (err, newAddress) => {
+                if(err) return callback(err);
+    
+                return callback(null, newAddress);
+            });
         });
     }
 
@@ -21,15 +26,21 @@ module.exports = function(Address) {
     }
 
     Address.Update = function(address, callback) {
-        Address.upsert(address, (err, addressUpdated) => {
+        Address.CheckAliasAvailability(address, (err, isAvailable) => {
             if(err) return callback(err);
-            
-            return callback(null, addressUpdated);
+
+            if(!isAvailable) return callback(`El alias ya está siendo usado por otra dirección`);
+            Address.upsert(address, (err, addressUpdated) => {
+                if(err) return callback(err);
+                
+                return callback(null, addressUpdated);
+            });
         });
     }
 
     Address.prototype.Delete = function(callback) {
         this.deleted = true;
+        this.alias = null;
         this.save((err, deleted) => {
             if(err) return callback(err);
 
@@ -50,6 +61,20 @@ module.exports = function(Address) {
 
                 return callback(null, updated);
             });
+        });
+    }
+
+    Address.CheckAliasAvailability = function(address, callback) {
+        if(!address.clientId) return callback(null, false);
+        Address.findOne({
+            where: {
+                alias: {like: `%${address.alias}%`},
+                clientId: address.clientId
+            }
+        }, (err, addressFound) => {
+            if(err) return callback(err);
+            if(address.id != addressFound.id) return callback(null, !!!addressFound);
+            else return callback(null, true);
         });
     }
 

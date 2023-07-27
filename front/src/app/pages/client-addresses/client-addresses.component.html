@@ -21,8 +21,9 @@
                 </div>
                 <div class="card-body">
                     <div class="d-flex flex-column">
-                        <div>
-                            ID: {{address.id}}
+                        <div class="d-flex align-items-center justify-content-between flex-wrap" style="gap: 12px;">
+                            <span>ID: {{address.id}}</span>
+                            <span class="ml-auto">{{address.alias}}</span>
                         </div>
                         <div>
                             {{GenerateClientAddress(address)}}
@@ -88,7 +89,21 @@
                             <div class="row">
                                 <div class="col-12">
                                     <div class="form-group">
-                                        <label>Dirección <span class="text-danger">*</span></label>
+                                        <label>Alias <span class="text-danger">*</span></label>
+                                        <div class="input-container">
+                                            <i class="input-icon zmdi zmdi-home zmdi-hc-lg"></i>
+                                            <input class="form-control" type="text" placeholder="Alias" formControlName="alias" (keyup.enter)="Create()">
+                                        </div>
+                                        <div class="error-messages" *ngIf="form.GetFormControlByName(addressForm, 'alias')?.touched && form.GetFormControlByName(addressForm, 'alias')?.errors">
+                                            <span class="d-block" *ngIf="form.GetFormControlByName(addressForm, 'alias')?.errors.required">
+                                                Campo obligatorio
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label>Calle <span class="text-danger">*</span></label>
                                         <div class="input-container">
                                             <i class="input-icon zmdi zmdi-home zmdi-hc-lg"></i>
                                             <input class="form-control" type="text" placeholder="Calle" formControlName="street" (keyup.enter)="Create()">

@@ -48,7 +48,7 @@ export class SellOrdersComponent implements OnInit {
     },
     {
       oldKey: 'Dirección',
-      newKey: 'addressId'
+      newKey: 'addressAliasOrId'
     },
     {
       oldKey: 'Fecha',
