@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { onlyNumbers } from 'src/app/common/custom-validators.directive';
+import { filter } from 'src/app/common/data-types.interface';
 import { CsvService } from 'src/app/services/csv.service';
 import { FormService } from 'src/app/services/form.service';
 import { HttpService } from 'src/app/services/http.service';
@@ -21,6 +22,13 @@ export class ClientsComponent implements OnInit {
   clientsCsv: any;
   clientsToUpload: Array<any> = [];
   clientsFailed: Array<any> = [];
+  filters: Array<filter> = [
+    {
+      name: 'text',
+      type: 'text',
+      placeholder: 'Buscar'
+    }
+  ];
   loading: any = {
     updating: false,
     getting: true

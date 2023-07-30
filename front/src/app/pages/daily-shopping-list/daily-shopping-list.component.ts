@@ -28,6 +28,7 @@ export class DailyShoppingListComponent implements OnInit {
   ordersCsv: any;
   ordersToUpload: Array<any> = [];
   ordersFailed: Array<any> = [];
+  filters: Array<filter> = [];
   loading: any = {
     updating: false,
     getting: true
@@ -83,13 +84,22 @@ export class DailyShoppingListComponent implements OnInit {
   GetBuyers() {
     this.http.Get(`Buyers`).subscribe((buyers: any) => {
       this.buyers = buyers;
+      this.filters.push({
+        type: 'select',
+        name: 'buyer',
+        placeholder: 'Comprador',
+        config: {
+          multiple: false,
+          options: buyers
+        }
+      });
     }, err => {
       console.error("Error getting buyers", err);
     });
   }
 
-  OnFiltersChanged(filters: filter | null = null) {
-    this.SetProductsArray(filters?.options == '*' ? null : filters?.options);
+  OnFiltersChanged(filters: any = null) {
+    this.SetProductsArray(filters?.buyer);
   }
 
   GetClients() {

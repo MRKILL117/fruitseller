@@ -9,8 +9,9 @@ import { environment } from 'src/environments/environment';
 })
 export class DatePickerComponent implements OnInit {
 
-  @Input() placeholder: string = 'Seleccione una fecha';
-  @Input() presetDate: string | null = null;
+  @Input() placeholder: string | null | undefined;
+  @Input() useIsoString: boolean = true;
+  @Input() presetDate: string | undefined | null = null;
 
   @Output() onDateChange: EventEmitter<string> = new EventEmitter<string>();
 
@@ -19,6 +20,7 @@ export class DatePickerComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    if(!this.placeholder) this.placeholder = 'Seleccione una fecha';
     setTimeout(() => {
       if(!!this.presetDate) this.datePicker.bsValue = new Date(this.presetDate);
     }, 10);

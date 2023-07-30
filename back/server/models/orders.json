@@ -205,6 +205,12 @@
           "type": "array",
           "required": false,
           "description": ""
+        },
+        {
+          "arg": "clients",
+          "type": "array",
+          "required": false,
+          "description": ""
         }
       ],
       "returns": [
@@ -227,6 +233,10 @@
         },
         {
           "path": "/FilteredBy/StartDate/:startDate/EndDate/:endDate/Statuses/:statuses",
+          "verb": "get"
+        },
+        {
+          "path": "/FilteredBy/StartDate/:startDate/EndDate/:endDate/Statuses/:statuses/Clients/:clients",
           "verb": "get"
         }
       ]
@@ -259,6 +269,12 @@
           "type": "array",
           "required": false,
           "description": ""
+        },
+        {
+          "arg": "clients",
+          "type": "array",
+          "required": false,
+          "description": ""
         }
       ],
       "returns": [
@@ -277,6 +293,14 @@
         },
         {
           "path": "/OfPayments/FilteredBy/StartDate/:startDate/EndDate/:endDate/Statuses/:statuses",
+          "verb": "get"
+        },
+        {
+          "path": "/OfPayments/FilteredBy/StartDate/:startDate/EndDate/:endDate/Statuses/:statuses",
+          "verb": "get"
+        },
+        {
+          "path": "/OfPayments/FilteredBy/StartDate/:startDate/EndDate/:endDate/Statuses/:statuses/Clients/:clients",
           "verb": "get"
         }
       ]

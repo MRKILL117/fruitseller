@@ -39,7 +39,7 @@
     <div class="row justify-content-center">
         <!-- Filters -->
         <div class="col-12 mb-4">
-            <app-filters [timerTrigger]="true" [filters]="{text:true,startDate:true,endDate:true,options:null}" (onSearch)="GetOrders($event)"></app-filters>
+            <app-filters [timerTrigger]="true" [filters]="filters" (onSearch)="GetOrders($event)"></app-filters>
         </div>
         <div class="col-12 col-lg-11" *ngIf="!loading.getting; else bigLoading">
             <table class="table table-striped" *ngIf="!!orders?.length; else noOrdersMessage">
@@ -65,7 +65,7 @@
                         <td class="align-middle">${{order.taxes}}</td>
                         <td class="align-middle">${{order.subtotal}}</td>
                         <td class="align-middle">${{order.total}}</td>
-                        <td>
+                        <td class="align-middle">
                             <div class="d-flex flex-column" style="gap: 12px;">
                                 <div class="d-flex align-items-center justify-content-center" style="gap: 12px;">
                                     <i class="zmdi zmdi-edit zmdi-hc-lg clickeable" (click)="nav.GoToRoleRoute('edit-sell-orders/' + order.id)"></i>

@@ -39,7 +39,7 @@
     <div class="row justify-content-center">
         <!-- Filters -->
         <div class="col-12 col-lg-11 mt-3 mb-4">
-            <app-filters [timerTrigger]="true" [filters]="{text: true,startDate: false,endDate: false,options: null}" (onSearch)="GetClients($event)"></app-filters>
+            <app-filters [timerTrigger]="true" [filters]="filters" (onSearch)="GetClients($event)"></app-filters>
         </div>
         <div class="col-12 col-lg-11" *ngIf="!loading.getting; else bigLoading">
             <table class="table table-striped" *ngIf="!!clients?.length; else noClientsMessage">

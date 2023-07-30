@@ -1,9 +1,9 @@
 .filters {
     display: flex;
     align-items: center;
-    justify-content: end;
+    justify-content: flex-end;
     flex-wrap: wrap;
-    gap: .4rem;
+    gap: 14px;
 }
 
 .space {
@@ -15,5 +15,11 @@
     min-width: min-content;
     margin: .5rem;
     flex-basis: 225px;
+    max-width: 100%;
+}
+
+.filter {
+    flex-grow: 1;
+    width: 250px;
     max-width: 100%;
 }

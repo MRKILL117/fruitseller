@@ -31,10 +31,10 @@
     <div class="row">
         <!-- Filters -->
         <div class="col-12 mt-3 mb-4">
-            <app-filters [timerTrigger]="true" [filters]="{text:true,startDate:true,endDate:true,options: null}" (onSearch)="GetProducts($event)"></app-filters>
+            <app-filters [timerTrigger]="true" [filters]="filters" (onSearch)="GetProducts($event)"></app-filters>
         </div>
         <div class="col-12 my-3" *ngFor="let product of products">
-            <app-product-inventory-history [product]="product" [toggleHistory]="onShowHistory"></app-product-inventory-history>
+            <app-product-inventory-history [product]="product" [history]="showingHistory" [toggleHistory]="onShowHistory"></app-product-inventory-history>
         </div>
     </div>
 </div>

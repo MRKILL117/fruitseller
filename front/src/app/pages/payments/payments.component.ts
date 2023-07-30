@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import * as moment from 'moment-timezone';
 import { filter } from 'src/app/common/data-types.interface';
 import { CsvService } from 'src/app/services/csv.service';
 import { HttpService } from 'src/app/services/http.service';
 import { NavigationService } from 'src/app/services/navigation.service';
 import { ToastService } from 'src/app/services/toast.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-payments',
@@ -15,6 +17,7 @@ export class PaymentsComponent implements OnInit {
   clients: Array<any> = [];
   orders: Array<any> = [];
   orderStatuses: Array<any> = [];
+  filters: Array<filter> = [];
   loading: any = {
     updating: false,
     getting: true
@@ -25,33 +28,85 @@ export class PaymentsComponent implements OnInit {
     private http: HttpService,
     private csv: CsvService,
     public nav: NavigationService
-  ) { }
+  ) {
+    this.InitializeFilters();
+  }
 
   ngOnInit(): void {
     this.GetOrderStatuses();
     this.GetOrders();
   }
 
+  InitializeFilters() {
+    // Start date filter
+    this.filters.push({
+      type: 'datepicker',
+      name: 'startDate',
+      placeholder: 'Fecha de inicio',
+      config: null
+    });
+    // End date filter
+    this.filters.push({
+      type: 'datepicker',
+      name: 'endDate',
+      placeholder: 'Fecha de fin',
+      config: null
+    });
+  }
+
   GoHome() {
     this.nav.GoToRoleRoute('');
   }
 
-  GetOrders(filters: filter | null = null) {
+  FormatDate(date: string) {
+    if(!!date && date != '*') {
+      return moment(date).tz(environment.timezone).toISOString().split('T').shift();
+    }
+    return '*';
+  }
+
+  GetOrders(filters: any = null) {
     this.loading.getting = true;
     let endpoint = `/Orders/OfPayments`;
-    if(!!filters) endpoint += `/FilteredBy/StartDate/${filters.startDate}/EndDate/${filters.endDate}/Statuses/${JSON.stringify(filters.options)}`;
-    this.http.Get(endpoint).subscribe((Orders: any) => {
-      this.orders = Orders;
+    if(!!filters) endpoint += `/FilteredBy/StartDate/${this.FormatDate(filters.startDate)}/EndDate/${this.FormatDate(filters.endDate)}/Statuses/${JSON.stringify(!!filters.status ? [filters.status] : [])}/Clients/${JSON.stringify(!!filters.client ? [filters.client] : [])}`;
+    this.http.Get(endpoint).subscribe((orders: any) => {
+      this.orders = orders;
       this.loading.getting = false;
     }, err => {
-      console.error("Error getting Orders", err);
+      console.error("Error getting orders", err);
       this.loading.getting = false;
+    });
+  }
+
+  GetClients() {
+    this.http.Get(`/Clients`).subscribe((clients: any) => {
+      this.filters.push({
+        type: 'select',
+        name: 'client',
+        placeholder: 'Cliente',
+        config: {
+          multiple: false,
+          options: clients
+        }
+      });
+    }, err => {
+      console.error("Error getting clients", err);
     });
   }
 
   GetOrderStatuses() {
     this.http.Get(`/OrderStatuses`).subscribe((statuses: any) => {
+      this.GetClients();
       this.orderStatuses = statuses.filter((status: any) => status.id >= 3);
+      this.filters.push({
+        type: 'select',
+        name: 'status',
+        placeholder: 'Estado',
+        config: {
+          multiple: false,
+          options: this.orderStatuses
+        }
+      });
     }, err => {
       console.error("Error getting order statuses", err);
     });
