@@ -14,25 +14,19 @@ export class FiltersComponent implements OnInit {
 
   @Input() timerTrigger: boolean = false;
   @Input() dateIncludesTime: boolean = false;
-  @Input() filters: any = {
-    text: true,
-    startDate: true,
-    endDate: true,
-    optionsLabel: 'Seleccione una opcion',
-    multiple: false,
-    optionsMultiple: false,
-    options: [],
-  };
+  @Input() filters: Array<filter> = [
+    {
+      type: 'text',
+      placeholder: 'Buscar',
+      value: '',
+      name: 'searchText',
+      config: null
+    }
+  ];
 
-  @Output() onSearch: EventEmitter<filter> = new EventEmitter<filter>();
+  @Output() onSearch: EventEmitter<any> = new EventEmitter<any>();
 
   timer: any = null;
-  filtersForm: FormGroup = new FormGroup({
-    text: new FormControl('', []),
-    startDate: new FormControl(null, []),
-    endDate: new FormControl(null, []),
-    options: new FormControl(null, []),
-  });
 
   constructor(
     public form: FormService
@@ -41,25 +35,26 @@ export class FiltersComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  SetDate(filterName: string, date: string) {
+  SetDate(filter: filter, date: string) {
     let dateMoment = moment(date).tz(environment.timezone);
-    if(filterName.toLowerCase().includes('start')) this.dateIncludesTime ? dateMoment.startOf('day') : dateMoment;
-    if(filterName.toLowerCase().includes('end')) this.dateIncludesTime ? dateMoment.endOf('day') : dateMoment;
-    this.filtersForm.get(filterName)?.setValue(dateMoment.toISOString());
+    filter.value = dateMoment.toISOString();
     this.Search();
   }
 
   OnOptionSelected(option: any) {
-    this.filtersForm.get('options')?.setValue(option);
     this.Search();
   }
 
   Search(keyupEvent: boolean = false) {
-    let filters: filter = this.filtersForm.value;
-    filters.text = !!filters.text ? filters.text : '*';
-    filters.startDate = !!filters.startDate ? (this.dateIncludesTime ? filters.startDate : filters.startDate.split('T')[0]) : '*';
-    filters.endDate = !!filters.endDate ? (this.dateIncludesTime ? filters.endDate : filters.endDate.split('T')[0]) : '*';
-    filters.options = !!filters.options ? filters.options : [];
+    let filters: any = {};
+    this.filters.forEach((filter: filter) => {
+      let vlaueFormated: any = filter.value;
+      switch (filter.type) {
+        case 'text': case 'datepicker': default: vlaueFormated = !!vlaueFormated ? vlaueFormated : '*'; break;
+        case 'select': vlaueFormated = !!vlaueFormated ? vlaueFormated : (filter.config?.multiple ? [] : null); break;
+      }
+      filters[filter.name] = vlaueFormated;
+    });
 
     if(this.timerTrigger && keyupEvent) {
       if(!!this.timer) clearTimeout(this.timer);
@@ -68,6 +63,15 @@ export class FiltersComponent implements OnInit {
       }, 300);
     }
     else this.onSearch.emit(filters);
+  }
+
+  GetFilterValue(filter: filter) {
+    switch (filter.type) {
+      case 'text': return !!filter.value ? filter.value : '*';
+      case 'datepicker': return !!filter.value ? filter.value : '*';
+      case 'select': return !!filter.value ? filter.value : '*';
+      default: return '*';
+    }
   }
 
 }

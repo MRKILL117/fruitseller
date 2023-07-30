@@ -138,13 +138,16 @@ module.exports = function(Orders) {
         });
     }
 
-    Orders.GetAll = function(ctx, startDate, endDate, statuses = [], callback) {
+    Orders.GetAll = function(ctx, startDate, endDate, statuses = [], clients = [], callback) {
         const userId = ctx.accessToken.userId;
         let where = {and: [{adminId: userId}, {deleted: false}]};
         if(!!startDate && startDate != '*') where.and.push({date: {gte: startDate}});
         if(!!endDate && endDate != '*') where.and.push({date: {lte: endDate}});
         if(!!statuses && statuses.length) where.and.push({
             or: statuses.map(status => {return {statusId: status.id}})
+        });
+        if(!!clients && clients.length) where.and.push({
+            or: clients.map(client=> {return {clientId: client.id}})
         });
         Orders.find({
             where,
@@ -156,13 +159,16 @@ module.exports = function(Orders) {
         });
     }
     
-    Orders.GetAllOfPayments = function(ctx, startDate, endDate, statuses = [], callback) {
+    Orders.GetAllOfPayments = function(ctx, startDate, endDate, statuses = [], clients = [], callback) {
         const userId = ctx.accessToken.userId;
         let where = {and: [{adminId: userId}, {deleted: false}, {statusId: {gte: 3}}]};
         if(!!startDate && startDate != '*') where.and.push({date: {gte: startDate}});
         if(!!endDate && endDate != '*') where.and.push({date: {lte: endDate}});
         if(!!statuses && statuses.length) where.and.push({
             or: statuses.map(status => {return {statusId: status.id}})
+        });
+        if(!!clients && clients.length) where.and.push({
+            or: clients.map(client=> {return {clientId: client.id}})
         });
         Orders.find({
             where,

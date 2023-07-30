@@ -1,7 +1,12 @@
 export interface filter {
-    text: string,
-    startDate: string,
-    endDate: string,
-    optionsLabel: string,
-    options: Array<any> | string,
+    type: 'text' | 'datepicker' | 'select',
+    placeholder?: string,
+    value?: string,
+    name: string,
+    config?: selectConfig | null
+}
+
+interface selectConfig {
+    options: Array<any>,
+    multiple: boolean | false
 }

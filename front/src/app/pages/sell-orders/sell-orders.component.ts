@@ -9,6 +9,7 @@ import { HttpService } from 'src/app/services/http.service';
 import { ModalService } from 'src/app/services/modal.service';
 import { NavigationService } from 'src/app/services/navigation.service';
 import { ToastService } from 'src/app/services/toast.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-sell-orders',
@@ -24,6 +25,7 @@ export class SellOrdersComponent implements OnInit {
   ordersCsv: any;
   ordersToUpload: Array<any> = [];
   ordersFailed: Array<any> = [];
+  filters: Array<filter> = [];
   loading: any = {
     updating: false,
     getting: true
@@ -82,14 +84,46 @@ export class SellOrdersComponent implements OnInit {
     private http: HttpService,
     private csv: CsvService,
     public nav: NavigationService
-  ) { }
+  ) {
+    this.InitializeFilters();
+  }
 
   ngOnInit(): void {
     this.GetOrders();
   }
 
+  InitializeFilters() {
+    // Text filter
+    // this.filters.push({
+    //   type: 'text',
+    //   name: 'text',
+    //   placeholder: 'Buscar'
+    // });
+    // Start date filter
+    this.filters.push({
+      type: 'datepicker',
+      name: 'startDate',
+      placeholder: 'Fecha de inicio',
+      config: null
+    });
+    // End date filter
+    this.filters.push({
+      type: 'datepicker',
+      name: 'endDate',
+      placeholder: 'Fecha de fin',
+      config: null
+    });
+  }
+
   GoHome() {
     this.nav.GoToRoleRoute('');
+  }
+
+  FormatDate(date: string) {
+    if(!!date && date != '*') {
+      return moment(date).tz(environment.timezone).toISOString().split('T').shift();
+    }
+    return '*';
   }
 
   OnSalesMeasurementTypeChanges(measurementType: any) {
@@ -98,10 +132,10 @@ export class SellOrdersComponent implements OnInit {
     }
   }
 
-  GetOrders(filters: filter | null = null) {
+  GetOrders(filters: any | null = null) {
     this.loading.getting = true;
     let endpoint = `/Orders`;
-    if(!!filters) endpoint += `/FilteredBy/StartDate/${filters.startDate}/EndDate/${filters.endDate}`;
+    if(!!filters) endpoint += `/FilteredBy/StartDate/${this.FormatDate(filters.startDate)}/EndDate/${this.FormatDate(filters.endDate)}`;
     this.http.Get(endpoint).subscribe((Orders: any) => {
       this.orders = Orders;
       this.loading.getting = false;
