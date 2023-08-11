@@ -169,7 +169,8 @@ export class CreateSellOrderComponent implements OnInit {
   }
 
   GenerateClientAddress(address: any) {
-    return address.street + " #" + address.externalNumber + (!!address.internalNumber ? (" int. " + address.internalNumber) : "")
+    if(!!address) return address.street + " #" + address.externalNumber + (!!address.internalNumber ? (" int. " + address.internalNumber) : "")
+    return '';
   }
 
 }
