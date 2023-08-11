@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { priceNumber, onlyNumbers } from 'src/app/common/custom-validators.directive';
+import { filter } from 'src/app/common/data-types.interface';
 import { CsvService } from 'src/app/services/csv.service';
 import { FormService } from 'src/app/services/form.service';
 import { HttpService } from 'src/app/services/http.service';
@@ -23,6 +24,7 @@ export class ProductsComponent implements OnInit {
   productsCsv: any;
   productsToUpload: Array<any> = [];
   productsFailed: Array<any> = [];
+  filters: Array<filter> = [];
   loading: any = {
     updating: false,
     getting: true
@@ -88,6 +90,7 @@ export class ProductsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    // this.InitializeFilters();
     this.GetBuyers();
     this.GetMeasurementTypes();
     this.GetProducts();
@@ -95,6 +98,15 @@ export class ProductsComponent implements OnInit {
 
   GoHome() {
     this.nav.GoToRoleRoute('');
+  }
+
+  InitializeFilters() {
+    // Text filter
+    this.filters.push({
+      type: 'text',
+      name: 'text',
+      placeholder: 'Buscar'
+    });
   }
 
   OnSalesMeasurementTypeChanges(measurementType: any) {
@@ -122,7 +134,7 @@ export class ProductsComponent implements OnInit {
     });
   }
 
-  GetProducts() {
+  GetProducts(filters: any = null) {
     this.loading.getting = true;
     this.http.Get(`Products`).subscribe((products: any) => {
       this.products = products;
