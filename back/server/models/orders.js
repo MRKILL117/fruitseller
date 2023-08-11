@@ -37,10 +37,11 @@ module.exports = function(Orders) {
             ordersFailed: [],
             ordersSuccess: []
         }
-        Orders.MapPorductsInOrders(products, (err, ordersMap) => {
+        Orders.MapPorductsInOrders(products, (err, ordersObj) => {
             if(err) return callback(err);
 
-            let orders = Array.from(ordersMap.values());
+            let orders = Array.from(ordersObj.map.values());
+            data.ordersFailed = ordersObj.failed;
             let cont = 0, limit = orders.length;
             if(!limit) return callback(null, data);
             orders.forEach(order => {
@@ -57,6 +58,7 @@ module.exports = function(Orders) {
 
     Orders.MapPorductsInOrders = function(products, callback) {
         let ordersMap = new Map();
+        let failed = [];
         let cont = 0, limit = products.length;
         if(!limit) return callback(null, []);
         products.forEach(product => {
@@ -110,27 +112,28 @@ module.exports = function(Orders) {
                             order.taxes += item.tax;
                             order.total += item.total;
                             order.items.push(item);
-                            if(++cont == limit) return callback(null, ordersMap);
+                            if(++cont == limit) return callback(null, {map: ordersMap, failed});
                         } else {
                             let order = {
                                 client,
                                 clientId: client.id,
                                 date: !!product.date ? moment(product.date).tz(constants.timezone).toISOString() : moment().tz(constants.timezone).toISOString(),
-                                clientAddress: !!client.addresses().length ? client.addresses().pop().toJSON() : null,
+                                clientAddress: client.addresses().pop().toJSON(),
                                 subtotal: item.price,
                                 taxes: item.tax,
                                 total: item.total,
                                 items: [item]
                             }
                             ordersMap.set(product.orderId, order);
-                            if(++cont == limit) return callback(null, ordersMap);
+                            if(++cont == limit) return callback(null, {map: ordersMap, failed});
                         }
                     } else {
-                        // let errorMessage;
-                        // if(!productFound) errorMessage = `No se enctontró un producto con id o nombre: "${product.productNameOrId}"`
-                        // if(!client) errorMessage = `No se enctontró un cliente con id o RFC: "${product.productNameOrId}"`
-                        // if(!client.addresses().length) errorMessage = `El cliente ${client.name} no tiene direcciones"`
-                        if(++cont == limit) return callback(null, ordersMap);
+                        let errorMessage;
+                        if(!productFound) errorMessage = `No se enctontró un producto con id o nombre: "${product.productNameOrId}"`
+                        else if(!client) errorMessage = `No se enctontró un cliente con id o RFC: "${product.clientRfcOrId}"`
+                        else if(!client.addresses().length) errorMessage = `El cliente ${client.name} no tiene direcciones"`
+                        failed.push({reason: errorMessage, order: product});
+                        if(++cont == limit) return callback(null, {map: ordersMap, failed});
                     }
                 });
 

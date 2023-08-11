@@ -148,12 +148,11 @@ export class SellOrdersComponent implements OnInit {
   RegisterOrders() {
     this.loading.updating = true;
     this.http.Post(`Orders/Array`, {products: this.ordersToUpload}).subscribe((data: any) => {
-      console.log(data);
       this.GetOrders();
       this.ordersFailed = data.ordersFailed;
-      if(!!data.ordersSuccess.length) this.toast.ShowDefaultSuccess(`${data.ordersSuccess.length} ordenes creados correctamente`);
+      if(!!data.ordersSuccess.length) this.toast.ShowDefaultSuccess(`Ordenes creados correctamente`);
       if(data.ordersFailed.length) {
-        this.toast.ShowDefaultWarning(`${data.ordersFailed.length} ordenes no se pudieron crear`);
+        this.toast.ShowDefaultWarning(`Algunas ordenes no se pudieron crear`);
       }
       else {
         this.modal.CloseModal();
