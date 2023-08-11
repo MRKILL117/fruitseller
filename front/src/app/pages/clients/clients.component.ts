@@ -271,7 +271,8 @@ export class ClientsComponent implements OnInit {
   }
 
   GenerateClientAddress(client: any) {
-    return client.addresses[0].street + " #" + client.addresses[0].externalNumber + (!!client.addresses[0].internalNumber ? (" int. " + client.addresses[0].internalNumber) : "")
+    if(!!client.addresses.length) return client.addresses[0].street + " #" + client.addresses[0].externalNumber + (!!client.addresses[0].internalNumber ? (" int. " + client.addresses[0].internalNumber) : "")
+    else return `Sin direccioón`;
   }
 
   GenerateCsv() {
