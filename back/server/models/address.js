@@ -73,7 +73,7 @@ module.exports = function(Address) {
             }
         }, (err, addressFound) => {
             if(err) return callback(err);
-            if(address.id != addressFound.id) return callback(null, !!!addressFound);
+            if(!!addressFound && address.id != addressFound.id) return callback(null, !!!addressFound);
             else return callback(null, true);
         });
     }
