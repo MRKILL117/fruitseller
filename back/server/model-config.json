@@ -58,9 +58,13 @@
         "sharedMethods": {
           "*": false,
           "CreateUserWithRole": true,
-          "GetAllAccounts": true,
+          "GetAll": true,
           "LogIn": true,
-          "LogOut": true
+          "LogOut": true,
+          "GetRoles": true,
+          "prototype.Update": true,
+          "prototype.Delete": true,
+          "prototype.ToggleEnabled": true
         }
       }
     }

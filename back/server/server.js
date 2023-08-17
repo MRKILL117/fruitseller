@@ -87,7 +87,11 @@ var SeedRoles = function() {
     const roles = [
       {
         name: 'Admin',
-        description: 'Admin of the platform'
+        description: 'Administrador'
+      },
+      {
+        name: 'Warehouseman',
+        description: 'Almacenista'
       },
     ];
     const conditions = [

@@ -2,10 +2,25 @@
   "name": "Account",
   "base": "User",
   "idInjection": true,
+  "emailVerificationRequired": true,
+  "scope": {
+    "include": {"role": "role"}
+  },
   "options": {
     "validateUpsert": true
   },
-  "properties": {},
+  "properties": {
+    "isEnabled": {
+      "type": "boolean",
+      "required": true,
+      "default": true
+    },
+    "deleted": {
+      "type": "boolean",
+      "required": true,
+      "default": false
+    }
+  },
   "validations": [],
   "relations": {
     "accessTokens": {
@@ -66,7 +81,11 @@
       "permission": "ALLOW",
       "property": [
         "CreateUserWithRole",
-        "GetAllAccounts"
+        "GetAll",
+        "GetRoles",
+        "Update",
+        "Delete",
+        "ToggleEnabled"
       ]
     }
   ],
@@ -96,8 +115,21 @@
         }
       ]
     },
-    "GetAllAccounts": {
-      "accepts": [],
+    "GetAll": {
+      "accepts": [
+        {
+          "arg": "text",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "arg": "roles",
+          "type": "array",
+          "required": false,
+          "description": ""
+        }
+      ],
       "returns": [
         {
           "arg": "users",
@@ -110,6 +142,10 @@
       "http": [
         {
           "path": "/",
+          "verb": "get"
+        },
+        {
+          "path": "/FilteredBy/Text/:text/Roles/:roles",
           "verb": "get"
         }
       ]
@@ -161,6 +197,84 @@
         {
           "path": "/LogOut",
           "verb": "post"
+        }
+      ]
+    },
+    "GetRoles": {
+      "accepts": [],
+      "returns": [
+        {
+          "arg": "roles",
+          "type": "array",
+          "root": true,
+          "description": ""
+        }
+      ],
+      "description": "",
+      "http": [
+        {
+          "path": "/Roles",
+          "verb": "get"
+        }
+      ]
+    },
+    "prototype.Update": {
+      "accepts": [
+        {
+          "arg": "user",
+          "type": "object",
+          "required": true
+        }
+      ],
+      "returns": [
+        {
+          "arg": "user",
+          "type": "object",
+          "root": true,
+          "description": ""
+        }
+      ],
+      "description": "",
+      "http": [
+        {
+          "path": "/",
+          "verb": "patch"
+        }
+      ]
+    },
+    "prototype.Delete": {
+      "accepts": [],
+      "returns": [
+        {
+          "arg": "user",
+          "type": "object",
+          "root": true,
+          "description": ""
+        }
+      ],
+      "description": "",
+      "http": [
+        {
+          "path": "/",
+          "verb": "delete"
+        }
+      ]
+    },
+    "prototype.ToggleEnabled": {
+      "accepts": [],
+      "returns": [
+        {
+          "arg": "user",
+          "type": "object",
+          "root": true,
+          "description": ""
+        }
+      ],
+      "description": "",
+      "http": [
+        {
+          "path": "/ToggleEnabled",
+          "verb": "patch"
         }
       ]
     }

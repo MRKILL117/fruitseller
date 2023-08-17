@@ -28,7 +28,26 @@
     padding: 8px 16px !important;
 }
 
-/* ------------------ End scroll bar styles ------------------ */
+/* ------------------ Global styles ------------------ */
+
+.sign-in-disabled-container {
+    position: relative;
+    width: 35px;
+    height: 30px;
+}
+.sign-in-disabled-container i {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.upper {
+    z-index: 2;
+    display: none;
+}
+.sign-in-disabled-container:hover .upper {
+    display: block;
+}
 
 body {
     width: 100%;
