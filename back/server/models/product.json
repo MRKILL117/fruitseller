@@ -9,7 +9,8 @@
     "include": [
       "salesMeasurementType",
       "inventoryMeasurementType",
-      "buyer"
+      "buyer",
+      "type"
     ]
   },
   "properties": {
@@ -77,6 +78,11 @@
       "type": "hasMany",
       "model": "Inventory",
       "foreignKey": "productId"
+    },
+    "type": {
+      "type": "belongsTo",
+      "model": "ProductType",
+      "foreignKey": "productTypeId"
     }
   },
   "acls": [

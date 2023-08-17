@@ -18,6 +18,7 @@ export class ProductsComponent implements OnInit {
 
   measurementTypes: Array<any> = [];
   products: Array<any> = [];
+  productTypes: Array<any> = [];
   buyers: Array<any> = [];
   selectedProduct: any = null;
   isEditing: boolean = false;
@@ -39,6 +40,7 @@ export class ProductsComponent implements OnInit {
     buyerId: new FormControl(null, [Validators.required]),
     salesMeasurementTypeId: new FormControl(null, [Validators.required]),
     inventoryMeasurementTypeId: new FormControl(null, [Validators.required]),
+    productTypeId: new FormControl(null, [Validators.required]),
   });
   dataConversions: Array<any> = [
     {
@@ -90,10 +92,11 @@ export class ProductsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    // this.InitializeFilters();
+    this.InitializeFilters();
     this.GetBuyers();
     this.GetMeasurementTypes();
     this.GetProducts();
+    this.GetProductTypes();
   }
 
   GoHome() {
@@ -134,9 +137,22 @@ export class ProductsComponent implements OnInit {
     });
   }
 
+  GetProductTypes() {
+    this.loading.getting = true;
+    this.http.Get(`ProductTypes`).subscribe((productTypes: any) => {
+      this.productTypes = productTypes;
+      this.loading.getting = false;
+    }, err => {
+      console.error("Error getting productTypes", err);
+      this.loading.getting = false;
+    });
+  }
+
   GetProducts(filters: any = null) {
     this.loading.getting = true;
-    this.http.Get(`Products`).subscribe((products: any) => {
+    let endpoint = `/Products`;
+    if(!!filters) endpoint += `/FilteredBy/Text/${filters.text}`;
+    this.http.Get(endpoint).subscribe((products: any) => {
       this.products = products;
       this.loading.getting = false;
     }, err => {
@@ -214,12 +230,12 @@ export class ProductsComponent implements OnInit {
     this.productForm.reset();
   }
 
-  EditProduct(Product: any) {
+  EditProduct(product: any) {
     this.isEditing = true;
     for (const key in this.productForm.controls) {
       if (Object.prototype.hasOwnProperty.call(this.productForm.controls, key)) {
         const control = this.productForm.controls[key];
-        control.setValue(Product[key]);
+        control.setValue(product[key]);
       }
     }
   }

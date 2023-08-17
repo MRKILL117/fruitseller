@@ -177,6 +177,29 @@ var SeedOrderStatuses = function() {
   });
 }
 
+var SeedProductTypes = function() {
+  return new Promise((res, rej) => {
+    const productTypes = [
+      {
+        name: 'Alimentos',
+        utility: null,
+      },
+      {
+        name: 'Varios',
+        utility: 22.00,
+      },
+    ];
+
+    let cont = 0, limit = productTypes.length;
+    productTypes.forEach(type => {
+      app.models.ProductType.CreateOne(type, (err, newType) => {
+        if(err) throw err;
+        if(++cont == limit) res();
+      });
+    });
+  });
+}
+
 var InitializeCornjobs = function() {
   return new Promise((res, rej) => {
     app.models.PriceHistory.DailyCronJobToUpdatePrices();
@@ -191,6 +214,7 @@ var AutoFillData = function() {
       await SeedUsers();
       await SeedOrderStatuses();
       await SeedMeasurementTypes();
+      await SeedProductTypes();
       await InitializeCornjobs();
     } catch (err) {
       rej(err);

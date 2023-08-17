@@ -10,6 +10,9 @@
     "name": {
       "type": "string"
     },
+    "socialReason": {
+      "type": "string"
+    },
     "rfc": {
       "type": "string"
     },

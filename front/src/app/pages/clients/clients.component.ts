@@ -36,6 +36,7 @@ export class ClientsComponent implements OnInit {
   clientForm: FormGroup = new FormGroup({
     id: new FormControl(null, []),
     name: new FormControl('', [Validators.required]),
+    socialReason: new FormControl('', [Validators.required]),
     rfc: new FormControl('', [Validators.required, Validators.pattern(/[A-Za-z0-9]{12,13}/)]),
     address: new FormGroup({
       id: new FormControl(null, []),
@@ -205,9 +206,10 @@ export class ClientsComponent implements OnInit {
   EditClient(client: any) {
     this.isEditing = true;
     this.clientForm.setValue({
-      id: client.id,
-      name: client.name,
-      rfc: client.rfc,
+      id: !!client.id ? client.id : null,
+      name: !!client.name ? client.name : null,
+      socialReason: !!client.socialReason ? client.socialReason : null,
+      rfc: !!client.rfc ? client.rfc : null,
       address: {
         id: !!client.addresses && client.addresses.length ? client.addresses[0].id : null,
         street: !!client.addresses && client.addresses.length ? client.addresses[0].street : null,
@@ -218,8 +220,8 @@ export class ClientsComponent implements OnInit {
         country: !!client.addresses && client.addresses.length ? client.addresses[0].country : null,
         postalCode: !!client.addresses && client.addresses.length ? client.addresses[0].postalCode : null,
       },
-      utilityPercentage: client.utilityPercentage,
-      paymentDays: client.paymentDays,
+      utilityPercentage: !!client.utilityPercentage ? client.utilityPercentage : null,
+      paymentDays: !!client.paymentDays ? client.paymentDays : null,
     });
   }
 

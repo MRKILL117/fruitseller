@@ -39,7 +39,6 @@
     <ng-container *ngIf="!loading.getting; else bigLoading">
         <div class="row justify-content-center" *ngIf="!!products?.length; else noProductsMessage">
             <!-- Filters -->
-            <!-- Filters -->
             <div class="col-12 mb-4">
                 <app-filters [timerTrigger]="true" [filters]="filters" (onSearch)="GetProducts($event)"></app-filters>
             </div>
@@ -49,7 +48,7 @@
                         <tr>
                             <th>Nombre</th>
                             <th>Precio</th>
-                            <th>Impuesto</th>
+                            <th>Tipo</th>
                             <th>Unidad de medida (ventas)</th>
                             <th>Unidad de medida (inventario)</th>
                             <th>Comprador</th>
@@ -60,8 +59,8 @@
                     <tbody>
                         <tr *ngFor="let product of products">
                             <td>{{product.name}}</td>
-                            <td>{{product.price}}</td>
-                            <td>{{product.tax}}</td>
+                            <td>${{product.price | number:"0.2-2"}}</td>
+                            <td>{{!!product.type?.name ? product.type?.name : 'Sin tipo'}}</td>
                             <td>{{product.salesMeasurementType?.name + " - " + product.salesMeasurementType?.abrev}}</td>
                             <td>{{product.inventoryMeasurementType?.name + " - " + product.inventoryMeasurementType?.abrev}}</td>
                             <td>{{product.buyer?.name ? product.buyer?.name : 'No asignado'}}</td>
@@ -188,6 +187,42 @@
                     </div>
                     <div class="col-12 col-sm-6">
                         <div class="form-group">
+                            <label>Tipo de producto <span class="text-danger">*</span></label>
+                            <ng-select
+                                class=""
+                                [items]="productTypes"
+                                bindLabel="name"
+                                bindValue="id"
+                                placeholder="Tipo"
+                                formControlName="productTypeId"
+                            ></ng-select>
+                            <div class="error-messages" *ngIf="form.GetFormControlByName(productForm, 'productTypeId')?.touched && form.GetFormControlByName(productForm, 'productTypeId')?.errors">
+                                <span class="d-block" *ngIf="form.GetFormControlByName(productForm, 'productTypeId')?.errors.required">
+                                    Campo obligatorio
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6">
+                        <div class="form-group">
+                            <label>Comprador <span class="text-danger">*</span></label>
+                            <ng-select
+                                class=""
+                                [items]="buyers"
+                                bindLabel="name"
+                                bindValue="id"
+                                placeholder="Comprador"
+                                formControlName="buyerId"
+                            ></ng-select>
+                            <div class="error-messages" *ngIf="form.GetFormControlByName(productForm, 'buyerId')?.touched && form.GetFormControlByName(productForm, 'buyerId')?.errors">
+                                <span class="d-block" *ngIf="form.GetFormControlByName(productForm, 'buyerId')?.errors.required">
+                                    Campo obligatorio
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6">
+                        <div class="form-group">
                             <label>Código del SAT <span class="text-danger">*</span></label>
                             <div class="input-container">
                                 <i class="input-icon zmdi zmdi-collection-text zmdi-hc-lg"></i>
@@ -286,24 +321,6 @@
                             ></ng-select>
                             <div class="error-messages" *ngIf="form.GetFormControlByName(productForm, 'inventoryMeasurementTypeId')?.touched && form.GetFormControlByName(productForm, 'inventoryMeasurementTypeId')?.errors">
                                 <span class="d-block" *ngIf="form.GetFormControlByName(productForm, 'inventoryMeasurementTypeId')?.errors.required">
-                                    Campo obligatorio
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12">
-                        <div class="form-group">
-                            <label>Comprador <span class="text-danger">*</span></label>
-                            <ng-select
-                                class=""
-                                [items]="buyers"
-                                bindLabel="name"
-                                bindValue="id"
-                                placeholder="Comprador"
-                                formControlName="buyerId"
-                            ></ng-select>
-                            <div class="error-messages" *ngIf="form.GetFormControlByName(productForm, 'buyerId')?.touched && form.GetFormControlByName(productForm, 'buyerId')?.errors">
-                                <span class="d-block" *ngIf="form.GetFormControlByName(productForm, 'buyerId')?.errors.required">
                                     Campo obligatorio
                                 </span>
                             </div>
