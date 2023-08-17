@@ -2,16 +2,14 @@
 
 module.exports = function(Client) {
 
-    Client.CreateOne = function(ctx, client, callback) {
-        const userId = ctx.accessToken.userId;
+    Client.CreateOne = function(client, callback) {
         Client.findOne({
-            where: {rfc: client.rfc, adminId: userId, deleted: false}
+            where: {rfc: client.rfc, deleted: false}
         }, (err, clientFound) => {
             if(err) return callback(err);
     
             if(!!clientFound) return callback('El RFC ya está registrado');
 
-            client.adminId = userId;
             Client.create(client, (err, newClient) => {
                 if(err) return callback(err);
                 
@@ -31,7 +29,7 @@ module.exports = function(Client) {
         });
     }
 
-    Client.CreateArray = function(ctx, clients, callback) {
+    Client.CreateArray = function(clients, callback) {
         let data = {
             clientsFailed: [],
             clientsSuccess: []
@@ -39,7 +37,7 @@ module.exports = function(Client) {
         let cont = 0, limit = clients.length;
         if(!limit) return callback(null, data);
         clients.forEach(client => {
-            Client.CreateOne(ctx, client, (err, newClient) => {
+            Client.CreateOne(client, (err, newClient) => {
                 if(err) {
                     data.clientsFailed.push({client, reason: typeof err === 'string' ? err : null});
                 }
@@ -50,18 +48,12 @@ module.exports = function(Client) {
         });
     }
 
-    Client.GetAll = function(ctx, text, callback) {
-        const userId = ctx.accessToken.userId;
-        let where = {
-            adminId: userId, deleted: false
-        }
+    Client.GetAll = function(text, callback) {
+        let where = {deleted: false};
         if(!!text && text != '*') {
             where['or'] = [
                 {name: {like: `%${text}%`}},
                 {rfc: {like: `%${text}%`}},
-                {state: {like: `%${text}%`}},
-                {country: {like: `%${text}%`}},
-                {postalCode: {like: `%${text}%`}},
             ]
         }
         Client.find({

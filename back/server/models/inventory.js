@@ -6,14 +6,8 @@ var moment = require('moment-timezone');
 module.exports = function(Inventory) {
 
     Inventory.UpsertTodayInventories = function(ctx, callback) {
-        let where = {};
-        if(!!ctx) {
-            const userId = ctx.accessToken.userId;
-            where.adminId = userId;
-        }
         const todayDate = moment().tz(constants.timezone).format(constants.dateFormat);
         Inventory.app.models.Product.find({
-            where,
             include: {
                 relation: 'inventories',
                 scope: {

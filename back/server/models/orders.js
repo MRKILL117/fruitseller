@@ -21,9 +21,7 @@ var isOrderReadyToDeliver = function(order) {
 
 module.exports = function(Orders) {
 
-    Orders.CreateOne = function(ctx, order, callback) {
-        const userId = ctx.accessToken.userId;
-        order.adminId = userId;
+    Orders.CreateOne = function(order, callback) {
         if(!order.clientId && !!order.client) order.clintId = order.client.id;
         Orders.create(order, (err, newOrder) => {
             if(err) return callback(err);
@@ -32,7 +30,7 @@ module.exports = function(Orders) {
         });
     }
 
-    Orders.CreateArray = function(ctx, products, callback) {
+    Orders.CreateArray = function(products, callback) {
         let data = {
             ordersFailed: [],
             ordersSuccess: []
@@ -45,7 +43,7 @@ module.exports = function(Orders) {
             let cont = 0, limit = orders.length;
             if(!limit) return callback(null, data);
             orders.forEach(order => {
-                Orders.CreateOne(ctx, order, (err, newOrder) => {
+                Orders.CreateOne(order, (err, newOrder) => {
                     if(err) {
                         data.ordersFailed.push({order, reason: typeof err === 'string' ? err : null});
                     }
@@ -141,9 +139,8 @@ module.exports = function(Orders) {
         });
     }
 
-    Orders.GetAll = function(ctx, startDate, endDate, statuses = [], clients = [], callback) {
-        const userId = ctx.accessToken.userId;
-        let where = {and: [{adminId: userId}, {deleted: false}]};
+    Orders.GetAll = function(startDate, endDate, statuses = [], clients = [], callback) {
+        let where = {and: [{deleted: false}]};
         if(!!startDate && startDate != '*') where.and.push({date: {gte: startDate}});
         if(!!endDate && endDate != '*') where.and.push({date: {lte: endDate}});
         if(!!statuses && statuses.length) where.and.push({
@@ -162,9 +159,8 @@ module.exports = function(Orders) {
         });
     }
     
-    Orders.GetAllOfPayments = function(ctx, startDate, endDate, statuses = [], clients = [], callback) {
-        const userId = ctx.accessToken.userId;
-        let where = {and: [{adminId: userId}, {deleted: false}, {statusId: {gte: 3}}]};
+    Orders.GetAllOfPayments = function(startDate, endDate, statuses = [], clients = [], callback) {
+        let where = {and: [{deleted: false}, {statusId: {gte: 3}}]};
         if(!!startDate && startDate != '*') where.and.push({date: {gte: startDate}});
         if(!!endDate && endDate != '*') where.and.push({date: {lte: endDate}});
         if(!!statuses && statuses.length) where.and.push({

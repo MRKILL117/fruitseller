@@ -68,11 +68,6 @@
   },
   "validations": [],
   "relations": {
-    "admin": {
-      "type": "belongsTo",
-      "model": "Account",
-      "foreignKey": "adminId"
-    },
     "status": {
       "type": "belongsTo",
       "model": "OrderStatus",
@@ -112,15 +107,6 @@
     "CreateOne": {
       "accepts": [
         {
-          "arg": "ctx",
-          "type": "object",
-          "required": true,
-          "description": "",
-          "http": {
-            "source": "req"
-          }
-        },
-        {
           "arg": "order",
           "type": "object",
           "required": true,
@@ -146,15 +132,6 @@
     "CreateArray": {
       "accepts": [
         {
-          "arg": "ctx",
-          "type": "object",
-          "required": true,
-          "description": "",
-          "http": {
-            "source": "req"
-          }
-        },
-        {
           "arg": "products",
           "type": "array",
           "required": true,
@@ -179,15 +156,6 @@
     },
     "GetAll": {
       "accepts": [
-        {
-          "arg": "ctx",
-          "type": "object",
-          "required": true,
-          "description": "",
-          "http": {
-            "source": "req"
-          }
-        },
         {
           "arg": "startDate",
           "type": "string",
@@ -243,15 +211,6 @@
     },
     "GetAllOfPayments": {
       "accepts": [
-        {
-          "arg": "ctx",
-          "type": "object",
-          "required": true,
-          "description": "",
-          "http": {
-            "source": "req"
-          }
-        },
         {
           "arg": "startDate",
           "type": "string",

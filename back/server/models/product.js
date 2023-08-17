@@ -2,20 +2,18 @@
 
 module.exports = function(Product) {
 
-    Product.CreateOne = function(ctx, product, callback) {
-        const userId = ctx.accessToken.userId;
+    Product.CreateOne = function(product, callback) {
         Product.findOne({
-            where: {name: {like: `%${product.name}%`}, adminId: userId, deleted: false}
+            where: {name: {like: `%${product.name}%`}, deleted: false}
         }, (err, productFound) => {
             if(err) return callback(err);
     
             if(!!productFound) return callback('El producto ya existe');
 
-            Product.app.models.Buyer.CreateOne(ctx, !!product.buyer ? product.buyer : product.buyerId, (err, newBuyer) => {
+            Product.app.models.Buyer.CreateOne(!!product.buyer ? product.buyer : product.buyerId, (err, newBuyer) => {
                 if(err) return callback(err);
 
                 product.buyerId = newBuyer.id;
-                product.adminId = userId;
                 Product.create(product, (err, newproduct) => {
                     if(err) return callback(err);
     
@@ -25,7 +23,7 @@ module.exports = function(Product) {
         });
     }
 
-    Product.CreateArray = function(ctx, products, callback) {
+    Product.CreateArray = function(products, callback) {
         let data = {
             productsFailed: [],
             productsSuccess: []
@@ -44,7 +42,7 @@ module.exports = function(Product) {
                     const measurementType = measurementTypes.find(type => type.name.toLowerCase().includes(product.inventoryMeasurementType.toLowerCase()) || type.abrev.toLowerCase().includes(product.inventoryMeasurementType.toLowerCase()));
                     product.inventoryMeasurementTypeId = !!measurementType ? measurementType.id : null;
                 }
-                Product.CreateOne(ctx, product, (err, newproduct) => {
+                Product.CreateOne(product, (err, newproduct) => {
                     if(err) {
                         data.productsFailed.push({product, reason: typeof err === 'string' ? err : null});
                     }
@@ -56,11 +54,8 @@ module.exports = function(Product) {
         });
     }
 
-    Product.GetAll = function(ctx, callback) {
+    Product.GetAll = function(callback) {
         let where = {deleted: false};
-        if(!!ctx) {
-            where['adminId'] = ctx.accessToken.userId;
-        }
         Product.find({
             where,
             order: 'name ASC'
@@ -71,15 +66,14 @@ module.exports = function(Product) {
         });
     }
 
-    Product.GetAllWithPriceHistory = function(ctx, text = null, startDate = null, endDate = null, callback) {
-        const userId = ctx.accessToken.userId;
-        let where = {adminId: userId, deleted: false};
+    Product.GetAllWithPriceHistory = function(text = null, startDate = null, endDate = null, callback) {
+        let where = {deleted: false};
         let wherePrices = {and: []};
         if(!!text && text != '*') where['name'] = {like: `%${text}%`};
         if(!!startDate && startDate != '*') wherePrices.and.push({date: {gte: startDate}});
         if(!!endDate && endDate != '*') wherePrices.and.push({date: {lte: endDate}});
 
-        Product.app.models.PriceHistory.UpsertTodayPrices(ctx, (err, pricesUPdated) => {
+        Product.app.models.PriceHistory.UpsertTodayPrices((err, pricesUPdated) => {
             if(err) return callback(err);
             
             Product.find({
@@ -101,15 +95,14 @@ module.exports = function(Product) {
         });
     }
 
-    Product.GetAllWithInventories = function(ctx, text = null, startDate = null, endDate = null, callback) {
-        const userId = ctx.accessToken.userId;
-        let where = {adminId: userId, deleted: false};
+    Product.GetAllWithInventories = function(text = null, startDate = null, endDate = null, callback) {
+        let where = {deleted: false};
         let whereInventories = {and: []};
         if(!!text && text != '*') where['name'] = {like: `%${text}%`};
         if(!!startDate && startDate != '*') whereInventories.and.push({date: {gte: startDate}});
         if(!!endDate && endDate != '*') whereInventories.and.push({date: {lte: endDate}});
 
-        Product.app.models.Inventory.UpsertTodayInventories(ctx, (err, inventoriesUpdated) => {
+        Product.app.models.Inventory.UpsertTodayInventories((err, inventoriesUpdated) => {
             if(err) return callback(err);
             
             Product.find({

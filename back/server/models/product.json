@@ -53,11 +53,6 @@
   },
   "validations": [],
   "relations": {
-    "admin": {
-      "type": "belongsTo",
-      "model": "Account",
-      "foreignKey": "adminId"
-    },
     "buyer": {
       "type": "belongsTo",
       "model": "Buyer",
@@ -111,15 +106,6 @@
     "CreateOne": {
       "accepts": [
         {
-          "arg": "ctx",
-          "type": "object",
-          "required": true,
-          "description": "",
-          "http": {
-            "source": "req"
-          }
-        },
-        {
           "arg": "product",
           "type": "object",
           "required": true,
@@ -145,15 +131,6 @@
     "CreateArray": {
       "accepts": [
         {
-          "arg": "ctx",
-          "type": "object",
-          "required": true,
-          "description": "",
-          "http": {
-            "source": "req"
-          }
-        },
-        {
           "arg": "products",
           "type": "array",
           "required": true,
@@ -178,15 +155,6 @@
     },
     "GetAll": {
       "accepts": [
-        {
-          "arg": "ctx",
-          "type": "object",
-          "required": true,
-          "description": "",
-          "http": {
-            "source": "req"
-          }
-        }
       ],
       "returns": [
         {
@@ -201,20 +169,15 @@
         {
           "path": "/",
           "verb": "get"
+        },
+        {
+          "path": "/FilteredBy/Text/:text",
+          "verb": "get"
         }
       ]
     },
     "GetAllWithPriceHistory": {
       "accepts": [
-        {
-          "arg": "ctx",
-          "type": "object",
-          "required": true,
-          "description": "",
-          "http": {
-            "source": "req"
-          }
-        },
         {
           "arg": "text",
           "type": "string",
@@ -256,15 +219,6 @@
     },
     "GetAllWithInventories": {
       "accepts": [
-        {
-          "arg": "ctx",
-          "type": "object",
-          "required": true,
-          "description": "",
-          "http": {
-            "source": "req"
-          }
-        },
         {
           "arg": "text",
           "type": "string",
