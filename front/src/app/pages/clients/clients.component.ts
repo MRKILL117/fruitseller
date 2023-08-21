@@ -188,6 +188,7 @@ export class ClientsComponent implements OnInit {
     this.http.Patch(`Clients`, {client}).subscribe(clientSaved => {
       this.GetClients();
       this.toast.ShowDefaultSuccess(`Cliente actualizado con éxito`);
+      this.clientForm.reset();
       this.modal.CloseModal();
       this.isEditing = false;
     }, err => {

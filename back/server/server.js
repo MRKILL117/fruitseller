@@ -167,6 +167,10 @@ var SeedOrderStatuses = function() {
         id: 5,
         name: 'Incobrable',
       },
+      {
+        id: 6,
+        name: 'Cancelado',
+      },
     ];
     const conditions = [
       {key: 'id'}

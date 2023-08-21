@@ -147,7 +147,7 @@ export class PaymentsComponent implements OnInit {
     }
 
     this.loading.updating = true;
-    this.http.Patch(`/Orders`, {order}).subscribe(orderSaved => {
+    this.http.Patch(`/Orders/${order.id}`, {order}).subscribe(orderSaved => {
       this.toast.ShowDefaultSuccess(`Estatus actualizado`);
       this.ToggleStatusEdition(order);
       this.GetOrders();

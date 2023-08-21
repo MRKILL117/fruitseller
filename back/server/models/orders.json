@@ -64,6 +64,17 @@
       "type": "boolean",
       "required": true,
       "default": false
+    },
+    "deliveredAt": {
+      "type": "string",
+      "required": false
+    },
+    "comments": {
+      "type": "string",
+      "required": false,
+      "mysql": {
+        "dataType": "TEXT"
+      }
     }
   },
   "validations": [],
