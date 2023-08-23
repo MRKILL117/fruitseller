@@ -37,6 +37,8 @@ export class ProductsComponent implements OnInit {
     weightPerPiece: new FormControl('', [Validators.required, priceNumber()]),
     price: new FormControl('', [Validators.required, priceNumber()]),
     tax: new FormControl('', [Validators.required, onlyNumbers()]),
+    minimumInventory: new FormControl('', [Validators.required, onlyNumbers()]),
+    maximumInventory: new FormControl('', [Validators.required, onlyNumbers()]),
     buyerId: new FormControl(null, [Validators.required]),
     salesMeasurementTypeId: new FormControl(null, [Validators.required]),
     inventoryMeasurementTypeId: new FormControl(null, [Validators.required]),

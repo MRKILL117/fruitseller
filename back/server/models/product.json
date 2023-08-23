@@ -43,6 +43,26 @@
         "dataScale": 2
       }
     },
+    "maximumInventory": {
+      "type": "number",
+      "required": true,
+      "default": 1,
+      "mysql": {
+        "dataType": "DECIMAL",
+        "dataPrecision": 8,
+        "dataScale": 2
+      }
+    },
+    "minimumInventory": {
+      "type": "number",
+      "required": true,
+      "default": 1,
+      "mysql": {
+        "dataType": "DECIMAL",
+        "dataPrecision": 8,
+        "dataScale": 2
+      }
+    },
     "satCode": {
       "type": "string"
     },

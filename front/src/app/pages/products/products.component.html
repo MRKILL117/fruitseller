@@ -250,7 +250,7 @@
                                     Campo obligatorio
                                 </span>
                                 <span class="d-block" *ngIf="form.GetFormControlByName(productForm, 'weightPerPiece')?.errors.pricenumber">
-                                    Solo numeros con un maximo de 2 decimales
+                                    Solo números con un maximo de 2 decimales
                                 </span>
                             </div>
                         </div>
@@ -267,7 +267,7 @@
                                     Campo obligatorio
                                 </span>
                                 <span class="d-block" *ngIf="form.GetFormControlByName(productForm, 'price')?.errors.pricenumber">
-                                    Solo numeros con un maximo de 2 decimales
+                                    Solo números con un maximo de 2 decimales
                                 </span>
                             </div>
                         </div>
@@ -322,6 +322,40 @@
                             <div class="error-messages" *ngIf="form.GetFormControlByName(productForm, 'inventoryMeasurementTypeId')?.touched && form.GetFormControlByName(productForm, 'inventoryMeasurementTypeId')?.errors">
                                 <span class="d-block" *ngIf="form.GetFormControlByName(productForm, 'inventoryMeasurementTypeId')?.errors.required">
                                     Campo obligatorio
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6">
+                        <div class="form-group">
+                            <label>Inventario minimo <span class="text-danger">*</span></label>
+                            <div class="input-container">
+                                <i class="input-icon zmdi zmdi-money zmdi-hc-lg"></i>
+                                <input class="form-control" type="text" placeholder="Inventario mínimo" formControlName="minimumInventory" (keyup.enter)="RegisterProduct()">
+                            </div>
+                            <div class="error-messages" *ngIf="form.GetFormControlByName(productForm, 'minimumInventory')?.touched && form.GetFormControlByName(productForm, 'minimumInventory')?.errors">
+                                <span class="d-block" *ngIf="form.GetFormControlByName(productForm, 'minimumInventory')?.errors.required">
+                                    Campo obligatorio
+                                </span>
+                                <span class="d-block" *ngIf="form.GetFormControlByName(productForm, 'minimumInventory')?.errors.onlynumbers">
+                                    Solo números enteros
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6">
+                        <div class="form-group">
+                            <label>Inventario maxímo <span class="text-danger">*</span></label>
+                            <div class="input-container">
+                                <i class="input-icon zmdi zmdi-money zmdi-hc-lg"></i>
+                                <input class="form-control" type="text" placeholder="Inventario maxímo" formControlName="maximumInventory" (keyup.enter)="RegisterProduct()">
+                            </div>
+                            <div class="error-messages" *ngIf="form.GetFormControlByName(productForm, 'maximumInventory')?.touched && form.GetFormControlByName(productForm, 'maximumInventory')?.errors">
+                                <span class="d-block" *ngIf="form.GetFormControlByName(productForm, 'maximumInventory')?.errors.required">
+                                    Campo obligatorio
+                                </span>
+                                <span class="d-block" *ngIf="form.GetFormControlByName(productForm, 'maximumInventory')?.errors.onlynumbers">
+                                    Solo números enteros
                                 </span>
                             </div>
                         </div>
