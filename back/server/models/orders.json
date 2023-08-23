@@ -110,7 +110,8 @@
         "GetOne",
         "Update",
         "Delete",
-        "SetAsDelivered"
+        "SetAsDelivered",
+        "UpdateOrdersStatus"
       ]
     }
   ],
@@ -338,6 +339,35 @@
     },
     "prototype.SetAsDelivered": {
       "accepts": [],
+      "returns": [
+        {
+          "arg": "order",
+          "type": "object",
+          "root": true,
+          "description": ""
+        }
+      ],
+      "description": "",
+      "http": [
+        {
+          "path": "/Deliver",
+          "verb": "patch"
+        }
+      ]
+    },
+    "UpdateOrdersStatus": {
+      "accepts": [
+        {
+          "arg": "ordersIds",
+          "type": "array",
+          "required": true
+        },
+        {
+          "arg": "status",
+          "type": "object",
+          "required": true
+        }
+      ],
       "returns": [
         {
           "arg": "order",

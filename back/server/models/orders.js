@@ -211,7 +211,19 @@ module.exports = function(Orders) {
         this.deliveredAt = moment().tz(constants.timezone).toISOString();
         this.save((err, saved) => {
             if(err) return callback(err);
-            return callback(null, saved);
+            
+            Orders.app.models.Inventory.SubstractItemsFromOrder(this.toJSON(), (err, order) => {
+                if(err) return callback(err);
+                return callback(null, saved);
+            });
+        });
+    }
+
+    Orders.UpdateOrdersStatus = function(ordersIds, status, callback) {
+        Orders.updateAll({id: {inq: ordersIds}}, {statusId: status.id}, (err, ordersUpdated) => {
+            if(err) return callback(err);
+
+            return callback(null, ordersUpdated);
         });
     }
 
