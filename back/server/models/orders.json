@@ -111,7 +111,8 @@
         "Update",
         "Delete",
         "SetAsDelivered",
-        "UpdateOrdersStatus"
+        "UpdateOrdersStatus",
+        "GenerateOrderResume"
       ]
     }
   ],
@@ -381,6 +382,24 @@
         {
           "path": "/Deliver",
           "verb": "patch"
+        }
+      ]
+    },
+    "prototype.GenerateOrderResume": {
+      "accepts": [],
+      "returns": [
+        {
+          "arg": "resume",
+          "type": "object",
+          "required": true,
+          "description": ""
+        }
+      ],
+      "description": "",
+      "http": [
+        {
+          "path": "/Resume",
+          "verb": "get"
         }
       ]
     }

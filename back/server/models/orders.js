@@ -2,6 +2,9 @@
 
 var moment = require('moment-timezone');
 const constants = require('./../assets/constants');
+const PdfService = require('../services/pdf.service');
+var pdfService = new PdfService();
+
 
 var isOrderReadyToDeliver = function(order) {
     let errorMessages = [];
@@ -225,6 +228,10 @@ module.exports = function(Orders) {
 
             return callback(null, ordersUpdated);
         });
+    }
+
+    Orders.prototype.GenerateOrderResume = async function() {
+        return pdfService.GenerateOrderResume(this.toJSON());
     }
 
 };

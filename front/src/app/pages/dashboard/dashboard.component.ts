@@ -48,7 +48,7 @@ export class DashboardComponent implements OnInit {
     },
     {
       title: 'Entradas de mercancía',
-      route: 'products-entarnce',
+      route: 'products-entrance',
       icon: 'zmdi-shopping-cart',
       img: 'shopping.jpg'
     },

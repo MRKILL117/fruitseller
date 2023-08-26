@@ -172,7 +172,8 @@
           "Update": true,
           "prototype.Delete": true,
           "prototype.SetAsDelivered": true,
-          "UpdateOrdersStatus": true
+          "UpdateOrdersStatus": true,
+          "prototype.GenerateOrderResume": true
         }
       }
     }
