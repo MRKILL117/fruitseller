@@ -251,5 +251,9 @@
         }
       }
     }
+  },
+  "Files": {
+    "dataSource": "storage",
+    "public": true
   }
 }
