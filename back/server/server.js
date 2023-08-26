@@ -38,7 +38,7 @@ boot(app, __dirname, function(err) {
 var AutoUpdate = function() {
   const models = app.models();
   const dataSource = app.datasources.mysql;
-  const modelsName = models.map(model => model.modelName);
+  const modelsName = models.filter(model => model.config.dataSource ? model.config.dataSource.name == dataSource.name : false).map(model => model.modelName);
 
   dataSource.autoupdate(modelsName, err => {
     if(err) throw err;
@@ -197,7 +197,7 @@ var SeedProductTypes = function() {
     let cont = 0, limit = productTypes.length;
     productTypes.forEach(type => {
       app.models.ProductType.CreateOne(type, (err, newType) => {
-        if(err) throw err;
+        if(err) rej(err);
         if(++cont == limit) res();
       });
     });
@@ -210,15 +210,15 @@ var SeedFolders = function() {
       'orders-resumes'
     ];
   
-    const File = app.models.File;
+    const Files = app.models.Files;
     let cont = 0, limit = folders.length;
     folders.forEach(folder => {
       // Get the container and if it doesn't exist, then create the container
-      File.getContainer(folder, (err, container) => {
+      Files.getContainer(folder, (err, container) => {
         // Check if the error code is related with "No such file or directory" (ENOENT)
         // and if it does, create the container
         if(err && err.code == "ENOENT") {
-          File.createContainer({name: folder}, (err, newContainer) => {
+          Files.createContainer({name: folder}, (err, newContainer) => {
             if(err) rej(err);
             cont++;
             if(cont == limit) res();
