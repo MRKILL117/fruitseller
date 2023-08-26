@@ -204,6 +204,35 @@ var SeedProductTypes = function() {
   });
 }
 
+var SeedFolders = function() {
+  return new Promise((res, rej) => {
+    const folders = [
+      'orders-resumes'
+    ];
+  
+    const File = app.models.File;
+    let cont = 0, limit = folders.length;
+    folders.forEach(folder => {
+      // Get the container and if it doesn't exist, then create the container
+      File.getContainer(folder, (err, container) => {
+        // Check if the error code is related with "No such file or directory" (ENOENT)
+        // and if it does, create the container
+        if(err && err.code == "ENOENT") {
+          File.createContainer({name: folder}, (err, newContainer) => {
+            if(err) rej(err);
+            cont++;
+            if(cont == limit) res();
+          });
+        }
+        else {
+          cont++;
+          if(cont == limit) res();
+        }
+      });
+    })
+  });
+}
+
 var InitializeCornjobs = function() {
   return new Promise((res, rej) => {
     app.models.PriceHistory.DailyCronJobToUpdatePrices();
@@ -214,6 +243,7 @@ var InitializeCornjobs = function() {
 var AutoFillData = function() {
   return new Promise(async (res, rej) => {
     try {
+      await SeedFolders();
       await SeedRoles();
       await SeedUsers();
       await SeedOrderStatuses();
