@@ -51,7 +51,7 @@ var AutoUpdate = function() {
         throw err;
       });
     }
-  })
+  });
 }
 
 /*
@@ -251,7 +251,7 @@ var AutoFillData = function() {
       await SeedProductTypes();
       await InitializeCornjobs();
     } catch (err) {
-      rej(err);
+      console.error("Error", err);
     }
     res();
   });
