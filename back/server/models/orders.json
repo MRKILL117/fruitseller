@@ -295,7 +295,7 @@
         }
       ]
     },
-    "Update": {
+    "prototype.Update": {
       "accepts": [
         {
           "arg": "order",
@@ -380,7 +380,7 @@
       "description": "",
       "http": [
         {
-          "path": "/Deliver",
+          "path": "/UpdateStatus",
           "verb": "patch"
         }
       ]

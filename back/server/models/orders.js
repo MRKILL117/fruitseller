@@ -188,8 +188,8 @@ module.exports = function(Orders) {
 
     Orders.prototype.Update = function(order, callback) {
         if(!!this.deliveredAt) {
-            const delveredAt = moment(this.deliveredAt).tz(constants.timezone).add(2, 'days');
-            if(moment().tz(constants.timezone).isAfter(delveredAt)) return callback(`No se pueden editar ordenes que se entregaron hace más de 2 días`);
+            const limitDateToEdit = moment(this.deliveredAt).tz(constants.timezone).add(2, 'days');
+            if(moment().tz(constants.timezone).isAfter(limitDateToEdit)) return callback(`No se pueden editar ordenes que se entregaron hace más de 2 días`);
         }
         Orders.upsert(order, (err, orderUpdated) => {
             if(err) return callback(err);

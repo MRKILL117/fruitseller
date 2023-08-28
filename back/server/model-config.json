@@ -169,7 +169,7 @@
           "GetAll": true,
           "GetAllOfPayments": true,
           "prototype.GetOne": true,
-          "Update": true,
+          "prototype.Update": true,
           "prototype.Delete": true,
           "prototype.SetAsDelivered": true,
           "UpdateOrdersStatus": true,
