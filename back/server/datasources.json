@@ -4,9 +4,15 @@
     "port": 3306,
     "url": "",
     "database": "fruitseller",
-    "password": "qq+FG+XjMYLH",
+    "password": "",
     "name": "mysql",
     "user": "fruitselleruser",
     "connector": "mysql"
+  },
+  "storage": {
+    "name": "storage",
+    "connector": "loopback-component-storage",
+    "provider": "filesystem",
+    "root": "./server/files"
   }
 }

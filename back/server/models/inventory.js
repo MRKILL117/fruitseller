@@ -6,14 +6,8 @@ var moment = require('moment-timezone');
 module.exports = function(Inventory) {
 
     Inventory.UpsertTodayInventories = function(ctx, callback) {
-        let where = {};
-        if(!!ctx) {
-            const userId = ctx.accessToken.userId;
-            where.adminId = userId;
-        }
         const todayDate = moment().tz(constants.timezone).format(constants.dateFormat);
         Inventory.app.models.Product.find({
-            where,
             include: {
                 relation: 'inventories',
                 scope: {
@@ -50,6 +44,32 @@ module.exports = function(Inventory) {
             if(err) return callback(err);
             
             return callback(null, saved);
+        });
+    }
+
+    Inventory.SubstractItemsFromOrder = function(order, callback) {
+        if(!order || !order.items || !order.items.length) return callback(`La orden no existe o no tiene items`);
+        let cont = 0, limit = order.items.length;
+        order.items.forEach(item => {
+            let quantity = 0;
+            switch (item.product.salesMeasurementType.abrev) {
+                case 'kg': quantity = item.weight; break;
+                case 'pz': quantity = item.quantity; break;
+            }
+            Inventory.findOne({
+                where: {
+                    productId: item.product.id
+                }
+            }, (err, inventory) => {
+                if(err) return callback(err);
+                
+                inventory.quantity -= quantity;
+                inventory.save((err, saved) => {
+                    if(err) return callback(err);
+
+                    if(++cont == limit) return callback(null, order);
+                });
+            });
         });
     }
 

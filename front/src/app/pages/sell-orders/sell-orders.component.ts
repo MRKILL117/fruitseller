@@ -93,20 +93,12 @@ export class SellOrdersComponent implements OnInit {
   }
 
   InitializeFilters() {
-    // Text filter
-    // this.filters.push({
-    //   type: 'text',
-    //   name: 'text',
-    //   placeholder: 'Buscar'
-    // });
-    // Start date filter
     this.filters.push({
       type: 'datepicker',
       name: 'startDate',
       placeholder: 'Fecha de inicio',
       config: null
     });
-    // End date filter
     this.filters.push({
       type: 'datepicker',
       name: 'endDate',
@@ -209,21 +201,57 @@ export class SellOrdersComponent implements OnInit {
     FILE_READER.readAsText(file, 'ISO-8859-3');
   }
 
+  GenerateClientAddress(address: any) {
+    if(!!address) return address.street + " #" + address.externalNumber + (!!address.internalNumber ? (" int. " + address.internalNumber) : "")
+    return '';
+  }
+
   GenerateCsv() {
-    let headers: any = ['id', 'Estatus', 'Fecha', 'Cliente', 'Impuestos', 'Subtotal', 'Total'];
-    let keys: any = ['id', 'status', 'date', 'client', 'taxes', 'subtotal', 'total'];
-    let orders: Array<any> = this.orders.map(order => {
-      return {
-        id: order.id,
-        status: order.status?.name,
-        date: moment(order.date).format('DD/MM/YYYY'),
-        client: order.client?.name,
-        taxes: `$${order.taxes}`,
-        subtotal: `$${order.subtotal}`,
-        total: `$${order.total}`,
+    let headers: any = ['id', 'Estado', 'Fecha', 'Cliente', 'Direccion', 'Producto', 'Piezas', 'Kilos'];
+    let keys: any = ['id', 'status', 'date', 'client', 'address', 'product', 'quantity', 'weight'];
+    let rows: Array<any> = [];
+    this.orders.forEach(order => {
+      if(!!order.items?.length) {
+        order.items.forEach((item: any) => {
+          let csvRow: any = null;
+          csvRow = {
+            id: order.id,
+            status: order.status?.name,
+            date: moment(order.date).format('DD/MM/YYYY'),
+            client: order.client?.name,
+            address: this.GenerateClientAddress(order.address),
+            product: !!item.product?.name ? item.product?.name : 'Sin producto',
+            quantity: `${!!item.quantity ? item.quantity : 0}`,
+            weight: `${!!item.weight ? item.weight : 0}`,
+            taxes: `$${order.taxes}`,
+            subtotal: `$${order.subtotal}`,
+            total: `$${order.total}`,
+          }
+          rows.push(csvRow);
+        });
       }
     });
-    this.csv.GenerateCSV("ordenes_de_venta", orders, keys, headers);
+    this.csv.GenerateCSV("ordenes_de_venta", rows, keys, headers);
+  }
+
+  DownloadOrderResume(order: any) {
+    if(!!this.loading.generating) return;
+    this.loading.generating = order.id;
+    this.http.GetFile(`/Orders/${order.id}/Resume`).subscribe((file: any) => {
+      const blob = new Blob([file], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `ficha_orden_${order.id}`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      this.loading.generating = null;
+    }, err => {
+      console.error("Error generating order pdf", err);
+      this.toast.ShowDefaultDanger(`Error al generar PDF`);
+      this.loading.generating = null;
+    });
   }
 
 }

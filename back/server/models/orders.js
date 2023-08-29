@@ -2,6 +2,9 @@
 
 var moment = require('moment-timezone');
 const constants = require('./../assets/constants');
+const PdfService = require('../services/pdf.service');
+var pdfService = new PdfService();
+
 
 var isOrderReadyToDeliver = function(order) {
     let errorMessages = [];
@@ -21,9 +24,7 @@ var isOrderReadyToDeliver = function(order) {
 
 module.exports = function(Orders) {
 
-    Orders.CreateOne = function(ctx, order, callback) {
-        const userId = ctx.accessToken.userId;
-        order.adminId = userId;
+    Orders.CreateOne = function(order, callback) {
         if(!order.clientId && !!order.client) order.clintId = order.client.id;
         Orders.create(order, (err, newOrder) => {
             if(err) return callback(err);
@@ -32,7 +33,7 @@ module.exports = function(Orders) {
         });
     }
 
-    Orders.CreateArray = function(ctx, products, callback) {
+    Orders.CreateArray = function(products, callback) {
         let data = {
             ordersFailed: [],
             ordersSuccess: []
@@ -45,7 +46,7 @@ module.exports = function(Orders) {
             let cont = 0, limit = orders.length;
             if(!limit) return callback(null, data);
             orders.forEach(order => {
-                Orders.CreateOne(ctx, order, (err, newOrder) => {
+                Orders.CreateOne(order, (err, newOrder) => {
                     if(err) {
                         data.ordersFailed.push({order, reason: typeof err === 'string' ? err : null});
                     }
@@ -141,9 +142,8 @@ module.exports = function(Orders) {
         });
     }
 
-    Orders.GetAll = function(ctx, startDate, endDate, statuses = [], clients = [], callback) {
-        const userId = ctx.accessToken.userId;
-        let where = {and: [{adminId: userId}, {deleted: false}]};
+    Orders.GetAll = function(startDate, endDate, statuses = [], clients = [], callback) {
+        let where = {and: [{deleted: false}]};
         if(!!startDate && startDate != '*') where.and.push({date: {gte: startDate}});
         if(!!endDate && endDate != '*') where.and.push({date: {lte: endDate}});
         if(!!statuses && statuses.length) where.and.push({
@@ -162,9 +162,8 @@ module.exports = function(Orders) {
         });
     }
     
-    Orders.GetAllOfPayments = function(ctx, startDate, endDate, statuses = [], clients = [], callback) {
-        const userId = ctx.accessToken.userId;
-        let where = {and: [{adminId: userId}, {deleted: false}, {statusId: {gte: 3}}]};
+    Orders.GetAllOfPayments = function(startDate, endDate, statuses = [], clients = [], callback) {
+        let where = {and: [{deleted: false}, {statusId: {gte: 3}}]};
         if(!!startDate && startDate != '*') where.and.push({date: {gte: startDate}});
         if(!!endDate && endDate != '*') where.and.push({date: {lte: endDate}});
         if(!!statuses && statuses.length) where.and.push({
@@ -187,7 +186,11 @@ module.exports = function(Orders) {
         return callback(null, this);
     }
 
-    Orders.Update = function(order, callback) {
+    Orders.prototype.Update = function(order, callback) {
+        if(!!this.deliveredAt) {
+            const limitDateToEdit = moment(this.deliveredAt).tz(constants.timezone).add(2, 'days');
+            if(moment().tz(constants.timezone).isAfter(limitDateToEdit)) return callback(`No se pueden editar ordenes que se entregaron hace más de 2 días`);
+        }
         Orders.upsert(order, (err, orderUpdated) => {
             if(err) return callback(err);
             
@@ -208,9 +211,47 @@ module.exports = function(Orders) {
         if(!!(errorMessage = isOrderReadyToDeliver(this))) return callback(errorMessage);
         if(!!this.actualClient().paymentDays && this.actualClient().paymentDays > 0) this.statusId = 3;
         else this.statusId = 4;
+        this.deliveredAt = moment().tz(constants.timezone).toISOString();
         this.save((err, saved) => {
             if(err) return callback(err);
-            return callback(null, saved);
+            
+            Orders.app.models.Inventory.SubstractItemsFromOrder(this.toJSON(), (err, order) => {
+                if(err) return callback(err);
+                return callback(null, saved);
+            });
+        });
+    }
+
+    Orders.UpdateOrdersStatus = function(ordersIds, status, callback) {
+        Orders.updateAll({id: {inq: ordersIds}}, {statusId: status.id}, (err, ordersUpdated) => {
+            if(err) return callback(err);
+
+            return callback(null, ordersUpdated);
+        });
+    }
+
+    Orders.prototype.GenerateOrderResume = async function(res) {
+        try {
+            let data = await pdfService.GenerateOrderResume(this.toJSON());
+            res.setHeader('Content-Type', 'application/pdf');
+            res.setHeader('Content-Disposition', `attachment; filename=ficha_orden_${this.id}.pdf`);
+            res.send(Buffer.from(data.file, 'binary'));
+        } catch (err) {
+            console.error("Error generating pdf", err);
+            res.status(500).send('Error generating PDF');
+        }
+    }
+
+    Orders.GenerateResumes = async function(ordersIds) {
+        let ordersResumes = [];
+        Orders.find({
+            where: {id: {inq: ordersIds}}
+        }, (err, orders) => {
+            if(err) throw err;
+
+            orders.forEach(async order => {
+                ordersResumes.push(await pdfService.GenerateOrderResume(order.toJSON()));
+            });
         });
     }
 

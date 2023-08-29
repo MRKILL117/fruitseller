@@ -9,7 +9,8 @@
     "include": [
       "salesMeasurementType",
       "inventoryMeasurementType",
-      "buyer"
+      "buyer",
+      "type"
     ]
   },
   "properties": {
@@ -42,6 +43,26 @@
         "dataScale": 2
       }
     },
+    "maximumInventory": {
+      "type": "number",
+      "required": true,
+      "default": 1,
+      "mysql": {
+        "dataType": "DECIMAL",
+        "dataPrecision": 8,
+        "dataScale": 2
+      }
+    },
+    "minimumInventory": {
+      "type": "number",
+      "required": true,
+      "default": 1,
+      "mysql": {
+        "dataType": "DECIMAL",
+        "dataPrecision": 8,
+        "dataScale": 2
+      }
+    },
     "satCode": {
       "type": "string"
     },
@@ -53,11 +74,6 @@
   },
   "validations": [],
   "relations": {
-    "admin": {
-      "type": "belongsTo",
-      "model": "Account",
-      "foreignKey": "adminId"
-    },
     "buyer": {
       "type": "belongsTo",
       "model": "Buyer",
@@ -82,6 +98,11 @@
       "type": "hasMany",
       "model": "Inventory",
       "foreignKey": "productId"
+    },
+    "type": {
+      "type": "belongsTo",
+      "model": "ProductType",
+      "foreignKey": "productTypeId"
     }
   },
   "acls": [
@@ -111,15 +132,6 @@
     "CreateOne": {
       "accepts": [
         {
-          "arg": "ctx",
-          "type": "object",
-          "required": true,
-          "description": "",
-          "http": {
-            "source": "req"
-          }
-        },
-        {
           "arg": "product",
           "type": "object",
           "required": true,
@@ -145,15 +157,6 @@
     "CreateArray": {
       "accepts": [
         {
-          "arg": "ctx",
-          "type": "object",
-          "required": true,
-          "description": "",
-          "http": {
-            "source": "req"
-          }
-        },
-        {
           "arg": "products",
           "type": "array",
           "required": true,
@@ -178,15 +181,6 @@
     },
     "GetAll": {
       "accepts": [
-        {
-          "arg": "ctx",
-          "type": "object",
-          "required": true,
-          "description": "",
-          "http": {
-            "source": "req"
-          }
-        }
       ],
       "returns": [
         {
@@ -201,20 +195,15 @@
         {
           "path": "/",
           "verb": "get"
+        },
+        {
+          "path": "/FilteredBy/Text/:text",
+          "verb": "get"
         }
       ]
     },
     "GetAllWithPriceHistory": {
       "accepts": [
-        {
-          "arg": "ctx",
-          "type": "object",
-          "required": true,
-          "description": "",
-          "http": {
-            "source": "req"
-          }
-        },
         {
           "arg": "text",
           "type": "string",
@@ -256,15 +245,6 @@
     },
     "GetAllWithInventories": {
       "accepts": [
-        {
-          "arg": "ctx",
-          "type": "object",
-          "required": true,
-          "description": "",
-          "http": {
-            "source": "req"
-          }
-        },
         {
           "arg": "text",
           "type": "string",

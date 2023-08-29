@@ -18,9 +18,15 @@ export class PaymentsComponent implements OnInit {
   orders: Array<any> = [];
   orderStatuses: Array<any> = [];
   filters: Array<filter> = [];
+  globalStatus: any = null;
   loading: any = {
+    updatingOrders: false,
     updating: false,
     getting: true
+  }
+
+  public get areSomeOrdersSelected(): boolean {
+    return !!this.orders.length && this.orders.some(order => !!order.isSelected);
   }
 
   constructor(
@@ -147,7 +153,7 @@ export class PaymentsComponent implements OnInit {
     }
 
     this.loading.updating = true;
-    this.http.Patch(`/Orders`, {order}).subscribe(orderSaved => {
+    this.http.Patch(`/Orders/${order.id}`, {order}).subscribe(orderSaved => {
       this.toast.ShowDefaultSuccess(`Estatus actualizado`);
       this.ToggleStatusEdition(order);
       this.GetOrders();
@@ -155,8 +161,21 @@ export class PaymentsComponent implements OnInit {
     }, err => {
       console.error("Error updating order status", err);
       this.loading.updating = false;
-
     });
+  }
+
+  SaveOrdersStatuses() {
+    let ordersIds = this.orders.filter(order => !!order.isSelected).map(order => order.id);
+    this.loading.updatingOrders = true;
+    this.http.Patch(`/Orders/UpdateStatus`, {ordersIds, status: this.globalStatus}).subscribe(updated => {
+      this.toast.ShowDefaultSuccess(`Ordenes actualizadas correctamente`);
+      this.GetOrders();
+      this.loading.updatingOrders = false;
+    }, err => {
+      console.error("Error updating orders status", err);
+      this.toast.ShowDefaultDanger(`Error al actualizar el estado de las ordenes`);
+      this.loading.updatingOrders = false;
+    })
   }
 
 }

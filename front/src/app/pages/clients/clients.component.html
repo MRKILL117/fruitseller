@@ -46,6 +46,7 @@
                 <thead class="table-thead">
                     <tr>
                         <th>Nombre</th>
+                        <th>Razón social</th>
                         <th>RFC</th>
                         <th>Dirección principal</th>
                         <th>CP</th>
@@ -59,6 +60,7 @@
                 <tbody>
                     <tr *ngFor="let client of clients">
                         <td>{{client.name}}</td>
+                        <td>{{client.socialReason}}</td>
                         <td>{{client.rfc}}</td>
                         <td>{{GenerateClientAddress(client)}}</td>
                         <td>{{client.addresses[0]?.postalCode}}</td>
@@ -194,6 +196,20 @@
                     </div>
                     <div class="col-12">
                         <div class="form-group">
+                            <label>Razón social <span class="text-danger">*</span></label> 
+                            <div class="input-container">
+                                <i class="input-icon zmdi zmdi-account-o zmdi-hc-lg"></i>
+                                <input class="form-control" type="text" placeholder="Razón social del cliente" formControlName="socialReason" (keyup.enter)="RegisterClient()">
+                            </div>
+                            <div class="error-messages" *ngIf="form.GetFormControlByName(clientForm, 'socialReason')?.touched && form.GetFormControlByName(clientForm, 'socialReason')?.errors">
+                                <span class="d-block" *ngIf="form.GetFormControlByName(clientForm, 'socialReason')?.errors.required">
+                                    Campo obligatorio
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-group">
                             <label>RFC <span class="text-danger">*</span></label>
                             <div class="input-container">
                                 <i class="input-icon zmdi zmdi-account-o zmdi-hc-lg"></i>
@@ -205,12 +221,6 @@
                                 </span>
                                 <span class="d-block" *ngIf="form.GetFormControlByName(clientForm, 'rfc')?.errors.pattern">
                                     Valor con formato inválido
-                                </span>
-                                <span class="d-block" *ngIf="form.GetFormControlByName(clientForm, 'postalCode')?.errors.minlength">
-                                    Mínimo {{form.GetFormControlByName(clientForm, 'postalCode')?.errors.minlength.requiredLength}} caracteres
-                                </span>
-                                <span class="d-block" *ngIf="form.GetFormControlByName(clientForm, 'postalCode')?.errors.maxlength">
-                                    Máximo {{form.GetFormControlByName(clientForm, 'postalCode')?.errors.maxlength.requiredLength}} caracteres
                                 </span>
                             </div>
                         </div>

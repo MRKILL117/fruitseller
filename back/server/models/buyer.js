@@ -2,44 +2,44 @@
 
 module.exports = function(Buyer) {
 
-    Buyer.CreateOne = function(ctx, buyer, callback) {
-        const userId = ctx.accessToken.userId;
-        let where = {
-            adminId: userId,
-            deleted: false
-        };
+    Buyer.CreateOne = function(buyer, callback) {
+        let where = {deleted: false};
         if(typeof buyer === 'object') where['name'] = {like: `%${buyer.name}%`};
         else if(typeof buyer === 'string') {
             where['name'] = {like: `%${buyer}%`};
             buyer = {name: buyer};
         }
         else where['id'] = buyer;
-        buyer.adminId = userId;
-        Buyer.findOrCreate({where}, buyer, (err, newBuyer) => {
+        Buyer.findOne({where}, (err, buyerFound) => {
             if(err) return callback(err);
+            
+            if(!!buyerFound) return callback(null, buyerFound);
+            Buyer.create(buyer, (err, newBuyer) => {
+                if(err) return callback(err);
 
-            let cont = 0, limit = !!buyer.products ? buyer.products.length : 0;
-            if(!limit) return callback(null, newBuyer);
-            buyer.products.forEach(product => {
-                let where = {deleted: false};
-                if(typeof product === 'string') where['name'] = {like: `${product}`};
-                else if(typeof product === 'object') where['id'] = product.id;
-                Buyer.app.models.Product.findOne({where}, (err, productInstance) => {
-                    if(err) return callback(err);
-                    
-                    if(!!productInstance && !productInstance.buyerId) {
-                        productInstance.buyerId = newBuyer.id;
-                        productInstance.save((err, saved) => {
-                            if(err) return callback(err);
-                            if(++cont == limit) return callback(null, newBuyer);
-                        });
-                    } else if(++cont == limit) return callback(null, newBuyer);
+                let cont = 0, limit = !!buyer.products ? buyer.products.length : 0;
+                if(!limit) return callback(null, newBuyer);
+                buyer.products.forEach(product => {
+                    let where = {deleted: false};
+                    if(typeof product === 'string') where['name'] = {like: `${product}`};
+                    else if(typeof product === 'object') where['id'] = product.id;
+                    Buyer.app.models.Product.findOne({where}, (err, productInstance) => {
+                        if(err) return callback(err);
+                        
+                        if(!!productInstance && !productInstance.buyerId) {
+                            productInstance.buyerId = newBuyer.id;
+                            productInstance.save((err, saved) => {
+                                if(err) return callback(err);
+                                if(++cont == limit) return callback(null, newBuyer);
+                            });
+                        } else if(++cont == limit) return callback(null, newBuyer);
+                    });
                 });
             });
         });
     }
 
-    Buyer.CreateArray = function(ctx, buyers, callback) {
+    Buyer.CreateArray = function(buyers, callback) {
         let data = {
             buyersFailed: [],
             buyersSuccess: []
@@ -47,7 +47,7 @@ module.exports = function(Buyer) {
         let cont = 0, limit = buyers.length;
         if(!limit) return callback(null, data);
         buyers.forEach(buyer => {
-            Buyer.CreateOne(ctx, buyer, (err, newBuyer) => {
+            Buyer.CreateOne(buyer, (err, newBuyer) => {
                 if(err) {
                     data.buyersFailed.push({buyer, reason: typeof err === 'string' ? err : null});
                 }
@@ -58,10 +58,9 @@ module.exports = function(Buyer) {
         });
     }
 
-    Buyer.GetAll = function(ctx, callback) {
-        const userId = ctx.accessToken.userId;
+    Buyer.GetAll = function(callback) {
         Buyer.find({
-            where: {adminId: userId, deleted: false},
+            where: {deleted: false},
             include: {
                 relation: 'products',
                 scope: {

@@ -58,9 +58,13 @@
         "sharedMethods": {
           "*": false,
           "CreateUserWithRole": true,
-          "GetAllAccounts": true,
+          "GetAll": true,
           "LogIn": true,
-          "LogOut": true
+          "LogOut": true,
+          "GetRoles": true,
+          "prototype.Update": true,
+          "prototype.Delete": true,
+          "prototype.ToggleEnabled": true
         }
       }
     }
@@ -116,6 +120,23 @@
       }
     }
   },
+  "ProductType": {
+    "dataSource": "mysql",
+    "public": true,
+    "options": {
+      "allowEternalTokens": true,
+      "validateUpsert": true,
+      "remoting": {
+        "sharedMethods": {
+          "*": false,
+          "CreateOne": true,
+          "GetAll": true,
+          "Update": true,
+          "prototype.Delete": true
+        }
+      }
+    }
+  },
   "Buyer": {
     "dataSource": "mysql",
     "public": true,
@@ -148,9 +169,11 @@
           "GetAll": true,
           "GetAllOfPayments": true,
           "prototype.GetOne": true,
-          "Update": true,
+          "prototype.Update": true,
           "prototype.Delete": true,
-          "prototype.SetAsDelivered": true
+          "prototype.SetAsDelivered": true,
+          "UpdateOrdersStatus": true,
+          "prototype.GenerateOrderResume": true
         }
       }
     }
@@ -228,5 +251,9 @@
         }
       }
     }
+  },
+  "Files": {
+    "dataSource": "storage",
+    "public": true
   }
 }

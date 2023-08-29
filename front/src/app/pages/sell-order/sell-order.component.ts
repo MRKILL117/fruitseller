@@ -164,7 +164,7 @@ export class SellOrderComponent implements OnInit {
       total: this.orderTotal,
       statusId: this.GetOrderStatusId(),
     }
-    this.http.Patch(`Orders`, {order}).subscribe(newOrder => {
+    this.http.Patch(`Orders/${order.id}`, {order}).subscribe(newOrder => {
       this.toast.ShowDefaultSuccess(`Orden creada exitosamente`);
       this.nav.GoToRoleRoute('sell-orders');
     }, err => {

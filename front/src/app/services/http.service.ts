@@ -36,6 +36,10 @@ export class HttpService {
   public Get(endpoint: string, useToken: boolean = true) {
     return this.http.get(this.GetEndpointFullUrl(endpoint), {headers: this.headers});
   }
+
+  public GetFile(endpoint: string) {
+    return this.http.get(this.GetEndpointFullUrl(endpoint), {headers: this.headers, responseType: 'blob' as 'json'});
+  }
   
   public Patch(endpoint: string, body: any, useToken: boolean = true) {
     return this.http.patch(this.GetEndpointFullUrl(endpoint), body, {headers: this.headers});

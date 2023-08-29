@@ -12,6 +12,11 @@ export class DashboardComponent implements OnInit {
   user: any = null;
   pages: Array<any> = [
     {
+      title: 'Usuarios',
+      route: 'users',
+      icon: 'zmdi-accounts',
+    },
+    {
       title: 'Clientes',
       route: 'clients',
       icon: 'zmdi-accounts',
@@ -42,6 +47,12 @@ export class DashboardComponent implements OnInit {
       img: 'shopping.jpg'
     },
     {
+      title: 'Entradas de mercancía',
+      route: 'products-entrance',
+      icon: 'zmdi-shopping-cart',
+      img: 'shopping.jpg'
+    },
+    {
       title: 'Lista de precios',
       route: 'price-list',
       icon: 'zmdi-money',
@@ -63,6 +74,12 @@ export class DashboardComponent implements OnInit {
       title: 'Facturación',
       route: 'invoicing',
       icon: 'zmdi-money-box',
+      img: ''
+    },
+    {
+      title: 'Configuración',
+      route: 'settings',
+      icon: 'zmdi-settings',
       img: ''
     },
   ]

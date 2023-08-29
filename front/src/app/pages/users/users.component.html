@@ -1,0 +1,241 @@
+<div class="content">
+    <div class="d-flex align-items-center justify-content-between">
+        <div class="page-title">
+            <i class="zmdi zmdi-home zmdi-hc-lg mr-2 clickeable" (click)="GoHome()"></i>
+            Mis usuarios
+        </div>
+
+        <div class="d-flex" style="gap: 12px;">
+            <button class="btn btn-success" (click)="modal.OpenModal(addOrEditUserModal)">
+                <i class="zmdi zmdi-plus-circle-o zmdi-hc-lg mr-2"></i>
+                Agregar
+            </button>
+            <!-- <div class="clickeable px-2" id="csvClientsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <button class="btn btn-success">
+                    <i class="zmdi zmdi-file zmdi-hc-lg mr-2"></i>
+                    CSV
+                </button>
+            
+                <div class="dropdown-menu px-1 py-1" aria-labelledby="csvClientsDropdown">
+                    <div class="menu-list">
+                        <div class="d-flex align-items-center px-3 my-1 clickeable-hover" (click)="DownloadTemplate()">
+                            <i class="zmdi zmdi-file-text"></i>
+                            <span class="pl-2">Descargar plantilla</span>
+                        </div>
+                        <div class="d-flex align-items-center px-3 my-1 clickeable-hover" (click)="modal.OpenModal(addClientsByCsvModal)">
+                            <i class="zmdi zmdi-file-plus"></i>
+                            <span class="pl-2">Subir archivo</span>
+                        </div>
+                        <div class="d-flex align-items-center px-3 my-1 clickeable-hover" (click)="GenerateCsv()">
+                            <i class="zmdi zmdi-download"></i>
+                            <span class="pl-2">Exportar usuarios</span>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <!-- Filters -->
+        <div class="col-12 col-lg-11 mt-3 mb-4">
+            <app-filters [timerTrigger]="true" [filters]="filters" (onSearch)="GetUsers($event)"></app-filters>
+        </div>
+        <div class="col-12 col-lg-11" *ngIf="!loading.getting; else bigLoading">
+            <table class="table table-striped" *ngIf="!!users?.length; else noUsersMessage">
+                <thead class="table-thead">
+                    <tr>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Rol</th>
+                        <th>Estatus</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                
+                <tbody>
+                    <tr *ngFor="let user of users">
+                        <td>{{user.username}}</td>
+                        <td>{{user.email}}</td>
+                        <td>{{user.role?.name}}</td>
+                        <td>{{user.isEnabled ? 'Activo' : 'Deshabilitado'}}</td>
+                        <td>
+                            <div class="d-flex align-items-center justify-content-center">
+                                <div class="sign-in-disabled-container clickeable"
+                                    *ngIf="loading.de_activating == null || loading.de_activating != user.id"
+                                    [tooltip]="GetTooltipUserLabel(user)"
+                                    placement="top"
+                                    [adaptivePosition]="true"
+                                    (click)="ToggleEnabled(user)">
+                                    <i class="zmdi zmdi-sign-in zmdi-hc-lg"></i>
+                                    <i class="zmdi zmdi-block-alt zmdi-hc-2x" [ngClass]="{'upper': user.isEnabled, 'd-none': !user.isEnabled}"></i>
+                                </div>
+                                <i *ngIf="loading.de_activating == user.id" class="zmdi zmdi-spinner zmdi-hc-lg zmdi-hc-spin"></i>
+                                <i class="zmdi zmdi-edit zmdi-hc-lg clickeable mx-2" (click)="EditUser(user); modal.OpenModal(addOrEditUserModal)"></i>
+                                <i class="zmdi zmdi-delete zmdi-hc-lg clickeable mx-2" (click)="selectedUser = user; modal.OpenModal(deleteUserModal)"></i>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<ng-template #bigLoading>
+    <div class="col-12 w-100 h-75 d-flex align-items-center justify-content-center" style="min-height: min-content;">
+        <i class="zmdi zmdi-spinner zmdi-hc-5x zmdi-hc-spin"></i>
+    </div>
+</ng-template>
+<ng-template #noUsersMessage>
+    <div class="col-12 col-lg-11">
+        <div class="no-items-message">
+            No se encontraron usuarios
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #addClientsByCsvModal>
+    <div class="modal-header">
+        <h2 class="modal-title">Agregar por CSV</h2>
+        <i class="close-modal-button zmdi zmdi-close-circle-o zmdi-hc-2x clickeable" (click)="modal.CloseModal(loading.updating)"></i>
+    </div>
+    <div class="modal-body">
+        <div class="d-flex flex-column justify-content-between">
+
+            <div class="d-flex align-items-center justify-content-between">
+                <button class="btn btn-outline-primary" (click)="csvFileInput.click()">
+                    Seleccionar archivo
+                </button>
+                <span>
+                    {{usersCsv?.name}}
+                </span>
+                <input class="d-none" type="file" accept=".csv" (change)="OnFileSelected($event)" #csvFileInput>
+            </div>
+
+            <div class="modal-table" *ngIf="!!usersFailed?.length">
+                <div class="my-4 text-center" style="font-size: 1.25rem; font-weight: 700;">
+                    Error al crear usuarios
+                </div>
+                <table class="table table-danger table-striped">
+                    <thead class="table-thead bg-danger">
+                        <tr>
+                            <th>Nombre</th>
+                            <th>RFC</th>
+                            <th>Motivo</th>
+                        </tr>
+                    </thead>
+                    
+                    <tbody>
+                        <tr *ngFor="let user of usersFailed">
+                            <td>{{user.user.name}}</td>
+                            <td>{{user.user.rfc}}</td>
+                            <td>{{!!user.reason ? user.reason : 'Error al crear'}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="modal.CloseModal()">
+            <span *ngIf="!usersFailed?.length">Cancelar</span>
+            <span *ngIf="!!usersFailed?.length">Cerrar</span>
+        </button>
+        <button class="btn btn-success" (click)="RegisterUsers()">
+            {{csvAcceptLabel}}
+        </button>
+    </div>
+</ng-template>
+
+<ng-template #deleteUserModal>
+    <div class="modal-header">
+        <h2 class="modal-title">Eliminar usuario</h2>
+        <i class="close-modal-button zmdi zmdi-close-circle-o zmdi-hc-2x clickeable" (click)="modal.CloseModal()"></i>
+    </div>
+    <div class="modal-body">
+        <div class="d-flex">
+            ¿Esta seguro que desea eliminar a "{{selectedUser?.username}}"?
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="modal.CloseModal()">
+            No, cancelar
+        </button>
+        <button class="btn btn-danger" (click)="DeleteUser()">
+            Si, eliminar
+        </button>
+    </div>
+</ng-template>
+
+<ng-template #addOrEditUserModal>
+    <div class="modal-header">
+        <h2 class="modal-title">{{ isEditing ? 'Actualizar' : 'Agregar'}} usuario</h2>
+        <i class="close-modal-button zmdi zmdi-close-circle-o zmdi-hc-2x clickeable" (click)="CancelEdition()"></i>
+    </div>
+    <div class="modal-body">
+        <div class="w-100">
+            <form [formGroup]="userForm">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label>Username <span class="text-danger">*</span></label> 
+                            <div class="input-container">
+                                <i class="input-icon zmdi zmdi-account-o zmdi-hc-lg"></i>
+                                <input class="form-control" type="text" placeholder="Nombre del usuario" formControlName="username" (keyup.enter)="RegisterUser()">
+                            </div>
+                            <div class="error-messages" *ngIf="form.GetFormControlByName(userForm, 'username')?.touched && form.GetFormControlByName(userForm, 'username')?.errors">
+                                <span class="d-block" *ngIf="form.GetFormControlByName(userForm, 'username')?.errors.required">
+                                    Campo obligatorio
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label>Email <span class="text-danger">*</span></label>
+                            <div class="input-container">
+                                <i class="input-icon zmdi zmdi-email zmdi-hc-lg"></i>
+                                <input class="form-control" type="text" placeholder="Correo del usuario" formControlName="email" (keyup.enter)="RegisterUser()">
+                            </div>
+                            <div class="error-messages" *ngIf="form.GetFormControlByName(userForm, 'email')?.touched && form.GetFormControlByName(userForm, 'email')?.errors">
+                                <span class="d-block" *ngIf="form.GetFormControlByName(userForm, 'email')?.errors.required">
+                                    Campo obligatorio
+                                </span>
+                                <span class="d-block" *ngIf="form.GetFormControlByName(userForm, 'email')?.errors.email">
+                                    Valor con formato inválido
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label>Rol <span class="text-danger">*</span></label>
+                            <ng-select
+                                class=""
+                                [items]="roles"
+                                bindLabel="description"
+                                bindValue="name"
+                                placeholder="Rol"
+                                formControlName="role"
+                            ></ng-select>
+                            <div class="error-messages" *ngIf="form.GetFormControlByName(userForm, 'role')?.touched && form.GetFormControlByName(userForm, 'role')?.errors">
+                                <span class="d-block" *ngIf="form.GetFormControlByName(userForm, 'role')?.errors.required">
+                                    Campo obligatorio
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="CancelEdition()">
+            Cancelar
+        </button>
+        <button class="btn btn-primary" (click)="RegisterUser()">
+            {{isEditing ? 'Actualizar' : 'Agregar' }}
+        </button>
+    </div>
+</ng-template>

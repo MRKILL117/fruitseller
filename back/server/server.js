@@ -38,7 +38,7 @@ boot(app, __dirname, function(err) {
 var AutoUpdate = function() {
   const models = app.models();
   const dataSource = app.datasources.mysql;
-  const modelsName = models.map(model => model.modelName);
+  const modelsName = models.filter(model => model.config.dataSource ? model.config.dataSource.name == dataSource.name : false).map(model => model.modelName);
 
   dataSource.autoupdate(modelsName, err => {
     if(err) throw err;
@@ -51,7 +51,7 @@ var AutoUpdate = function() {
         throw err;
       });
     }
-  })
+  });
 }
 
 /*
@@ -87,7 +87,11 @@ var SeedRoles = function() {
     const roles = [
       {
         name: 'Admin',
-        description: 'Admin of the platform'
+        description: 'Administrador'
+      },
+      {
+        name: 'Warehouseman',
+        description: 'Almacenista'
       },
     ];
     const conditions = [
@@ -163,6 +167,10 @@ var SeedOrderStatuses = function() {
         id: 5,
         name: 'Incobrable',
       },
+      {
+        id: 6,
+        name: 'Cancelado',
+      },
     ];
     const conditions = [
       {key: 'id'}
@@ -170,6 +178,58 @@ var SeedOrderStatuses = function() {
 
     let cont = 0, limit = orderStatuses.length;
     SeedArrayInModel(app.models.OrderStatus, orderStatuses, conditions).then(() => res()).catch(err => rej(err));
+  });
+}
+
+var SeedProductTypes = function() {
+  return new Promise((res, rej) => {
+    const productTypes = [
+      {
+        name: 'Alimentos',
+        utility: null,
+      },
+      {
+        name: 'Varios',
+        utility: 22.00,
+      },
+    ];
+
+    let cont = 0, limit = productTypes.length;
+    productTypes.forEach(type => {
+      app.models.ProductType.CreateOne(type, (err, newType) => {
+        if(err) rej(err);
+        if(++cont == limit) res();
+      });
+    });
+  });
+}
+
+var SeedFolders = function() {
+  return new Promise((res, rej) => {
+    const folders = [
+      'orders-resumes'
+    ];
+  
+    const Files = app.models.Files;
+    let cont = 0, limit = folders.length;
+    folders.forEach(folder => {
+      // Get the container and if it doesn't exist, then create the container
+      Files.getContainer(folder, (err, container) => {
+        // Check if the error code is related with "No such file or directory" (ENOENT)
+        // and if it does, create the container
+        if(err && err.code == "ENOENT") {
+          Files.createContainer({name: folder}, (err, newContainer) => {
+            if(err) rej(err);
+            cont++;
+            if(cont == limit) res();
+          });
+        }
+        else {
+          cont++;
+          if(cont == limit) res();
+        }
+      });
+    })
   });
 }
 
@@ -183,13 +243,15 @@ var InitializeCornjobs = function() {
 var AutoFillData = function() {
   return new Promise(async (res, rej) => {
     try {
+      await SeedFolders();
       await SeedRoles();
       await SeedUsers();
       await SeedOrderStatuses();
       await SeedMeasurementTypes();
+      await SeedProductTypes();
       await InitializeCornjobs();
     } catch (err) {
-      rej(err);
+      console.error("Error", err);
     }
     res();
   });

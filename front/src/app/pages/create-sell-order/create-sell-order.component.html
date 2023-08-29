@@ -19,18 +19,23 @@
     </div>
     
     <div class="head-row">
-        <div class="form-group head-item my-3">
-            <ng-select
-                class="clients-select"
-                [items]="clients"
-                bindLabel="name"
-                placeholder="Clientes"
-                (change)="OnClientSelected($event)"
-                [(ngModel)]="selectedClient"
-            ></ng-select>
+        <div class="form-group head-item">
+            <div class="d-flex flex-column" style="gap: 12px;">
+                <ng-select
+                    class="clients-select"
+                    [items]="clients"
+                    bindLabel="name"
+                    placeholder="Clientes"
+                    (change)="OnClientSelected($event)"
+                    [(ngModel)]="selectedClient"
+                ></ng-select>
+            </div>
+        </div>
+        <div class="fake-form-control head-item">
+            {{!!selectedClient?.socialReason ? selectedClient.socialReason : 'Razón social'}}
         </div>
 
-        <div class="form-group head-item my-3">
+        <div class="form-group head-item">
             <ng-select
                 *ngIf="!!selectedClient"
                 class="clients-select"
@@ -43,7 +48,7 @@
             </ng-select>
         </div>
 
-        <app-date-picker *ngIf="!!orderDate" class="head-item my-3" [presetDate]="orderDate.format('YYYY/MM/DD')" placeholder="Selecciona una fecha"></app-date-picker>
+        <app-date-picker *ngIf="!!orderDate" class="head-item" [presetDate]="orderDate.format('YYYY/MM/DD')" placeholder="Selecciona una fecha"></app-date-picker>
     </div>
     <div class="flex-grow-1 overflow-auto">
         <table class="table">

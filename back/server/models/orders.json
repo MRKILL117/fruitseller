@@ -64,15 +64,21 @@
       "type": "boolean",
       "required": true,
       "default": false
+    },
+    "deliveredAt": {
+      "type": "string",
+      "required": false
+    },
+    "comments": {
+      "type": "string",
+      "required": false,
+      "mysql": {
+        "dataType": "TEXT"
+      }
     }
   },
   "validations": [],
   "relations": {
-    "admin": {
-      "type": "belongsTo",
-      "model": "Account",
-      "foreignKey": "adminId"
-    },
     "status": {
       "type": "belongsTo",
       "model": "OrderStatus",
@@ -104,22 +110,15 @@
         "GetOne",
         "Update",
         "Delete",
-        "SetAsDelivered"
+        "SetAsDelivered",
+        "UpdateOrdersStatus",
+        "GenerateOrderResume"
       ]
     }
   ],
   "methods": {
     "CreateOne": {
       "accepts": [
-        {
-          "arg": "ctx",
-          "type": "object",
-          "required": true,
-          "description": "",
-          "http": {
-            "source": "req"
-          }
-        },
         {
           "arg": "order",
           "type": "object",
@@ -146,15 +145,6 @@
     "CreateArray": {
       "accepts": [
         {
-          "arg": "ctx",
-          "type": "object",
-          "required": true,
-          "description": "",
-          "http": {
-            "source": "req"
-          }
-        },
-        {
           "arg": "products",
           "type": "array",
           "required": true,
@@ -179,15 +169,6 @@
     },
     "GetAll": {
       "accepts": [
-        {
-          "arg": "ctx",
-          "type": "object",
-          "required": true,
-          "description": "",
-          "http": {
-            "source": "req"
-          }
-        },
         {
           "arg": "startDate",
           "type": "string",
@@ -243,15 +224,6 @@
     },
     "GetAllOfPayments": {
       "accepts": [
-        {
-          "arg": "ctx",
-          "type": "object",
-          "required": true,
-          "description": "",
-          "http": {
-            "source": "req"
-          }
-        },
         {
           "arg": "startDate",
           "type": "string",
@@ -323,7 +295,7 @@
         }
       ]
     },
-    "Update": {
+    "prototype.Update": {
       "accepts": [
         {
           "arg": "order",
@@ -381,6 +353,61 @@
         {
           "path": "/Deliver",
           "verb": "patch"
+        }
+      ]
+    },
+    "UpdateOrdersStatus": {
+      "accepts": [
+        {
+          "arg": "ordersIds",
+          "type": "array",
+          "required": true
+        },
+        {
+          "arg": "status",
+          "type": "object",
+          "required": true
+        }
+      ],
+      "returns": [
+        {
+          "arg": "order",
+          "type": "object",
+          "root": true,
+          "description": ""
+        }
+      ],
+      "description": "",
+      "http": [
+        {
+          "path": "/UpdateStatus",
+          "verb": "patch"
+        }
+      ]
+    },
+    "prototype.GenerateOrderResume": {
+      "accepts": [
+        {
+          "arg": "res",
+          "type": "object",
+          "http": {
+            "source": "res"
+          }
+        }
+      ],
+      "returns": [
+        {
+          "arg": "resume",
+          "type": "object",
+          "root": true,
+          "description": ""
+        }
+      ],
+      "description": "",
+      "http": [
+        {
+          "path": "/Resume",
+          "verb": "get"
         }
       ]
     }

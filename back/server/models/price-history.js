@@ -7,15 +7,9 @@ var priceHistoryCornjob = null;
 
 module.exports = function(PriceHistory) {
 
-    PriceHistory.UpsertTodayPrices = function(ctx, callback) {
-        let where = {deleted: false}
-        if(!!ctx) {
-            const userId = ctx.accessToken.userId;
-            where.adminId = userId;
-        }
+    PriceHistory.UpsertTodayPrices = function(callback) {
         const todayDate = moment().tz(constants.timezone).format(constants.dateFormat);
         PriceHistory.app.models.Product.find({
-            where,
             include: {
                 relation: 'prices',
                 scope: {

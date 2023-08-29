@@ -2,29 +2,27 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NgSelectModule } from '@ng-select/ng-select';
+import { HeaderModule } from 'src/app/components/header/header.module';
 import { FiltersModule } from 'src/app/components/filters/filters.module';
 
-import { SellOrdersComponent } from './sell-orders.component';
-import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { SettingsComponent } from './settings.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: SellOrdersComponent
+    component: SettingsComponent
   }
 ];
 
 @NgModule({
-  declarations: [SellOrdersComponent],
+  declarations: [SettingsComponent],
   imports: [
     FormsModule,
     CommonModule,
+    HeaderModule,
     FiltersModule,
-    NgSelectModule,
     ReactiveFormsModule,
-    TooltipModule.forRoot(),
     RouterModule.forChild(routes)
   ]
 })
-export class SellOrdersModule { }
+export class SettingsModule { }

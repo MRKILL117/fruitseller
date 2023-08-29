@@ -10,6 +10,9 @@
     "name": {
       "type": "string"
     },
+    "socialReason": {
+      "type": "string"
+    },
     "rfc": {
       "type": "string"
     },
@@ -29,11 +32,6 @@
   },
   "validations": [],
   "relations": {
-    "admin": {
-      "type": "belongsTo",
-      "model": "Account",
-      "foreignKey": "adminId"
-    },
     "addresses": {
       "type": "hasMany",
       "model": "Address",
@@ -68,15 +66,6 @@
     "CreateOne": {
       "accepts": [
         {
-          "arg": "ctx",
-          "type": "object",
-          "required": true,
-          "description": "",
-          "http": {
-            "source": "req"
-          }
-        },
-        {
           "arg": "client",
           "type": "object",
           "required": true,
@@ -102,15 +91,6 @@
     "CreateArray": {
       "accepts": [
         {
-          "arg": "ctx",
-          "type": "object",
-          "required": true,
-          "description": "",
-          "http": {
-            "source": "req"
-          }
-        },
-        {
           "arg": "clients",
           "type": "array",
           "required": true,
@@ -135,15 +115,6 @@
     },
     "GetAll": {
       "accepts": [
-        {
-          "arg": "ctx",
-          "type": "object",
-          "required": true,
-          "description": "",
-          "http": {
-            "source": "req"
-          }
-        },
         {
           "arg": "text",
           "type": "string",

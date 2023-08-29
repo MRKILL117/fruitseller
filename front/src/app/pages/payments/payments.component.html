@@ -29,6 +29,20 @@
         <div class="col-12 mb-4">
             <app-filters [timerTrigger]="true" [filters]="filters" (onSearch)="GetOrders($event)"></app-filters>
         </div>
+        <div *ngIf="areSomeOrdersSelected" class="col-12 mb-4">
+            <label>Cambiar estatus de ordenes seleccionadas</label>
+            <div class="d-flex align-items-center" style="gap: 12px;">
+                <i class="zmdi zmdi-save zmdi-hc-lg clickeable" (click)="SaveOrdersStatuses()"></i>
+                <ng-select
+                    class="flex-grow-1"
+                    [items]="orderStatuses"
+                    bindLabel="name"
+                    [loading]="loading.updatingOrders"
+                    placeholder="Selecciona un estatus"
+                    [(ngModel)]="globalStatus"
+                ></ng-select>
+            </div>
+        </div>
         <div class="col-12 col-lg-11">
             <div class="total-card">
                 <div class="total">
@@ -49,6 +63,7 @@
             <table class="table table-striped" style="overflow: visible;" *ngIf="!!orders?.length; else noOrdersMessage">
                 <thead class="table-thead">
                     <tr>
+                        <th></th>
                         <th>#</th>
                         <th>Estatus</th>
                         <th>Fecha</th>
@@ -62,8 +77,11 @@
                 
                 <tbody>
                     <tr *ngFor="let order of orders">
-                        <td>{{order.id}}</td>
-                        <td>
+                        <td class="align-middle">
+                            <input type="checkbox" [(ngModel)]="order.isSelected">
+                        </td>
+                        <td class="align-middle">{{order.id}}</td>
+                        <td class="align-middle">
                             <div class="d-flex align-items-center clickeable" style="gap: 12px;" (click)="ToggleStatusEdition(order)" *ngIf="!!!order.editStatus">
                                 <i class="zmdi zmdi-edit zmdi-hc-lg"></i>
                                 {{order.status.name}}
@@ -82,11 +100,11 @@
                                 ></ng-select>
                             </div>
                         </td>
-                        <td>{{order.date | date:"dd/MM/YYYY hh:mm a"}}</td>
-                        <td>{{order.client.name}}</td>
-                        <td>${{order.taxes}}</td>
-                        <td>${{order.subtotal}}</td>
-                        <td>${{order.total}}</td>
+                        <td class="align-middle">{{order.date | date:"dd/MM/YYYY hh:mm a"}}</td>
+                        <td class="align-middle">{{order.client.name}}</td>
+                        <td class="align-middle">${{order.taxes}}</td>
+                        <td class="align-middle">${{order.subtotal}}</td>
+                        <td class="align-middle">${{order.total}}</td>
                     </tr>
                 </tbody>
             </table>
