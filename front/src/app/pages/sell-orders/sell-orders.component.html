@@ -71,7 +71,7 @@
                                     <i class="zmdi zmdi-case-download zmdi-hc-lg clickeable"
                                     *ngIf="!loading.generating || loading.generating != order.id"
                                     [isDisabled]="!!loading.generating && loading.generating != order.id"
-                                    [tooltip]="'Descargar PDF'"
+                                    tooltip="Generar PDF"
                                     (click)="DownloadOrderResume(order)"></i>
                                     <i class="zmdi zmdi-spinner zmdi-hc-lg zmdi-hc-spin" *ngIf="!!loading.generating && loading.generating == order.id"></i>
                                     <i class="zmdi zmdi-edit zmdi-hc-lg clickeable" (click)="nav.GoToRoleRoute('edit-sell-orders/' + order.id)"></i>
