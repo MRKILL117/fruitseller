@@ -6,6 +6,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { FiltersModule } from 'src/app/components/filters/filters.module';
 
 import { SellOrdersComponent } from './sell-orders.component';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 const routes: Routes = [
   {
@@ -22,6 +23,7 @@ const routes: Routes = [
     FiltersModule,
     NgSelectModule,
     ReactiveFormsModule,
+    TooltipModule.forRoot(),
     RouterModule.forChild(routes)
   ]
 })

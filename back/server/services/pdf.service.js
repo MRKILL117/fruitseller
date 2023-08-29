@@ -17,10 +17,11 @@ class PdfService {
   GenerateOrderResume = async function(order) {
     this.pdf = await PDFDocument.create();
     const sizes = PageSizes.Letter;
-    const font = StandardFonts.TimesRoman;
+    const font = await this.pdf.embedFont(StandardFonts.TimesRoman);
     const page = this.pdf.addPage(sizes);
     const pageWidth = sizes[0];
     const pageHeight = sizes[1];
+    const now = moment().tz(constants.timezone);
     let texts;
 
     let currentX = 0, currentY = 0;
@@ -45,6 +46,7 @@ class PdfService {
         ];
         currentX += 115 + 5;
         page.drawText(texts.join(''), {
+            font,
             x: currentX,
             y: pageHeight - 40,
             maxWidth: 200,
@@ -64,6 +66,7 @@ class PdfService {
         ];
         currentX += 180;
         page.drawText(texts.join(''), {
+            font,
             x: currentX,
             y: pageHeight - 40,
             maxWidth: 130,
@@ -89,6 +92,7 @@ class PdfService {
                 opacity: 0
             });
             page.drawText(text, {
+                font,
                 x: currentX + 5,
                 y: pageHeight - (currentY + cellHeight - 5),
                 maxWidth: separation - 10,
@@ -104,8 +108,8 @@ class PdfService {
                 `${item.product.salesMeasurementType.abrev}`,
                 `${item.weight}`,
                 item.product.name,
+                `$${Number(item.product.price).toFixed(2)}`,
                 `$${Number(item.total).toFixed(2)}`,
-                `$${Number(item.price).toFixed(2)}`,
                 `${order.comments ? order.comments : ''}`,
             ];
             separations.forEach((separation, idx) => {
@@ -119,6 +123,7 @@ class PdfService {
                     opacity: 0
                 });
                 page.drawText(text, {
+                    font,
                     x: currentX + 5,
                     y: pageHeight - (currentY + cellHeight - 6),
                     maxWidth: separation - 10,
@@ -130,18 +135,106 @@ class PdfService {
         });
         // ------------------------- End table of items ------------------------- //
         // ------------------------- Footer ------------------------- //
+        currentY = 20;
+        currentX = 20;
+        page.drawText(`Firma de recibido:`, {
+            font,
+            x: 300,
+            y: currentY,
+            maxWidth: 100,
+            size: 12,
+        });
         page.drawLine({
-            start: {x: 20, y: 200},
-            end: {x: pageWidth - 20, y: 200},
-            thickness: 2
-        })
+            start: {x: 400, y: currentY},
+            end: {x: pageWidth - 20, y: currentY},
+            thickness: 1,
+        });
+        currentY += 50;
+        page.drawText(`Nombre:`, {
+            font,
+            x: 300,
+            y: currentY,
+            maxWidth: 100,
+            size: 12
+        });
+        page.drawText(`${order.client.name}`, {
+            font,
+            x: 400,
+            y: currentY,
+            maxWidth: pageWidth - 20 - 400 - 20,
+            size: 12
+        });
+        currentY += 80;
+        page.drawText(`Pagaré suscrito en la fecha ${now.format('DD/MM/YYYY')} en el Domicilio ${this.BuildClientAddress(order.clientAddress)} en la ciudad de ${order.clientAddress.city}. Debo y pagaré a la orden de Guillermo Lúa Estrada en esta ciudad de Guadalajara, Jalisco, en la Fecha ${now.format('DD/MM/YYYY')} la cantidad de $${order.total} como valor de las mercancías recibidas a mi entera satisfacción. Después de la Fecha ${now.format('DD/MM/YYYY')}, este pagaré causará el 5% de interés mensual moratorio. Este pagaré es mercantil y está regido por la Ley General de Títulos y Operaciones de Crédito en su Art. 170 y 173 parte final y artículos correlativos por no ser pagaré domiciliado`,
+            {
+                font,
+                x: currentX,
+                y: currentY,
+                maxWidth: pageWidth - 40,
+                size: 10,
+                lineHeight: 12,
+            }
+        );
+        currentY += 15;
+        page.drawLine({
+            start: {x: 20, y: currentY},
+            end: {x: pageWidth - 20, y: currentY},
+            thickness: 1,
+        });
+        currentY += 5;
+        page.drawText(`${now.format('hh:mm:ss a')}`, {
+            font,
+            x: currentX + 10,
+            y: currentY,
+            size: 12,
+            lineHeight: 15,
+        });
+        currentY += 20;
+        page.drawText(`TOTAL`, {
+            font,
+            x: currentX + separations[0] + separations [1] + separations[2] + separations[3] - font.widthOfTextAtSize(`TOTAL`, 14),
+            y: currentY,
+            size: 14,
+        });
+        page.drawText(`$${order.total.toFixed(2)}`, {
+            font,
+            x: currentX + separations[0] + separations [1] + separations[2] + separations[3] + separations[4] - font.widthOfTextAtSize(`$${order.total.toFixed(2)}`, 12),
+            y: currentY,
+            size: 12,
+        });
+        currentY += 20;
+        page.drawText(`16%`, {
+            font,
+            x: currentX + separations[0] + separations [1] + separations[2] + separations[3] - font.widthOfTextAtSize(`16%`, 12),
+            y: currentY,
+            size: 12,
+        });
+        page.drawText(`$${order.taxes.toFixed(2)}`, {
+            font,
+            x: currentX + separations[0] + separations [1] + separations[2] + separations[3] + separations[4] - font.widthOfTextAtSize(`$${order.taxes.toFixed(2)}`, 12),
+            y: currentY,
+            size: 12,
+        });
+        currentY += 15;
+        page.drawText(`I.V.A.`, {
+            font,
+            x: currentX + separations[0] + separations [1] + separations[2] + separations[3] - font.widthOfTextAtSize(`I.V.A.`, 12),
+            y: currentY,
+            size: 12,
+        });
+        currentY += 13;
+        page.drawLine({
+            start: {x: 20, y: currentY},
+            end: {x: pageWidth - 20, y: currentY},
+            thickness: 2,
+        });
         // ------------------------- End Footer ------------------------- //
         
 
         // Save PDF in server
         const name = randomUUID();
         const pdfBytes = await this.pdf.save();
-        await fs.writeFile(`server/files/orders-resumes/${name}.pdf`, pdfBytes);
+        // await fs.writeFile(`server/files/orders-resumes/${name}.pdf`, pdfBytes);
         const parcialRoute = `/Files/orders-resumes/download/${name}.pdf`;
         return {path: parcialRoute, file: pdfBytes};
     } catch (err) {

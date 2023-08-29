@@ -230,8 +230,29 @@ module.exports = function(Orders) {
         });
     }
 
-    Orders.prototype.GenerateOrderResume = async function() {
-        return pdfService.GenerateOrderResume(this.toJSON());
+    Orders.prototype.GenerateOrderResume = async function(res) {
+        try {
+            let data = await pdfService.GenerateOrderResume(this.toJSON());
+            res.setHeader('Content-Type', 'application/pdf');
+            res.setHeader('Content-Disposition', `attachment; filename=ficha_orden_${this.id}.pdf`);
+            res.send(Buffer.from(data.file, 'binary'));
+        } catch (err) {
+            console.error("Error generating pdf", err);
+            res.status(500).send('Error generating PDF');
+        }
+    }
+
+    Orders.GenerateResumes = async function(ordersIds) {
+        let ordersResumes = [];
+        Orders.find({
+            where: {id: {inq: ordersIds}}
+        }, (err, orders) => {
+            if(err) throw err;
+
+            orders.forEach(async order => {
+                ordersResumes.push(await pdfService.GenerateOrderResume(order.toJSON()));
+            });
+        });
     }
 
 };

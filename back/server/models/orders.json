@@ -386,12 +386,20 @@
       ]
     },
     "prototype.GenerateOrderResume": {
-      "accepts": [],
+      "accepts": [
+        {
+          "arg": "res",
+          "type": "object",
+          "http": {
+            "source": "res"
+          }
+        }
+      ],
       "returns": [
         {
           "arg": "resume",
           "type": "object",
-          "required": true,
+          "root": true,
           "description": ""
         }
       ],

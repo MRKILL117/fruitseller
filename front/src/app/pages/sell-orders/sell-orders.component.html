@@ -68,6 +68,12 @@
                         <td class="align-middle">
                             <div class="d-flex flex-column" style="gap: 12px;">
                                 <div class="d-flex align-items-center justify-content-center" style="gap: 12px;">
+                                    <i class="zmdi zmdi-case-download zmdi-hc-lg clickeable"
+                                    *ngIf="!loading.generating || loading.generating != order.id"
+                                    [isDisabled]="!!loading.generating && loading.generating != order.id"
+                                    [tooltip]="'Descargar PDF'"
+                                    (click)="DownloadOrderResume(order)"></i>
+                                    <i class="zmdi zmdi-spinner zmdi-hc-lg zmdi-hc-spin" *ngIf="!!loading.generating && loading.generating == order.id"></i>
                                     <i class="zmdi zmdi-edit zmdi-hc-lg clickeable" (click)="nav.GoToRoleRoute('edit-sell-orders/' + order.id)"></i>
                                     <i class="zmdi zmdi-delete zmdi-hc-lg clickeable" (click)="selectedOrder = order; modal.OpenModal(deleteorderModal)"></i>
                                 </div>

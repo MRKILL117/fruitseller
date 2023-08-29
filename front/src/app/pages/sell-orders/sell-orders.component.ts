@@ -234,4 +234,24 @@ export class SellOrdersComponent implements OnInit {
     this.csv.GenerateCSV("ordenes_de_venta", rows, keys, headers);
   }
 
+  DownloadOrderResume(order: any) {
+    if(!!this.loading.generating) return;
+    this.loading.generating = order.id;
+    this.http.GetFile(`/Orders/${order.id}/Resume`).subscribe((file: any) => {
+      const blob = new Blob([file], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `ficha_orden_${order.id}`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      this.loading.generating = null;
+    }, err => {
+      console.error("Error generating order pdf", err);
+      this.toast.ShowDefaultDanger(`Error al generar PDF`);
+      this.loading.generating = null;
+    });
+  }
+
 }
