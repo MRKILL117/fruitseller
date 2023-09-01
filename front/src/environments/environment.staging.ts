@@ -1,6 +1,6 @@
 export const environment = {
-  production: true,
-  staging: false,
+  production: false,
+  staging: true,
   apiBaseUrl: 'http://3.19.203.86/api',
   timezone: 'America/Mexico_City',
 };

@@ -4,6 +4,7 @@
 
 export const environment = {
   production: false,
+  staging: false,
   apiBaseUrl: 'http://localhost:3117/api',
   timezone: 'America/Mexico_City',
 };
