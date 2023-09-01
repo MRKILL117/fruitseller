@@ -73,7 +73,7 @@ module.exports = function(Account) {
             if(err) return callback(err);
             
             if(!user) return callback('Usuario no registrado');
-            if(user.isEnabled)
+            if(!user.isEnabled) return callback('Usuario desactivado');
             credentials.ttl = -1;
             Account.login(credentials, (err, token) => {
                 if(err) return callback(err);

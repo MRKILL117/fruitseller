@@ -40,6 +40,8 @@ var AutoUpdate = function() {
   const dataSource = app.datasources.mysql;
   const modelsName = models.filter(model => model.config.dataSource ? model.config.dataSource.name == dataSource.name : false).map(model => model.modelName);
 
+  // Disable user email verification
+  app.models.Account.settings.emailVerificationRequired = false;
   dataSource.autoupdate(modelsName, err => {
     if(err) throw err;
     else{

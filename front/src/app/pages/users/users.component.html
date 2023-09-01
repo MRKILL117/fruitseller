@@ -58,21 +58,31 @@
                         <td>{{user.username}}</td>
                         <td>{{user.email}}</td>
                         <td>{{user.role?.name}}</td>
-                        <td>{{user.isEnabled ? 'Activo' : 'Deshabilitado'}}</td>
                         <td>
-                            <div class="d-flex align-items-center justify-content-center">
+                            <span class="badge" [ngClass]="{'badge-success': user.isEnabled, 'badge-danger': !user.isEnabled}">
+                                {{user.isEnabled ? 'Habilitado' : 'Deshabilitado'}}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center justify-content-center" style="gap: 6px;">
                                 <div class="sign-in-disabled-container clickeable"
-                                    *ngIf="loading.de_activating == null || loading.de_activating != user.id"
-                                    [tooltip]="GetTooltipUserLabel(user)"
+                                    *ngIf="loading.de_activating == null || loading.de_activating != user.id">
+                                </div>
+                                <i class="zmdi zmdi-block-alt zmdi-hc-lg clickeable"
+                                    *ngIf="user.isEnabled"
+                                    tooltip="Desactivar"
                                     placement="top"
                                     [adaptivePosition]="true"
-                                    (click)="ToggleEnabled(user)">
-                                    <i class="zmdi zmdi-sign-in zmdi-hc-lg"></i>
-                                    <i class="zmdi zmdi-block-alt zmdi-hc-2x" [ngClass]="{'upper': user.isEnabled, 'd-none': !user.isEnabled}"></i>
-                                </div>
+                                    (click)="ToggleEnabled(user)"></i>
+                                <i class="zmdi zmdi-sign-in zmdi-hc-lg clickeable"
+                                    *ngIf="!user.isEnabled"
+                                    tooltip="Activar"
+                                    placement="top"
+                                    [adaptivePosition]="true"
+                                    (click)="ToggleEnabled(user)"></i>
                                 <i *ngIf="loading.de_activating == user.id" class="zmdi zmdi-spinner zmdi-hc-lg zmdi-hc-spin"></i>
-                                <i class="zmdi zmdi-edit zmdi-hc-lg clickeable mx-2" (click)="EditUser(user); modal.OpenModal(addOrEditUserModal)"></i>
-                                <i class="zmdi zmdi-delete zmdi-hc-lg clickeable mx-2" (click)="selectedUser = user; modal.OpenModal(deleteUserModal)"></i>
+                                <!-- <i class="zmdi zmdi-edit zmdi-hc-lg clickeable mx-2" (click)="EditUser(user); modal.OpenModal(addOrEditUserModal)"></i> -->
+                                <!-- <i class="zmdi zmdi-delete zmdi-hc-lg clickeable mx-2" (click)="selectedUser = user; modal.OpenModal(deleteUserModal)"></i> -->
                             </div>
                         </td>
                     </tr>
