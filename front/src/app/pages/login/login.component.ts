@@ -48,7 +48,9 @@ export class LoginComponent implements OnInit {
       this.router.navigate([`/${userLogged.role.name.toLowerCase()}/dashboard`]);
     }, err => {
       console.error("Error al hacer login", err);
-    })
+      let defaultMessage = `Error al eliminar cliente`;
+      this.toast.ShowDefaultDanger(this.http.GetErrorMessage(err) || defaultMessage);
+    });
   }
 
   SetUserSession(userLogged: any) {
