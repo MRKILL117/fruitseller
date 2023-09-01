@@ -111,7 +111,8 @@ var SeedUsers = function() {
         role: 'Admin',
         username: 'Admin',
         email: 'admin@test.com',
-        password: '123'
+        password: '123',
+        isEnabled: true
       },
     ];
 
