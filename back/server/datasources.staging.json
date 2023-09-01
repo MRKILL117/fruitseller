@@ -4,9 +4,9 @@
     "port": 3306,
     "url": "",
     "database": "fruitseller",
-    "password": "f3Hj4b1GC!^w",
+    "password": "TH:X7(&]dHV(+:r_",
     "name": "mysql",
-    "user": "root",
+    "user": "fruitseller",
     "connector": "mysql"
   }
 }
