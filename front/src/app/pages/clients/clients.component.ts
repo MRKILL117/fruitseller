@@ -160,7 +160,7 @@ export class ClientsComponent implements OnInit {
       this.modal.CloseModal();
     }, err => {
       let defaultMessage = `Error al crear el cliente`;
-      this.toast.ShowDefaultDanger(this.http.GetErrorMessage(err) || defaultMessage);
+      this.toast.ShowDefaultDanger(err || defaultMessage);
       console.error("Error creating client", err);
     });
   }
@@ -194,7 +194,7 @@ export class ClientsComponent implements OnInit {
     }, err => {
       console.error("Error patching client", err);
       let defaultMessage = `Error al actualizar el cliente`;
-      this.toast.ShowDefaultDanger(this.http.GetErrorMessage(err) || defaultMessage);
+      this.toast.ShowDefaultDanger(err || defaultMessage);
     });
   }
 
@@ -234,7 +234,7 @@ export class ClientsComponent implements OnInit {
     }, err => {
       console.error("Error deleting client", err);
       let defaultMessage = `Error al eliminar cliente`;
-      this.toast.ShowDefaultDanger(this.http.GetErrorMessage(err) || defaultMessage);
+      this.toast.ShowDefaultDanger(err || defaultMessage);
     });
   }
 
