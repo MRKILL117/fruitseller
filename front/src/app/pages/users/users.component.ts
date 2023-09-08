@@ -143,7 +143,7 @@ export class UsersComponent implements OnInit {
       this.modal.CloseModal();
     }, err => {
       let defaultMessage = `Error al crear el usuario`;
-      this.toast.ShowDefaultDanger(this.http.GetErrorMessage(err) || defaultMessage);
+      this.toast.ShowDefaultDanger(err || defaultMessage);
       console.error("Error creating user", err);
     });
   }
@@ -176,7 +176,7 @@ export class UsersComponent implements OnInit {
     }, err => {
       console.error("Error patching user", err);
       let defaultMessage = `Error al actualizar el usuario`;
-      this.toast.ShowDefaultDanger(this.http.GetErrorMessage(err) || defaultMessage);
+      this.toast.ShowDefaultDanger(err || defaultMessage);
     });
   }
 
@@ -204,7 +204,7 @@ export class UsersComponent implements OnInit {
     }, err => {
       console.error("Error deleting user", err);
       let defaultMessage = `Error al eliminar usuario`;
-      this.toast.ShowDefaultDanger(this.http.GetErrorMessage(err) || defaultMessage);
+      this.toast.ShowDefaultDanger(err || defaultMessage);
     });
   }
 

@@ -49,7 +49,7 @@ export class LoginComponent implements OnInit {
     }, err => {
       console.error("Error al hacer login", err);
       let defaultMessage = `Error al eliminar cliente`;
-      this.toast.ShowDefaultDanger(this.http.GetErrorMessage(err) || defaultMessage);
+      this.toast.ShowDefaultDanger(err || defaultMessage);
     });
   }
 

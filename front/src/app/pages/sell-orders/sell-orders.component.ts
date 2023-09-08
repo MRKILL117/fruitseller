@@ -168,7 +168,7 @@ export class SellOrdersComponent implements OnInit {
     }, err => {
       console.error("Error deleting Order", err);
       let defaultMessage = `Error al eliminar orden`;
-      this.toast.ShowDefaultDanger(this.http.GetErrorMessage(err) || defaultMessage);
+      this.toast.ShowDefaultDanger(err || defaultMessage);
       this.loading.updating = false;
     });
   }
@@ -179,7 +179,7 @@ export class SellOrdersComponent implements OnInit {
       this.GetOrders();
     }, err => {
       let defaultMessage = `Error al actualizar orden`;
-      this.toast.ShowDefaultDanger(this.http.GetErrorMessage(err) || defaultMessage);
+      this.toast.ShowDefaultDanger(err || defaultMessage);
       console.error("Error delivering order", err);
     });
   }

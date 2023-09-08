@@ -7,15 +7,28 @@ const moment = require('moment-timezone');
 class PdfService {
   
   constructor() {
+    this.pdf = null;
+    this.pages = [];
   }
 
   BuildClientAddress = function(address) {
     if(!!address) return address.street + " #" + address.externalNumber + (!!address.internalNumber ? (" int. " + address.internalNumber) : "")
     return '';
   }
-  
+
   GenerateOrderResume = async function(order) {
-    this.pdf = await PDFDocument.create();
+    try {
+        this.pdf = await PDFDocument.create();
+        await this.GenerateOrderResumePdf(order);
+
+        const pdfBytes = await this.pdf.save();
+        return pdfBytes;
+    } catch (err) {
+        throw err
+    }
+  }
+  
+  GenerateOrderResumePdf = async function(order) {
     const sizes = PageSizes.Letter;
     const font = await this.pdf.embedFont(StandardFonts.TimesRoman);
     const page = this.pdf.addPage(sizes);
@@ -228,15 +241,20 @@ class PdfService {
             end: {x: pageWidth - 20, y: currentY},
             thickness: 2,
         });
+        currentY += 7;
+        page.drawText(`Subtotal`, {
+            font,
+            x: currentX + separations[0] + separations [1] + separations[2] + separations[3] - font.widthOfTextAtSize(`Subtotal`, 12),
+            y: currentY,
+            size: 12,
+        });
+        page.drawText(`$${order.subtotal.toFixed(2)}`, {
+            font,
+            x: currentX + separations[0] + separations [1] + separations[2] + separations[3] + separations[4] - font.widthOfTextAtSize(`$${order.subtotal.toFixed(2)}`, 12),
+            y: currentY,
+            size: 12,
+        });
         // ------------------------- End Footer ------------------------- //
-        
-
-        // Save PDF in server
-        const name = randomUUID();
-        const pdfBytes = await this.pdf.save();
-        // await fs.writeFile(`server/files/orders-resumes/${name}.pdf`, pdfBytes);
-        const parcialRoute = `/Files/orders-resumes/download/${name}.pdf`;
-        return {path: parcialRoute, file: pdfBytes};
     } catch (err) {
         throw err;
     }

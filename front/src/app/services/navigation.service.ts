@@ -15,8 +15,12 @@ export class NavigationService {
   ) { }
 
   private FormatRoute(route: string): string {
-    if(route.charAt(0) == '/') return  `${route.split('').slice(1).join('')}`;
+    if(route.charAt(0) == '/') return `${route.split('').slice(1).join('')}`;
     else return route;
+  }
+
+  public GoToRoute(route: string) {
+    this.router.navigate([`${this.FormatRoute(route)}`]);
   }
 
   public GoToRoleRoute(route: string) {
