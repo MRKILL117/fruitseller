@@ -232,10 +232,10 @@ module.exports = function(Orders) {
 
     Orders.prototype.GenerateOrderResume = async function(res) {
         try {
-            let data = await pdfService.GenerateOrderResume(this.toJSON());
+            let file = await pdfService.GenerateOrderResume(this.toJSON());
             res.setHeader('Content-Type', 'application/pdf');
             res.setHeader('Content-Disposition', `attachment; filename=ficha_orden_${this.id}.pdf`);
-            res.send(Buffer.from(data.file, 'binary'));
+            res.send(Buffer.from(file, 'binary'));
         } catch (err) {
             console.error("Error generating pdf", err);
             res.status(500).send('Error generating PDF');
