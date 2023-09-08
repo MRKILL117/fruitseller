@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
   staging: true,
-  apiBaseUrl: 'http://3.19.203.86/api',
+  apiBaseUrl: 'http://fruitseller.romanoserver.com/api',
   timezone: 'America/Mexico_City',
 };
