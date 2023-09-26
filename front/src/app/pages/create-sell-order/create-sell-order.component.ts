@@ -17,6 +17,7 @@ export class CreateSellOrderComponent implements OnInit {
   selectedAddress: any = null;
   measurementTypes: Array<any> = [];
   products: Array<any> = [];
+  comments: string = '';
   orderItems: Array<any> = [];
   orderItem: any = {
     product: null,
@@ -137,6 +138,7 @@ export class CreateSellOrderComponent implements OnInit {
       client: this.selectedClient,
       clientId: this.selectedClient.id,
       clientAddress: this.selectedAddress,
+      comments: this.comments
     }
     this.http.Post(`Orders`, {order}).subscribe(newOrder => {
       this.toast.ShowDefaultSuccess(`Orden creada exitosamente`);

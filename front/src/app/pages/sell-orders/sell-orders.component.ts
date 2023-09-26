@@ -70,6 +70,10 @@ export class SellOrdersComponent implements OnInit {
       newKey: 'weight',
       type: 'number'
     },
+    {
+      oldKey: 'Comentarios',
+      newKey: 'comments',
+    },
   ];
 
   public get csvAcceptLabel() {

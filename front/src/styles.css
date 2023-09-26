@@ -152,6 +152,17 @@ label {
     padding: 6px 1rem !important;
 }
 
+textarea.form-control {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 16px;
+    border: 2px solid #cacaca;
+    padding: .5rem 1rem;
+    max-width: 100%;
+    resize: none;
+}
+
 /* Card override */
 .card {
     border-radius: 12px !important;
