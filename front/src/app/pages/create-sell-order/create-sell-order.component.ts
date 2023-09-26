@@ -112,7 +112,8 @@ export class CreateSellOrderComponent implements OnInit {
         default: productQuantity = !!item.weight ? item.weight : 0; break;
       }
       if(!Number.isNaN(Number(productQuantity))) {
-        const clientCommission = productPrice*Number(this.selectedClient.utilityPercentage)/100;
+        const utilityPercentage = item?.product?.type?.utility != null ? item?.product?.type?.utility : Number(this.selectedClient.utilityPercentage);
+        const clientCommission = productPrice * utilityPercentage / 100;
         item.price = Number(productQuantity) * (productPrice + clientCommission);
         item.tax = item.price * this.IVA;
         item.total = item.price + item.tax;

@@ -102,7 +102,8 @@ module.exports = function(Orders) {
                             default: productQuantity = !!product.weight ? product.weight : 0; break;
                         }
                         if(!Number.isNaN(Number(productQuantity))) {
-                            const clientCommission = productPrice*client.utilityPercentage/100;
+                            const utilityPercentage = item?.product?.type?.utility != null ? item?.product?.type?.utility : Number(this.selectedClient.utilityPercentage);
+                            const clientCommission = productPrice * utilityPercentage / 100;
                             item.price = Number(productQuantity) * (productPrice + clientCommission);
                             item.tax = item.price * 0.16;
                             item.total = item.price + item.tax;
