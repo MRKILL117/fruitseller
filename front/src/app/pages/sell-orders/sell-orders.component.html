@@ -45,6 +45,7 @@
             <table class="table table-striped" *ngIf="!!orders?.length; else noOrdersMessage">
                 <thead class="table-thead">
                     <tr>
+                        <th></th>
                         <th>#</th>
                         <th>Estatus</th>
                         <th>Fecha</th>
@@ -58,6 +59,9 @@
                 
                 <tbody>
                     <tr *ngFor="let order of orders">
+                        <td class="align-middle">
+                            <input class="clickeable" type="checkbox" [(ngModel)]="order.isSelected">
+                        </td>
                         <td class="align-middle clickeable" (click)="nav.GoToRoleRoute('edit-sell-orders/' + order.id)">{{order.id}}</td>
                         <td class="align-middle">{{order.status.name}}</td>
                         <td class="align-middle">{{order.date | date:"dd/MM/YYYY hh:mm a"}}</td>

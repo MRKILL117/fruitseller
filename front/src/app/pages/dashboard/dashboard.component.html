@@ -2,7 +2,7 @@
     <div class="row justify-content-center h-100">
         <div class="col-12 modules-container">
             <div class="pages-container">
-                <div class="page-container clickeable bg-white" *ngFor="let page of pages" (click)="nav.GoToRoleRoute(page.route)">
+                <div class="page-container clickeable bg-white" *ngFor="let page of userPages" (click)="nav.GoToRoleRoute(page.route)">
                     <i *ngIf="!page.img" class="zmdi {{page.icon}} zmdi-hc-4x"></i>
                     <img class="img-icon" *ngIf="!!page.img" src="assets/icons/{{page.img}}">
                     <div class="text-center">{{page.title}}</div>
