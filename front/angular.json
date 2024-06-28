@@ -11,7 +11,14 @@
         },
         "@schematics/angular:component": {
           "prefix": "app",
-          "style": "scss"
+          "style": "scss",
+          "skipTests": true
+        },
+        "@schematics/angular:service": {
+          "skipTests": true
+        },
+        "@schematics/angular:directive": {
+          "skipTests": true
         }
       },
       "root": "",
