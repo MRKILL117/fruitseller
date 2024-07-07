@@ -8,7 +8,7 @@ import { ToastService } from 'src/app/services/toast.service';
 @Component({
   selector: 'app-product-inventory-history',
   templateUrl: './product-inventory-history.component.html',
-  styleUrls: ['./product-inventory-history.component.css']
+  styleUrls: ['./product-inventory-history.component.scss']
 })
 export class ProductInventoryHistoryComponent implements OnInit {
 

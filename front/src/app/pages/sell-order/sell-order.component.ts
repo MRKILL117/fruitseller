@@ -8,7 +8,7 @@ import { ToastService } from 'src/app/services/toast.service';
 @Component({
   selector: 'app-sell-order',
   templateUrl: './sell-order.component.html',
-  styleUrls: ['./sell-order.component.css']
+  styleUrls: ['./sell-order.component.scss']
 })
 export class SellOrderComponent implements OnInit {
 

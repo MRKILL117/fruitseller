@@ -7,7 +7,7 @@ import { ToastService } from 'src/app/services/toast.service';
 @Component({
   selector: 'app-dropdown-links',
   templateUrl: './dropdown-links.component.html',
-  styleUrls: ['./dropdown-links.component.css']
+  styleUrls: ['./dropdown-links.component.scss']
 })
 export class DropdownLinksComponent implements OnInit {
 

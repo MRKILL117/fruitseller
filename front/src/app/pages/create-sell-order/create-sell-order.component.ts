@@ -7,7 +7,7 @@ import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-create-sell-order',
   templateUrl: './create-sell-order.component.html',
-  styleUrls: ['./create-sell-order.component.css']
+  styleUrls: ['./create-sell-order.component.scss']
 })
 export class CreateSellOrderComponent implements OnInit {
 
