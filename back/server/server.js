@@ -89,11 +89,23 @@ var SeedRoles = function() {
     const roles = [
       {
         name: 'Admin',
-        description: 'Administrador'
+        description: 'Administrador',
       },
       {
-        name: 'Warehouseman',
-        description: 'Almacenista'
+        name: 'Collector',
+        description: 'Cobrador (Cobranza)',
+      },
+      {
+        name: 'Accountant',
+        description: 'Contador (Facturación)',
+      },
+      {
+        name: 'Buyer',
+        description: 'Comprador',
+      },
+      {
+        name: 'Capturist',
+        description: 'Capturista',
       },
     ];
     const conditions = [

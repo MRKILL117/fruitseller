@@ -7,7 +7,7 @@ import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-create-sell-order',
   templateUrl: './create-sell-order.component.html',
-  styleUrls: ['./create-sell-order.component.css']
+  styleUrls: ['./create-sell-order.component.scss']
 })
 export class CreateSellOrderComponent implements OnInit {
 
@@ -17,6 +17,7 @@ export class CreateSellOrderComponent implements OnInit {
   selectedAddress: any = null;
   measurementTypes: Array<any> = [];
   products: Array<any> = [];
+  comments: string = '';
   orderItems: Array<any> = [];
   orderItem: any = {
     product: null,
@@ -112,7 +113,8 @@ export class CreateSellOrderComponent implements OnInit {
         default: productQuantity = !!item.weight ? item.weight : 0; break;
       }
       if(!Number.isNaN(Number(productQuantity))) {
-        const clientCommission = productPrice*Number(this.selectedClient.utilityPercentage)/100;
+        const utilityPercentage = item?.product?.type?.utility != null ? item?.product?.type?.utility : Number(this.selectedClient.utilityPercentage);
+        const clientCommission = productPrice * utilityPercentage / 100;
         item.price = Number(productQuantity) * (productPrice + clientCommission);
         item.tax = item.price * this.IVA;
         item.total = item.price + item.tax;
@@ -136,6 +138,7 @@ export class CreateSellOrderComponent implements OnInit {
       client: this.selectedClient,
       clientId: this.selectedClient.id,
       clientAddress: this.selectedAddress,
+      comments: this.comments
     }
     this.http.Post(`Orders`, {order}).subscribe(newOrder => {
       this.toast.ShowDefaultSuccess(`Orden creada exitosamente`);

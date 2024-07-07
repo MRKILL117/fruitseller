@@ -12,7 +12,7 @@ import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-daily-shopping-list',
   templateUrl: './daily-shopping-list.component.html',
-  styleUrls: ['./daily-shopping-list.component.css']
+  styleUrls: ['./daily-shopping-list.component.scss']
 })
 export class DailyShoppingListComponent implements OnInit {
 

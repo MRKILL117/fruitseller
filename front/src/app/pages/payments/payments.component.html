@@ -78,7 +78,7 @@
                 <tbody>
                     <tr *ngFor="let order of orders">
                         <td class="align-middle">
-                            <input type="checkbox" [(ngModel)]="order.isSelected">
+                            <input class="clickeable" type="checkbox" [(ngModel)]="order.isSelected">
                         </td>
                         <td class="align-middle">{{order.id}}</td>
                         <td class="align-middle">

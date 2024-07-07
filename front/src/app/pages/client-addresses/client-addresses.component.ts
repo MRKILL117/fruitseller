@@ -11,7 +11,7 @@ import { ToastService } from 'src/app/services/toast.service';
 @Component({
   selector: 'app-client-addresses',
   templateUrl: './client-addresses.component.html',
-  styleUrls: ['./client-addresses.component.css']
+  styleUrls: ['./client-addresses.component.scss']
 })
 export class ClientAddressesComponent implements OnInit {
 

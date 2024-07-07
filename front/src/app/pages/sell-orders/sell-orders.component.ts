@@ -14,7 +14,7 @@ import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-sell-orders',
   templateUrl: './sell-orders.component.html',
-  styleUrls: ['./sell-orders.component.css']
+  styleUrls: ['./sell-orders.component.scss']
 })
 export class SellOrdersComponent implements OnInit {
 
@@ -69,6 +69,10 @@ export class SellOrdersComponent implements OnInit {
       oldKey: 'Kilos',
       newKey: 'weight',
       type: 'number'
+    },
+    {
+      oldKey: 'Comentarios',
+      newKey: 'comments',
     },
   ];
 
